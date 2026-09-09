@@ -139,7 +139,10 @@ what they exclude.
 **7. Tested in Chromium only.** No real iOS Safari, no real Android device. Safari is
 the gap I would most like to close.
 
-**8. No analytics.** I cannot tell whether anyone visits or where they drop off.
+**8. Analytics is a page counter, not a funnel.** GA4 is installed, so visits are visible
+— but nothing on the page is instrumented, so I still cannot tell where a reader drops off
+or which project sent them to GitHub. GA4 also sets cookies and the page ships no consent
+banner; `GO-LIVE.md` explains the trade and keeps a cookieless counter one command away.
 
 **9. Three of five projects have no repository link,** and the Transformer project's
 result has no number attached. On a page that argues from evidence, those are the weak

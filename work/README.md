@@ -85,7 +85,7 @@ python3 work/scripts/audit_launch.py               # did it work
 | Piece | State |
 |---|---|
 | Custom domain | Wired end to end, still canonical on `github.io` until DNS resolves — see `portfolio/GO-LIVE.md` |
-| Analytics (GoatCounter) | Installed on both pages; loads nothing until the site code is set |
+| Analytics | GA4 `G-KGRCWRY9BV` on both pages, stamped from `portfolio/site.json`; swap it for GoatCounter or turn it off with one command |
 | Share preview / favicon / titles | Done on both pages; the paper's card is `docs/og-paper.png` |
 | Graduate badge | Drawn and in both footers; link is a placeholder until the verification URL is set |
 
