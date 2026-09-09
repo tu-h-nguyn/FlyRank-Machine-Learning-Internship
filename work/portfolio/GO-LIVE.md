@@ -40,7 +40,7 @@ to it. The site goes dark until DNS catches up. That is why the repo is still ca
 5. Open the PR and wait for it to merge (usually a day or two).
 6. Confirm DNS actually resolves before touching the repo:
    ```bash
-   dig +short hoangtu.is-a.dev      # must return john-hcmus.github.io / GitHub's IPs
+   dig +short hoangtu.is-a.dev      # must return tu-h-nguyn.github.io / GitHub's IPs
    ```
 7. Only once that returns something, flip the site over:
    ```bash
@@ -56,7 +56,7 @@ to it. The site goes dark until DNS catches up. That is why the repo is still ca
 To back out at any point:
 
 ```bash
-python3 work/scripts/configure_site.py --base https://john-hcmus.github.io/flyrank-ML-internship-starter
+python3 work/scripts/configure_site.py --base https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship
 ```
 
 ## 2. Analytics — GoatCounter

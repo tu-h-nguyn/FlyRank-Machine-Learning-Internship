@@ -74,7 +74,7 @@ python work/scripts/capstone_pipeline.py
 
 ## 4:30–5:00 — Wrap up
 
-**Show:** The deployed paper at john-hcmus.github.io/flyrank-ML-internship-starter
+**Show:** The deployed paper at tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship
 
 **Say:** "The full write-up is deployed as a research paper here. Every number traces back to the JSON files in the repo, which are regenerated deterministically by the single command I ran at the start. The repo README has setup instructions, the full evaluation table, and the limitations list. Thanks for watching."
 

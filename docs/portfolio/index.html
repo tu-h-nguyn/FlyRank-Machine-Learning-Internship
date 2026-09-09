@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nguyễn Hoàng Tú — Machine Learning / AI Engineer Intern</title>
   <meta name="description" content="Maths and CS undergraduate targeting ML / AI Engineer internships. Search-ranking system with a public paper: 18,010 pages ranked, 0.88 precision@50.">
-  <link rel="canonical" href="https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/">
+  <link rel="canonical" href="https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/portfolio/">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="author" content="Nguyễn Hoàng Tú">
   <meta name="theme-color" content="#0369a1">
@@ -16,8 +16,8 @@
   <meta property="og:site_name" content="Nguyễn Hoàng Tú">
   <meta property="og:title" content="Nguyễn Hoàng Tú — Machine Learning / AI Engineer Intern">
   <meta property="og:description" content="Mathematics and Computer Science undergraduate targeting Machine Learning / AI Engineer internships. Search-ranking system with a published paper and reproducible code: 18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline.">
-  <meta property="og:url" content="https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/">
-  <meta property="og:image" content="https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/og.png">
+  <meta property="og:url" content="https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/portfolio/">
+  <meta property="og:image" content="https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/portfolio/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Nguyễn Hoàng Tú, Machine Learning / AI Engineer Intern — 18,010 pages ranked, 0.88 precision@50, public paper and code.">
@@ -25,7 +25,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Nguyễn Hoàng Tú — Machine Learning / AI Engineer Intern">
   <meta name="twitter:description" content="Mathematics and Computer Science undergraduate targeting Machine Learning / AI Engineer internships. Search-ranking system with a published paper and reproducible code: 18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline.">
-  <meta name="twitter:image" content="https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/og.png">
+  <meta name="twitter:image" content="https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/portfolio/og.png">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
@@ -44,14 +44,14 @@
     "@type": "Person",
     "name": "Nguyễn Hoàng Tú",
     "alternateName": "Tu Nguyen",
-    "url": "https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/",
-    "image": "https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/og.png",
+    "url": "https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/portfolio/",
+    "image": "https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/portfolio/og.png",
     "jobTitle": "Machine Learning Engineer / AI Engineer Intern",
     "description": "Mathematics and Computer Science undergraduate targeting Machine Learning / AI Engineer internships. Search-ranking system with a published paper and reproducible code: 18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline.",
     "knowsAbout": ["Machine Learning", "Deep Learning", "PyTorch", "Time Series Forecasting",
                    "Ranking Systems", "Data Leakage Auditing", "Python", "scikit-learn"],
     "sameAs": [
-      "https://github.com/John-hcmus",
+      "https://github.com/tu-h-nguyn",
       "https://www.linkedin.com/in/tuhcmus/"
     ]
   }
@@ -445,7 +445,7 @@
       </p>
       <div class="cta-row">
         <a class="btn btn-primary" href="#projects">View projects</a>
-        <a class="btn btn-secondary" href="https://github.com/John-hcmus" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-secondary" href="https://github.com/tu-h-nguyn" target="_blank" rel="noopener">GitHub</a>
       </div>
       <div class="hero-links">
         <a href="https://www.linkedin.com/in/tuhcmus/" target="_blank" rel="noopener">LinkedIn</a>
@@ -559,12 +559,72 @@
         <div class="p-stack">Python · scikit-learn · pandas · NumPy · Matplotlib</div>
 
         <div class="p-links">
-          <a href="https://john-hcmus.github.io/flyrank-ML-internship-starter/" target="_blank" rel="noopener">Read the paper</a>
-          <a href="https://github.com/John-hcmus/flyrank-ML-internship-starter" target="_blank" rel="noopener">View code</a>
+          <a href="https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/" target="_blank" rel="noopener">Read the paper</a>
+          <a href="https://github.com/tu-h-nguyn/FlyRank-End-to-End-Machine-Learning-Project-Internship" target="_blank" rel="noopener">View code</a>
         </div>
       </article>
 
-      <!-- ── 2 ── -->
+      <!-- ── 2. Second public artifact: maths depth, verified end to end.
+               Lives in its own repo — see https://github.com/tu-h-nguyn/fem-wave-1d ── -->
+      <article class="project">
+        <div class="p-head">
+          <h3>Sharp CFL Analysis — FEM for the Wave Equation</h3>
+          <span class="p-status live">Report + code public</span>
+        </div>
+        <p class="p-problem">
+          Every course quotes <span class="metric">Δt ≤ h/c</span> as the stability limit
+          for explicit time-stepping on the wave equation. With a consistent mass matrix
+          that bound is wrong, and a scheme built on it diverges — quietly, because the
+          unstable mode is the one your initial data barely excites.
+        </p>
+
+        <div class="p-row">
+          <div class="p-label">My contribution</div>
+          <div class="p-body">
+            <ul>
+              <li>Two-person coursework report; everything below — the verification, the fix, the pipeline — is mine.</li>
+              <li>Built the reproduction harness that recomputes all four tables from source and fails on any mismatch against the published PDF. It runs in CI on every push.</li>
+              <li>Found and fixed a real reproducibility gap: the published <code>growth()</code> listing could not generate the report's own Table 3.</li>
+              <li>Wrote the figure pipeline that renders the report's figures and the web page's from one set of computed arrays, so the two cannot drift.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="p-row">
+          <div class="p-label">Approach</div>
+          <div class="p-body">
+            Closed-form spectrum of the stiffness/mass pair (S, T) · necessary <em>and</em>
+            sufficient stability condition · Ritz projection for the convergence proof ·
+            Thomas algorithm, O(N) per step · four numerical experiments · machine-checked
+            tables
+          </div>
+        </div>
+
+        <div class="p-row">
+          <div class="p-label">Result</div>
+          <div class="p-body">
+            Two distinct CFL constants where the literature usually states one:
+            <span class="metric">Δt &lt; h/(c√3)</span> for the consistent mass matrix and
+            <span class="metric">Δt &lt; h/c</span> for the lumped one. The measured
+            threshold matches the analytic <span class="metric">θ* to four significant
+            figures</span>, and convergence lands on <span class="metric">2.00</span> in
+            L² and <span class="metric">1.00</span> in H¹ across six refinements. All four
+            tables reproduce digit-for-digit — after the harness caught that the shipped
+            code was missing the <span class="metric">1e-8</span> mode seeding the report
+            describes.
+          </div>
+        </div>
+
+        <div class="p-stack">Python · NumPy · Matplotlib · LaTeX (XeLaTeX) · GitHub Actions</div>
+
+        <div class="p-links">
+          <a href="https://tu-h-nguyn.github.io/fem-wave-1d/" target="_blank" rel="noopener">Read the write-up</a>
+          <a href="https://tu-h-nguyn.github.io/fem-wave-1d/report-fem-wave-vi.pdf" target="_blank" rel="noopener">Full report (PDF, VI)</a>
+          <a href="https://github.com/tu-h-nguyn/fem-wave-1d" target="_blank" rel="noopener">View code</a>
+        </div>
+      </article>
+
+      <!-- ── 3 ── -->
       <article class="project">
         <div class="p-head">
           <h3>Transformer Volatility Forecasting</h3>
@@ -608,7 +668,7 @@
              the weakest item on this page. Replace the block below. -->
       </article>
 
-      <!-- ── 3 ── -->
+      <!-- ── 4 ── -->
       <article class="project">
         <div class="p-head">
           <h3>Quant Research Scout — LLM Agent</h3>
@@ -653,7 +713,7 @@
         <!-- TODO: add repo link. -->
       </article>
 
-      <!-- ── 4 ── -->
+      <!-- ── 5 ── -->
       <article class="project">
         <div class="p-head">
           <h3>Neural ODE Signal Pipeline</h3>
@@ -693,7 +753,7 @@
         <div class="p-stack">Python · PyTorch · SciML</div>
       </article>
 
-      <!-- ── 5 ── -->
+      <!-- ── 6 ── -->
       <article class="project">
         <div class="p-head">
           <h3>Mean-Reversion Strategy Backtest</h3>
@@ -844,7 +904,7 @@
         <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
       </form>
       <div class="contact-alt">
-        <a href="https://github.com/John-hcmus" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/tu-h-nguyn" target="_blank" rel="noopener">GitHub</a>
         <a href="https://www.linkedin.com/in/tuhcmus/" target="_blank" rel="noopener">LinkedIn</a>
         <a href="https://calendly.com/nhtuhcmus" target="_blank" rel="noopener">Book a call</a>
       </div>
