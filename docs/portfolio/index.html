@@ -849,6 +849,19 @@
           </div>
         </div>
 
+        <figure class="p-fig">
+          <img src="figures/lmm_method_a.png" width="1595" height="647" loading="lazy"
+               alt="Two panels. Left: the exact solution e to the minus t is a flat black line while the computed solution oscillates with growing amplitude, reaching plus or minus 40 by t = 6. Right: the error on a log axis climbs in a straight line from 1e-18 past 1e36, amplified about fivefold every step.">
+          <figcaption>
+            The theorem, made concrete. This method is consistent to <em>order 3</em> —
+            higher than BDF2 — and still diverges, because its ρ polynomial has a root at
+            z = −5 and the error is multiplied by five every step. Black is the exact
+            solution; by t = 6 the computed one has passed 10³⁷. Accuracy does not rescue
+            a method that is not zero-stable. (Axis labels in Vietnamese, from the
+            report.)
+          </figcaption>
+        </figure>
+
         <div class="p-stack">Python · NumPy · pytest · ruff · GitHub Actions · LaTeX</div>
 
         <div class="p-links">
