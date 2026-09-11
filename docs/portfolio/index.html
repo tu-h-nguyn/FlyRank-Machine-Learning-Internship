@@ -220,6 +220,30 @@
     }
     .ev-callout strong { font-weight: 600; }
 
+    /* ── Overview strip ──
+       The projects section runs half the page. This gives a skimmer the whole
+       of it in one screen before they decide what to open. */
+    .overview {
+      display: grid; gap: 1px; background: var(--border);
+      border: 1px solid var(--border); margin-bottom: 2.5rem;
+    }
+    .ov-row {
+      display: grid; grid-template-columns: 15rem 1fr; gap: 0.2rem 1rem;
+      background: var(--surface); padding: 0.7rem 1rem;
+      text-decoration: none; color: inherit;
+      transition: background 0.12s;
+    }
+    .ov-row:hover, .ov-row:focus-visible { background: var(--accent-light); outline: none; }
+    .ov-name {
+      font-family: var(--mono); font-size: 0.84rem; font-weight: 600;
+      color: var(--accent); letter-spacing: -0.01em;
+    }
+    .ov-metric { font-size: 0.83rem; color: var(--text-secondary); }
+    .ov-metric b { color: var(--text); font-weight: 600; font-family: var(--mono); }
+
+    /* Cards are jump targets now, so keep the sticky nav off their headings. */
+    .project { scroll-margin-top: 4.5rem; }
+
     /* ── Projects ── */
     .project {
       border-left: 3px solid var(--border-strong);
@@ -419,6 +443,7 @@
       .role { font-size: 0.95rem; }
       .ev-grid { grid-template-columns: 1fr; }
       .p-row { grid-template-columns: 1fr; gap: 0.1rem; }
+      .ov-row { grid-template-columns: 1fr; padding: 0.65rem 0.85rem; }
       .p-label { padding-top: 0.4rem; }
       .nav-links { gap: 0.8rem; }
       .nav-links a { font-size: 0.72rem; }
@@ -525,8 +550,40 @@
     <section id="projects">
       <h2>Selected projects</h2>
 
+      <p class="lede">
+        Six, all public. One line each below; the detail, the figures and the links
+        follow underneath.
+      </p>
+
+      <nav class="overview" aria-label="Project summary">
+        <a class="ov-row" href="#p-ranking">
+          <span class="ov-name">Search-Ranking Refresh Queue</span>
+          <span class="ov-metric">18,010 pages ranked · <b>0.88</b> precision@50 vs 0.74 baseline</span>
+        </a>
+        <a class="ov-row" href="#p-fem">
+          <span class="ov-name">Sharp CFL — FEM, wave equation</span>
+          <span class="ov-metric">Threshold matched to <b>four significant figures</b></span>
+        </a>
+        <a class="ov-row" href="#p-euler">
+          <span class="ov-name">Finite Volume — 1D Euler</span>
+          <span class="ov-metric">L¹ error <b>7.4× smaller</b> · 133 tests, 98% coverage</span>
+        </a>
+        <a class="ov-row" href="#p-lmm">
+          <span class="ov-name">Linear Multistep Methods</span>
+          <span class="ov-metric">Order within <b>0.12</b> of theory · BDF barrier derived, not quoted</span>
+        </a>
+        <a class="ov-row" href="#p-pinns">
+          <span class="ov-name">Neural Networks and PINNs</span>
+          <span class="ov-metric">Thesis · <b>six</b> experiments with committed results</span>
+        </a>
+        <a class="ov-row" href="#p-ppa">
+          <span class="ov-name">Proximal Point Algorithms</span>
+          <span class="ov-metric">LASSO under <b>four</b> inner-accuracy schedules</span>
+        </a>
+      </nav>
+
       <!-- ── 1. Flagship: verifiable end to end ── -->
-      <article class="project flagship">
+      <article id="p-ranking" class="project flagship">
         <div class="p-head">
           <h3>Search-Ranking Refresh Queue</h3>
           <span class="p-status live">Paper + code public</span>
@@ -608,7 +665,7 @@
 
       <!-- ── 2. Second public artifact: maths depth, verified end to end.
                Lives in its own repo — see https://github.com/tu-h-nguyn/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation ── -->
-      <article class="project">
+      <article id="p-fem" class="project">
         <div class="p-head">
           <h3>Sharp CFL Analysis — FEM for the Wave Equation</h3>
           <span class="p-status live">Report + code public</span>
@@ -677,7 +734,7 @@
       </article>
 
       <!-- ── 3. Numerics track: four-person coursework, public package ── -->
-      <article class="project">
+      <article id="p-euler" class="project">
         <div class="p-head">
           <h3>Finite-Volume Solver for the 1D Euler Equations</h3>
           <span class="p-status live">Package + tests public</span>
@@ -743,7 +800,7 @@
       </article>
 
       <!-- ── 4 ── -->
-      <article class="project">
+      <article id="p-lmm" class="project">
         <div class="p-head">
           <h3>Linear Multistep Methods — Dahlquist, Derived Not Quoted</h3>
           <span class="p-status live">Library + tests public</span>
@@ -800,7 +857,7 @@
       </article>
 
       <!-- ── 5 ── -->
-      <article class="project">
+      <article id="p-pinns" class="project">
         <div class="p-head">
           <h3>Neural Networks and PINNs for Differential Equations</h3>
           <span class="p-status live">Thesis + code public</span>
@@ -840,7 +897,7 @@
       </article>
 
       <!-- ── 6 ── -->
-      <article class="project">
+      <article id="p-ppa" class="project">
         <div class="p-head">
           <h3>Inexact and Accelerated Proximal Point Algorithms</h3>
           <span class="p-status live">Report + code public</span>
