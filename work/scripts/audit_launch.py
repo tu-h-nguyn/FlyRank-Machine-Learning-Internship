@@ -49,6 +49,10 @@ def png_size(path):
 
 cfg = json.loads(CONFIG.read_text(encoding="utf-8"))
 BASE = cfg["base_url"].rstrip("/")
+# Sites this one links to deliberately (a sibling project on its own Pages
+# address, say). Without this every intentional outbound link reads as a
+# leftover of the previous address.
+EXTERNAL = tuple(u.rstrip("/") for u in cfg.get("external_sites", []))
 CODE = cfg.get("goatcounter_code", "")
 VERIFY = cfg.get("badge_verify_url", "")
 
@@ -113,10 +117,16 @@ for name, path, url in PAGES:
     check("theme-color set", bool(meta(html, "name", "theme-color")))
 
     # --- analytics ---
+    # Two snippets can carry it: GoatCounter (data-goatcounter) and GA4
+    # (gtag config). Either one counted is enough — the site currently runs
+    # GA4 with GoatCounter left unset, and flagging that forever is noise.
     tag = re.search(r'data-goatcounter="([^"]*)"', html)
-    if check("analytics snippet present", bool(tag)):
-        endpoint = tag.group(1)
-        check("analytics code configured", bool(endpoint), endpoint or "empty — nothing will be counted")
+    ga4 = re.search(r"gtag\('config',\s*'(G-[A-Z0-9]+)'\)", html)
+    if check("analytics snippet present", bool(tag) or bool(ga4)):
+        endpoint = tag.group(1) if tag else ""
+        measured = endpoint or (ga4.group(1) if ga4 else "")
+        check("analytics code configured", bool(measured),
+              measured or "empty — nothing will be counted")
         if endpoint:
             check("analytics endpoint well formed",
                   re.fullmatch(r"https://[a-z0-9-]+\.goatcounter\.com/count", endpoint) is not None,
@@ -142,8 +152,9 @@ check("the two pages have different titles", titles.get("paper") != titles.get("
 stray = set()
 for f in list(DOCS.rglob("*.html")) + list(DOCS.rglob("*.xml")):
     for m in re.finditer(r'https://[a-z0-9.-]*(?:github\.io|is-a\.dev)[^\s"\'<>]*', f.read_text(encoding="utf-8")):
-        if not m.group(0).startswith(BASE):
-            stray.add(m.group(0))
+        url = m.group(0)
+        if not url.startswith(BASE) and not url.startswith(EXTERNAL):
+            stray.add(url)
 check("no URLs left pointing at the old address", not stray, "; ".join(sorted(stray)[:3]))
 
 sitemap = DOCS / "sitemap.xml"

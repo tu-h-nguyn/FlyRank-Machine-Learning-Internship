@@ -1,8 +1,12 @@
 {
-  "_comment": "Single source of truth for the public site. Change a value here, then run: python3 work/scripts/configure_site.py",
-  "base_url": "https://john-hcmus.github.io/flyrank-ML-internship-starter",
+  "_comment": "Single source of truth for the public site. Change a value here, then run: python3 work/scripts/configure_site.py. external_sites lists other sites this one links to on purpose, so the launch audit does not flag them as stale URLs.",
+  "base_url": "https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship",
   "base_url_target": "https://hoangtu.is-a.dev",
   "goatcounter_code": "",
+  "ga4_id": "G-KGRCWRY9BV",
   "badge_verify_url": "https://internship.flyrank.ai/verify?id=FR-D2-T779H-R890R&first_name=T%C3%BA",
-  "google_site_verification": "RoBPPTMe-SpFcYKFTp-OJqG3KOfBKTTpeFSvSFcufJE"
+  "google_site_verification": "RoBPPTMe-SpFcYKFTp-OJqG3KOfBKTTpeFSvSFcufJE",
+  "external_sites": [
+    "https://tu-h-nguyn.github.io/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation/"
+  ]
 }

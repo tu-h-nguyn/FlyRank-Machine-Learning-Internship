@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nguyễn Hoàng Tú — Machine Learning / AI Engineer Intern</title>
   <meta name="description" content="Maths and CS undergraduate targeting ML / AI Engineer internships. Search-ranking system with a public paper: 18,010 pages ranked, 0.88 precision@50.">
-  <link rel="canonical" href="https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/">
+  <link rel="canonical" href="https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="author" content="Nguyễn Hoàng Tú">
   <meta name="theme-color" content="#0369a1">
@@ -16,8 +16,8 @@
   <meta property="og:site_name" content="Nguyễn Hoàng Tú">
   <meta property="og:title" content="Nguyễn Hoàng Tú — Machine Learning / AI Engineer Intern">
   <meta property="og:description" content="Mathematics and Computer Science undergraduate targeting Machine Learning / AI Engineer internships. Search-ranking system with a published paper and reproducible code: 18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline.">
-  <meta property="og:url" content="https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/">
-  <meta property="og:image" content="https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/og.png">
+  <meta property="og:url" content="https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/">
+  <meta property="og:image" content="https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Nguyễn Hoàng Tú, Machine Learning / AI Engineer Intern — 18,010 pages ranked, 0.88 precision@50, public paper and code.">
@@ -25,7 +25,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Nguyễn Hoàng Tú — Machine Learning / AI Engineer Intern">
   <meta name="twitter:description" content="Mathematics and Computer Science undergraduate targeting Machine Learning / AI Engineer internships. Search-ranking system with a published paper and reproducible code: 18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline.">
-  <meta name="twitter:image" content="https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/og.png">
+  <meta name="twitter:image" content="https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/og.png">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
@@ -44,14 +44,14 @@
     "@type": "Person",
     "name": "Nguyễn Hoàng Tú",
     "alternateName": "Tu Nguyen",
-    "url": "https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/",
-    "image": "https://john-hcmus.github.io/flyrank-ML-internship-starter/portfolio/og.png",
+    "url": "https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/",
+    "image": "https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/og.png",
     "jobTitle": "Machine Learning Engineer / AI Engineer Intern",
     "description": "Mathematics and Computer Science undergraduate targeting Machine Learning / AI Engineer internships. Search-ranking system with a published paper and reproducible code: 18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline.",
     "knowsAbout": ["Machine Learning", "Deep Learning", "PyTorch", "Time Series Forecasting",
                    "Ranking Systems", "Data Leakage Auditing", "Python", "scikit-learn"],
     "sameAs": [
-      "https://github.com/John-hcmus",
+      "https://github.com/tu-h-nguyn",
       "https://www.linkedin.com/in/tuhcmus/"
     ]
   }
@@ -445,7 +445,7 @@
       </p>
       <div class="cta-row">
         <a class="btn btn-primary" href="#projects">View projects</a>
-        <a class="btn btn-secondary" href="https://github.com/John-hcmus" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-secondary" href="https://github.com/tu-h-nguyn" target="_blank" rel="noopener">GitHub</a>
       </div>
       <div class="hero-links">
         <a href="https://www.linkedin.com/in/tuhcmus/" target="_blank" rel="noopener">LinkedIn</a>
@@ -559,169 +559,288 @@
         <div class="p-stack">Python · scikit-learn · pandas · NumPy · Matplotlib</div>
 
         <div class="p-links">
-          <a href="https://john-hcmus.github.io/flyrank-ML-internship-starter/" target="_blank" rel="noopener">Read the paper</a>
-          <a href="https://github.com/John-hcmus/flyrank-ML-internship-starter" target="_blank" rel="noopener">View code</a>
+          <a href="https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/" target="_blank" rel="noopener">Read the paper</a>
+          <a href="https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship" target="_blank" rel="noopener">View code</a>
         </div>
       </article>
 
-      <!-- ── 2 ── -->
+      <!-- ── 2. Second public artifact: maths depth, verified end to end.
+               Lives in its own repo — see https://github.com/tu-h-nguyn/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation ── -->
       <article class="project">
         <div class="p-head">
-          <h3>Transformer Volatility Forecasting</h3>
+          <h3>Sharp CFL Analysis — FEM for the Wave Equation</h3>
+          <span class="p-status live">Report + code public</span>
         </div>
         <p class="p-problem">
-          Realized volatility on financial time series is noisy, heteroskedastic and
-          badly served by point forecasts — can an attention model beat the standard
-          econometric baseline on the same walk-forward protocol?
+          Every course quotes <span class="metric">Δt ≤ h/c</span> as the stability limit
+          for explicit time-stepping on the wave equation. With a consistent mass matrix
+          that bound is wrong, and a scheme built on it diverges — quietly, because the
+          unstable mode is the one your initial data barely excites.
         </p>
 
         <div class="p-row">
           <div class="p-label">My contribution</div>
           <div class="p-body">
-            Designed and trained a Transformer encoder for volatility forecasting, and
-            built the full pipeline from raw tick data through resampling and feature
-            construction to inference.
+            <ul>
+              <li>Two-person coursework report; everything below — the verification, the fix, the pipeline — is mine.</li>
+              <li>Built the reproduction harness that recomputes all four tables from source and fails on any mismatch against the published PDF. It runs in CI on every push.</li>
+              <li>Found and fixed a real reproducibility gap: the published <code>growth()</code> listing could not generate the report's own Table 3.</li>
+              <li>Wrote the figure pipeline that renders the report's figures and the web page's from one set of computed arrays, so the two cannot drift.</li>
+            </ul>
           </div>
         </div>
 
         <div class="p-row">
           <div class="p-label">Approach</div>
           <div class="p-body">
-            Transformer encoder architecture · data pipeline from raw ticks ·
-            walk-forward validation · benchmarking against GARCH and LSTM baselines ·
-            MAE and directional accuracy across rolling test windows
+            Closed-form spectrum of the stiffness/mass pair (S, T) · necessary <em>and</em>
+            sufficient stability condition · Ritz projection for the convergence proof ·
+            Thomas algorithm, O(N) per step · four numerical experiments · machine-checked
+            tables
           </div>
         </div>
 
         <div class="p-row">
           <div class="p-label">Result</div>
           <div class="p-body">
-            Lower MAE and better directional accuracy than the GARCH and LSTM
-            baselines across rolling test windows, under the same walk-forward
-            protocol for every model.
+            Two distinct CFL constants where the literature usually states one:
+            <span class="metric">Δt &lt; h/(c√3)</span> for the consistent mass matrix and
+            <span class="metric">Δt &lt; h/c</span> for the lumped one. The measured
+            threshold matches the analytic <span class="metric">θ* to four significant
+            figures</span>, and convergence lands on <span class="metric">2.00</span> in
+            L² and <span class="metric">1.00</span> in H¹ across six refinements. All four
+            tables reproduce digit-for-digit — after the harness caught that the shipped
+            code was missing the <span class="metric">1e-8</span> mode seeding the report
+            describes.
           </div>
         </div>
 
-        <div class="p-stack">Python · PyTorch · pandas · NumPy</div>
+        <div class="p-stack">Python · NumPy · Matplotlib · LaTeX (XeLaTeX) · GitHub Actions</div>
 
-        <!-- TODO: add repo link once the code is public — a project with no link is
-             the weakest item on this page. Replace the block below. -->
+        <div class="p-links">
+          <a href="https://tu-h-nguyn.github.io/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation/" target="_blank" rel="noopener">Read the write-up</a>
+          <a href="https://tu-h-nguyn.github.io/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation/report-fem-wave-vi.pdf" target="_blank" rel="noopener">Full report (PDF, VI)</a>
+          <a href="https://github.com/tu-h-nguyn/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation" target="_blank" rel="noopener">View code</a>
+        </div>
       </article>
 
-      <!-- ── 3 ── -->
+      <!-- ── 3. Numerics track: four-person coursework, public package ── -->
       <article class="project">
         <div class="p-head">
-          <h3>Quant Research Scout — LLM Agent</h3>
+          <h3>Finite-Volume Solver for the 1D Euler Equations</h3>
+          <span class="p-status live">Package + tests public</span>
         </div>
         <p class="p-problem">
-          Keeping up with quantitative-finance research means scanning arXiv and GitHub
-          every week and deciding what is worth reading — repetitive triage that is
-          mostly relevance judgement.
+          The Euler equations grow shocks, contacts and rarefaction fans out of smooth
+          initial data. A scheme that looks convincing on a smooth problem can be
+          quietly wrong at a discontinuity — so the question is not whether the plot
+          looks right, but what it is being measured against.
         </p>
-
-        <div class="p-row">
-          <div class="p-label">My contribution</div>
-          <div class="p-body">
-            Built an agent that pulls candidates from arXiv and GitHub, scores them
-            with keyword matching plus LLM ranking, and writes a structured weekly
-            briefing. Designed the fallback path so the agent degrades to
-            GitHub-based proxies and local scoring instead of failing when the API
-            quota runs out.
-          </div>
-        </div>
 
         <div class="p-row">
           <div class="p-label">Approach</div>
           <div class="p-body">
-            API integration · retrieval and filtering · hybrid keyword + LLM relevance
-            ranking · structured output generation · graceful degradation under rate
-            limits
+            An <strong>exact Riemann solver as ground truth</strong>, then everything
+            measured against it: four numerical fluxes (Lax–Friedrichs, Rusanov, HLL,
+            HLLC) · MUSCL piecewise-linear reconstruction with four TVD limiters and a
+            positivity safeguard · three SSP time integrators · a CLI and a library API
           </div>
         </div>
 
         <div class="p-row">
           <div class="p-label">Result</div>
           <div class="p-body">
-            A working weekly briefing pipeline that keeps producing usable output when
-            the LLM API is unavailable — the fallback design is the part I would
-            defend in an interview.
+            On Sod's shock tube (N = 200, CFL 0.4, t = 0.2) the L¹ error in density
+            falls from <span class="metric">3.274e−02</span> for Lax–Friedrichs to
+            <span class="metric">4.446e−03</span> for MUSCL–minmod —
+            <span class="metric">7.4× smaller</span> on the same grid. A grid-convergence
+            study confirms the schemes reach their design order rather than merely
+            looking smooth. <span class="metric">133 tests</span>,
+            <span class="metric">98% coverage</span>, mypy clean, CI on every push, MIT.
           </div>
         </div>
 
-        <div class="p-stack">Python · Claude API · GitHub API · arXiv API</div>
+        <!-- TODO (Tú): one line on which parts were yours — four-person project,
+             so a reader cannot tell from the repo alone. -->
+        <div class="p-row">
+          <div class="p-label">Team</div>
+          <div class="p-body">
+            Four-person coursework — Nông Thanh Toàn, Nguyễn Hoàng Tú, Lê Minh Tuấn Kiệt,
+            Đặng Kim Bảng. <em>Chuyên đề giải tích số</em>, VNU-HCM University of
+            Science, 2025.
+          </div>
+        </div>
 
-        <!-- TODO: add repo link. -->
+        <div class="p-stack">Python · NumPy · pytest · mypy · GitHub Actions · LaTeX</div>
+
+        <div class="p-links">
+          <a href="https://github.com/tu-h-nguyn/The-Finite-Volume-Method-for-One-Dimensional-Euler-Equations" target="_blank" rel="noopener">View code</a>
+        </div>
       </article>
 
       <!-- ── 4 ── -->
       <article class="project">
         <div class="p-head">
-          <h3>Neural ODE Signal Pipeline</h3>
-          <span class="p-status">In progress</span>
+          <h3>Linear Multistep Methods — Dahlquist, Derived Not Quoted</h3>
+          <span class="p-status live">Library + tests public</span>
         </div>
         <p class="p-problem">
-          Discrete-time models fit noisy physical signals without respecting the
-          dynamics that generated them, which shows up as poor behaviour between
-          observations and under irregular sampling.
+          Courses state the equivalence theorem — a linear multistep method converges
+          if and only if it is consistent and zero-stable — and the BDF barrier at
+          k ≤ 6, as facts to memorise. Both are checkable by machine, and checking them
+          is more instructive than quoting them.
         </p>
-
-        <div class="p-row">
-          <div class="p-label">My contribution</div>
-          <div class="p-body">
-            Building a signal-generation and modelling pipeline on neural ordinary
-            differential equations and physics-informed networks, so that physical
-            priors enter the loss rather than being hoped for.
-          </div>
-        </div>
 
         <div class="p-row">
           <div class="p-label">Approach</div>
           <div class="p-body">
-            Neural ODEs · physics-informed loss terms · continuous-time latent
-            dynamics · comparison against discrete-time sequence baselines
+            A library that <strong>hard-codes no conclusions</strong>. Feed it the
+            coefficients (α<sub>j</sub>, β<sub>j</sub>) and it derives the order, the
+            error constant, the roots of the characteristic polynomial, zero-stability
+            and the absolute-stability region — so the textbook claims become test
+            assertions rather than prose.
           </div>
         </div>
 
         <div class="p-row">
-          <div class="p-label">Status</div>
+          <div class="p-label">Result</div>
           <div class="p-body">
-            In progress — no evaluation results yet. Listed because it is what I am
-            actively working on, not as a finished claim.
+            Measured order agrees with theory to within
+            <span class="metric">0.12</span> across eight zero-stable methods. BDF loses
+            zero-stability exactly at <span class="metric">k = 7</span>
+            (max|z<sub>i</sub>| = 1.0222) — the k ≤ 6 boundary falls out of the polynomial
+            roots instead of being assumed. And the point of the whole theorem, made
+            concrete: a consistent <em>order-3</em> method that is not zero-stable
+            reaches error <span class="metric">10³⁷</span> by t = 6.
+            <span class="metric">86 tests</span>, CI, MIT.
           </div>
         </div>
 
-        <div class="p-stack">Python · PyTorch · SciML</div>
+        <!-- TODO (Tú): one line on which parts were yours — three-person project. -->
+        <div class="p-row">
+          <div class="p-label">Team</div>
+          <div class="p-body">
+            Three-person coursework — L. T. Nhân, D. T. H. Yến, N. H. Tú.
+            63-page report and 50-page slide deck, both in the repo.
+          </div>
+        </div>
+
+        <div class="p-stack">Python · NumPy · pytest · ruff · GitHub Actions · LaTeX</div>
+
+        <div class="p-links">
+          <a href="https://github.com/tu-h-nguyn/Stability-Consistency-and-Convergence-of-Linear-Multistep-Methods" target="_blank" rel="noopener">View code</a>
+        </div>
       </article>
 
       <!-- ── 5 ── -->
       <article class="project">
         <div class="p-head">
-          <h3>Mean-Reversion Strategy Backtest</h3>
-          <span class="p-status">Side project</span>
+          <h3>Neural Networks and PINNs for Differential Equations</h3>
+          <span class="p-status live">Thesis + code public</span>
         </div>
         <p class="p-problem">
-          A statistical signal that looks profitable in-sample usually is not — the
-          interesting part is the validation protocol, not the strategy.
+          Physics-informed neural networks are usually introduced as a recipe. The
+          thesis works the other way round: the approximation theory first, then the
+          experiments that show where the theory bites.
         </p>
 
         <div class="p-row">
-          <div class="p-label">My contribution</div>
+          <div class="p-label">What is in it</div>
           <div class="p-body">
-            Implemented and backtested a mean-reversion options strategy with explicit
-            risk-management rules, evaluated walk-forward rather than on a single
-            split, and reported Sharpe alongside the assumptions it depends on.
+            A LaTeX thesis on the theoretical foundations of neural networks and PINNs,
+            plus a <code>pinns</code> package with six numbered experiments —
+            ReLU approximation, the λ trade-off, spectral bias, the heat equation,
+            Burgers' equation, and a stability study — each writing its results to
+            committed JSON, all reachable from one <code>run_all.py</code>.
           </div>
         </div>
+
+        <div class="p-row">
+          <div class="p-label">Honest scope</div>
+          <div class="p-body">
+            Undergraduate thesis, VNU-HCM University of Science. The experiments are
+            reproducible from the repo; unlike the projects above, this one does not
+            carry a test suite or CI, so treat the code as research code rather than a
+            library.
+          </div>
+        </div>
+
+        <div class="p-stack">Python · PyTorch · NumPy · LaTeX</div>
+
+        <div class="p-links">
+          <a href="https://github.com/tu-h-nguyn/Foundations-of-Neural-Networks-and-PINNs-for-Differential-Equations" target="_blank" rel="noopener">View thesis &amp; code</a>
+        </div>
+      </article>
+
+      <!-- ── 6 ── -->
+      <article class="project">
+        <div class="p-head">
+          <h3>Inexact and Accelerated Proximal Point Algorithms</h3>
+          <span class="p-status live">Report + code public</span>
+        </div>
+        <p class="p-problem">
+          The accelerated proximal point method assumes each inner subproblem is solved
+          exactly. In practice it never is — so the question is how much inexactness the
+          O(1/k²) rate survives.
+        </p>
 
         <div class="p-row">
           <div class="p-label">Approach</div>
           <div class="p-body">
-            Statistical signal construction · walk-forward backtesting · risk rules ·
-            Sharpe ratio analysis
+            A synthetic LASSO (n = 80, m = 30, sparsity 8) run through the inexact
+            accelerated method against a classical proximal-point baseline, under four
+            inner-loop schedules — constant, log, √k, and exact — each traced against
+            the O(1/k) and O(1/k²) reference rates, plus a direct numerical check of the
+            convergence bound proved in the report.
           </div>
         </div>
 
-        <div class="p-stack">Python · backtrader · pandas · statistics</div>
+        <div class="p-row">
+          <div class="p-label">Result</div>
+          <div class="p-body">
+            The experiments show which inner-accuracy schedules preserve the accelerated
+            rate and which decay to the unaccelerated one — the theorem's hypothesis
+            made visible rather than assumed.
+          </div>
+        </div>
+
+        <!-- TODO (Tú): one line on which parts were yours — group project (Nhóm 10). -->
+        <div class="p-row">
+          <div class="p-label">Team</div>
+          <div class="p-body">
+            Group coursework (Nhóm 10), optimisation topic. Report, slides and a
+            presentation transcript in the repo.
+          </div>
+        </div>
+
+        <div class="p-stack">MATLAB · LaTeX</div>
+
+        <div class="p-links">
+          <a href="https://github.com/tu-h-nguyn/Inexact-and-Accelerated-Proximal-Point-Algorithms" target="_blank" rel="noopener">View code</a>
+        </div>
+      </article>
+
+      <!-- ── Everything whose code is not public yet. Kept short on purpose:
+           a claim with nothing to open is worth a line, not a card. ── -->
+      <article class="project">
+        <div class="p-head">
+          <h3>Other work, code not public</h3>
+        </div>
+        <p class="p-problem">
+          Listed for completeness rather than as evidence — there is nothing to open
+          here yet, so take these as background, not as claims you can check.
+        </p>
+        <div class="p-row">
+          <div class="p-label">Projects</div>
+          <div class="p-body">
+            <ul>
+              <li><strong>Transformer volatility forecasting</strong> — attention encoder on realized volatility, benchmarked walk-forward against GARCH and LSTM.</li>
+              <li><strong>Quant research scout</strong> — an LLM agent that triages weekly arXiv and GitHub output for relevance.</li>
+              <li><strong>Neural ODE signal pipeline</strong> — continuous-time model over irregularly sampled series.</li>
+              <li><strong>Mean-reversion backtest</strong> — options strategy evaluated walk-forward with explicit risk rules.</li>
+            </ul>
+          </div>
+        </div>
       </article>
     </section>
 
@@ -844,7 +963,7 @@
         <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
       </form>
       <div class="contact-alt">
-        <a href="https://github.com/John-hcmus" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/tu-h-nguyn" target="_blank" rel="noopener">GitHub</a>
         <a href="https://www.linkedin.com/in/tuhcmus/" target="_blank" rel="noopener">LinkedIn</a>
         <a href="https://calendly.com/nhtuhcmus" target="_blank" rel="noopener">Book a call</a>
       </div>

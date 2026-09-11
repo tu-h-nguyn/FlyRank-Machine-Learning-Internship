@@ -124,7 +124,7 @@ the quota resets — with no alert to me and a green "message sent" shown to the
 This is the failure I would fix first if the site mattered commercially.
 
 **4. `robots.txt` cannot work here.** Crawlers only read it at the domain root
-(`john-hcmus.github.io/robots.txt`), which I do not control — this is a project page on
+(`tu-h-nguyn.github.io/robots.txt`), which I do not control — this is a project page on
 a shared domain. I shipped `sitemap.xml` instead and will submit it manually through
 Search Console. A custom domain would remove this limitation.
 

@@ -45,13 +45,19 @@ RULE = R["Rule baseline (decision-time columns)"]
 W4 = R["Week-4 rule (window-contaminated)"]
 RAND = R["Random ordering"]
 
-REPO_URL = "https://github.com/John-hcmus/flyrank-ML-internship-starter"
+REPO_URL = "https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship"
+# The directory `git clone` creates, so the repro block below cannot drift
+# away from REPO_URL when the repo is renamed.
+REPO_DIR = REPO_URL.rsplit("/", 1)[-1]
 
 # The public address, analytics code and badge link live in one place so that
 # going live on a new domain is one command; see work/scripts/configure_site.py.
 SITE = json.loads((REPO / "work" / "portfolio" / "site.json").read_text())
 SITE_URL = SITE["base_url"].rstrip("/")
 GOATCOUNTER = SITE.get("goatcounter_code", "")
+# GA4 lives in site.json too. It used to be hand-pasted into docs/index.html,
+# which meant every rebuild of this page silently dropped the tag.
+GA4 = SITE.get("ga4_id", "")
 BADGE_VERIFY = SITE.get("badge_verify_url", "") or "#badge-not-configured"
 GSV = SITE.get("google_site_verification", "")
 NB = f"{REPO_URL}/blob/main/work/notebooks"
@@ -765,7 +771,7 @@ BODY = f'''
   <p>Every number on this page is produced by one script and stored as JSON in the repository, and this
   page is generated from those files — so the paper cannot drift away from the pipeline.</p>
 <pre>git clone {REPO_URL}
-cd flyrank-ml-internship-starter
+cd {REPO_DIR}
 pip install -r requirements.txt
 
 python work/scripts/capstone_pipeline.py   # metrics + figures  (~25s, seed 42)
@@ -847,6 +853,16 @@ ANALYTICS = f'''
   }})();
 </script>'''
 
+GA4_TAG = f'''<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={GA4}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', '{GA4}');
+</script>
+''' if GA4 else ""
+
 DESCRIPTION = ("Ranking 18,010 pages by 30-day search-decline risk on real anonymized FlyRank data — "
                "and finding that the obvious baseline rule could not rank at all.")
 
@@ -876,7 +892,7 @@ full = f'''<!doctype html>
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="Nguyễn Hoàng Tú">
 <meta name="theme-color" content="#0b5fb0">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+{GA4_TAG}<link rel="icon" href="favicon.svg" type="image/svg+xml">
 {FONTS}
 <style>{CSS}</style>
 </head>
