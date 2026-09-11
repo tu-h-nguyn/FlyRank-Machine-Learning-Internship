@@ -56,7 +56,7 @@ to it. The site goes dark until DNS catches up. That is why the repo is still ca
 To back out at any point:
 
 ```bash
-python3 work/scripts/configure_site.py --base https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship
+python3 work/scripts/configure_site.py --base https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship
 ```
 
 ## 2. Analytics — GoatCounter

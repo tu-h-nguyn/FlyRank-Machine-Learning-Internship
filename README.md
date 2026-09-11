@@ -33,15 +33,15 @@ Click any badge below to open the notebook directly:
 
 | Notebook | What it does | Open |
 |---|---|---|
-| `01_first_look_and_discovery` | Explore the dataset, find your first real pattern | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-End-to-End-Machine-Learning-Project-Internship/blob/main/notebooks/01_first_look_and_discovery.ipynb?flush_cache=true) |
-| `02_your_first_readable_model` | Build a transparent rule-based model | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-End-to-End-Machine-Learning-Project-Internship/blob/main/notebooks/02_your_first_readable_model.ipynb?flush_cache=true) |
-| `capstone` | Full capstone: leakage-free pipeline end to end | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-End-to-End-Machine-Learning-Project-Internship/blob/main/work/notebooks/capstone.ipynb?flush_cache=true) |
+| `01_first_look_and_discovery` | Explore the dataset, find your first real pattern | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-Machine-Learning-Internship/blob/main/notebooks/01_first_look_and_discovery.ipynb?flush_cache=true) |
+| `02_your_first_readable_model` | Build a transparent rule-based model | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-Machine-Learning-Internship/blob/main/notebooks/02_your_first_readable_model.ipynb?flush_cache=true) |
+| `capstone` | Full capstone: leakage-free pipeline end to end | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-Machine-Learning-Internship/blob/main/work/notebooks/capstone.ipynb?flush_cache=true) |
 
 ### Option B: Local
 
 ```bash
-git clone https://github.com/tu-h-nguyn/FlyRank-End-to-End-Machine-Learning-Project-Internship.git
-cd FlyRank-End-to-End-Machine-Learning-Project-Internship
+git clone https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship.git
+cd FlyRank-Machine-Learning-Internship
 pip install -r requirements.txt
 
 # Run the reference pipeline (~10s on the bundled 30k-row sample)
@@ -178,8 +178,8 @@ All metrics are **out-of-fold** under `GroupKFold(5)` grouped by `client_id`. Ba
 
 ## Deployed outputs
 
-- **Research paper:** [tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship](https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/)
-- **Portfolio site:** [tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/portfolio](https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/portfolio/)
+- **Research paper:** [tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship](https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/)
+- **Portfolio site:** [tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio](https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/)
 - **FEM wave equation write-up** (separate repo): [https://tu-h-nguyn.github.io/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation/](https://tu-h-nguyn.github.io/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation/) — sharp CFL analysis, every table machine-verified ([code](https://github.com/tu-h-nguyn/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation))
 
 ---
@@ -198,8 +198,8 @@ This project was built with Claude (Anthropic) as an AI coding assistant. Specif
 ## Reproducibility
 
 ```bash
-git clone https://github.com/tu-h-nguyn/FlyRank-End-to-End-Machine-Learning-Project-Internship.git
-cd FlyRank-End-to-End-Machine-Learning-Project-Internship
+git clone https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship.git
+cd FlyRank-Machine-Learning-Internship
 pip install -r requirements.txt
 python work/scripts/capstone_pipeline.py   # ~25s; writes work/outputs/*.json + work/figures/*.svg
 ```

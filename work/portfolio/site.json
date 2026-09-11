@@ -1,6 +1,6 @@
 {
   "_comment": "Single source of truth for the public site. Change a value here, then run: python3 work/scripts/configure_site.py. external_sites lists other sites this one links to on purpose, so the launch audit does not flag them as stale URLs.",
-  "base_url": "https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship",
+  "base_url": "https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship",
   "base_url_target": "https://hoangtu.is-a.dev",
   "goatcounter_code": "",
   "ga4_id": "G-KGRCWRY9BV",

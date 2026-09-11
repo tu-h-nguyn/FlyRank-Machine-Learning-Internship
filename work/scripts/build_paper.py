@@ -45,7 +45,7 @@ RULE = R["Rule baseline (decision-time columns)"]
 W4 = R["Week-4 rule (window-contaminated)"]
 RAND = R["Random ordering"]
 
-REPO_URL = "https://github.com/tu-h-nguyn/FlyRank-End-to-End-Machine-Learning-Project-Internship"
+REPO_URL = "https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship"
 # The directory `git clone` creates, so the repro block below cannot drift
 # away from REPO_URL when the repo is renamed.
 REPO_DIR = REPO_URL.rsplit("/", 1)[-1]

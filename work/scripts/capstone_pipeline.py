@@ -139,7 +139,7 @@ LEAKY_EXTRA = [
 def load_raw() -> pd.DataFrame:
     if not DATA.exists():  # Colab / fresh clone without the sample
         url = ("https://raw.githubusercontent.com/tu-h-nguyn/"
-               "FlyRank-End-to-End-Machine-Learning-Project-Internship"
+               "FlyRank-Machine-Learning-Internship"
                "/main/data/raw/content_refresh_anonymized.csv")
         return pd.read_csv(url)
     return pd.read_csv(DATA)

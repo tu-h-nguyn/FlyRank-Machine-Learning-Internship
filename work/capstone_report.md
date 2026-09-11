@@ -2,7 +2,7 @@
 
 - **Author:** John (nguyenhoangtuk23hcmus@gmail.com)
 - **Lane:** Lane 2 — Refresh / Content Opportunity Scoring
-- **Repo:** https://github.com/tu-h-nguyn/FlyRank-End-to-End-Machine-Learning-Project-Internship
+- **Repo:** https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship
 - **Deployed paper:** see `submission/paper_url.txt`
 - **Date:** 2026-08-27
 - **Seed:** 42 · **Everything below is produced by** `work/scripts/capstone_pipeline.py`
@@ -303,8 +303,8 @@ holdouts), low in the middle (deciles 5–7 sit near the base rate), and out of 
 From a fresh clone:
 
 ```bash
-git clone https://github.com/tu-h-nguyn/FlyRank-End-to-End-Machine-Learning-Project-Internship
-cd FlyRank-End-to-End-Machine-Learning-Project-Internship
+git clone https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship
+cd FlyRank-Machine-Learning-Internship
 pip install -r requirements.txt
 python work/scripts/capstone_pipeline.py      # ~25s; writes work/outputs/*.json + work/figures/*.svg
 ```

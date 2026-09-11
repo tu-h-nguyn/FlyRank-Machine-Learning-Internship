@@ -21,7 +21,7 @@ shows the yellow "not connected yet" warning.
 GitHub Pages serves `docs/` from the **`main`** branch, so the page is not public until
 this branch is merged. Once it is, wait a minute or two and open:
 
-**https://tu-h-nguyn.github.io/FlyRank-End-to-End-Machine-Learning-Project-Internship/portfolio/**
+**https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/**
 
 ## 4. The real test — this is the actual deliverable
 
