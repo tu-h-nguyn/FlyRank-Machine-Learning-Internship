@@ -440,8 +440,10 @@
         Mathematics and Computer Science undergraduate. I build machine learning
         systems end to end — framing the decision the model has to support, auditing
         the data for leakage, building a baseline before reaching for a model, and
-        reporting what actually held up out of sample. Mostly Python and PyTorch, on
-        noisy time-series and ranking problems.
+        reporting what held up out of sample. The other half of my work is numerical
+        analysis: solvers whose error is measured against an exact solution, and
+        published results a script has to be able to regenerate. Both halves come down
+        to one habit — not trusting a number until something independent checks it.
       </p>
       <div class="cta-row">
         <a class="btn btn-primary" href="#projects">View projects</a>
@@ -458,9 +460,10 @@
     <section id="evidence">
       <h2>Evidence</h2>
       <p class="lede">
-        These figures come from one project whose paper, code and pipeline are public.
-        Every number is out-of-fold under a client-grouped split and reproducible from
-        a fixed seed.
+        These four come from the ranking system below, whose paper, code and pipeline
+        are public: every number is out-of-fold under a client-grouped split and
+        reproducible from a fixed seed. The projects after it carry their own, and the
+        note underneath is how they are kept honest.
       </p>
 
       <div class="ev-grid">
@@ -487,6 +490,16 @@
         Putting the window-overlapping columns back lifted precision@200 to 0.995 — a
         beautiful number that was leakage, not skill. The honest model scores lower,
         and it is the one I shipped.
+      </p>
+
+      <p class="ev-callout">
+        <strong>The same habit, turned on my own published results.</strong>
+        A report of mine carried four tables of numbers. Rebuilding them from the solver
+        reproduced three exactly and failed on the fourth — the code as shipped was
+        missing a step the text described, so it could not produce its own table. The
+        gap is fixed, and CI now recomputes all four tables and all 91 numbers on the
+        write-up page at every push, so the next such gap fails the build instead of
+        reaching a reader.
       </p>
     </section>
 
@@ -876,7 +889,13 @@
       <div class="skill-group">
         <div class="skill-name">Deep learning</div>
         <div class="skill-items">PyTorch, Transformer encoders, LSTMs, attention, training pipelines, neural ODEs and physics-informed losses</div>
-        <div class="skill-proof">→ Transformer Volatility Forecasting, Neural ODE Signal Pipeline</div>
+        <div class="skill-proof">→ <a href="#projects">Neural Networks and PINNs for Differential Equations</a> — thesis plus six experiments with committed results. Transformer and neural-ODE work sits under "Other work": code not public, so take it as background.</div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-name">Numerical methods and scientific computing</div>
+        <div class="skill-items">Finite element and finite volume methods, exact Riemann solvers, stability and convergence analysis, CFL conditions, mass lumping, TVD limiters, SSP integrators, LaTeX</div>
+        <div class="skill-proof">→ Four public repositories: a sharp CFL constant matched to four significant figures, L¹ error cut 7.4× on Sod's shock tube, 133 tests at 98% coverage, and Dahlquist's barriers derived from the coefficients rather than quoted from a book</div>
       </div>
 
       <div class="skill-group">
@@ -888,7 +907,7 @@
       <div class="skill-group">
         <div class="skill-name">Engineering</div>
         <div class="skill-items">Git, reproducible pipelines, fixed seeds, REST APIs, LLM integration, end-to-end testing, static deployment</div>
-        <div class="skill-proof">→ One script reproduces the whole capstone; this page's contact form is wired to a live backend and covered by a browser test suite</div>
+        <div class="skill-proof">→ One script reproduces the whole capstone; CI on two repositories recomputes published results on every push and fails the build on a mismatch; this page's contact form is wired to a live backend and covered by a browser test suite</div>
       </div>
     </section>
 
