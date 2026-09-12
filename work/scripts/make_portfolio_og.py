@@ -43,7 +43,7 @@ CARD = """
 <div class="stats">
   <div><div class="n">18,010</div><div class="l">pages ranked, out-of-fold</div></div>
   <div><div class="n">0.88</div><div class="l">precision@50 vs 0.74 baseline</div></div>
-  <div><div class="n">6 public</div><div class="l">repositories; four verify results in CI</div></div>
+  <div><div class="n">6 public</div><div class="l">repositories; three verify results in CI</div></div>
 </div>
 """
 

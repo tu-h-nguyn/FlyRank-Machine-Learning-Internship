@@ -268,6 +268,10 @@
       color: var(--text-muted);
     }
     .p-status.live { color: var(--ok); border-color: #bbf7d0; background: #f0fdf4; }
+    /* The blue rule down the left of this card meant "flagship" and nothing on the
+       page said so, which makes it decoration a reader has to decode. Now it has a
+       label in the same colour. */
+    .p-status.lead { color: var(--accent); border-color: var(--accent-light); background: var(--accent-light); }
 
     .p-problem {
       font-size: 0.9rem; color: var(--text); margin: 0.5rem 0 0.9rem;
@@ -499,14 +503,33 @@
       </div>
     </header>
 
+    <!-- ═══ EDUCATION ═══ -->
+    <section id="background">
+      <h2>Background</h2>
+      <div class="edu-role">
+        Mathematics and Computer Science, undergraduate —
+        VNU-HCM University of Science<br>
+        <span class="edu-when">Expected graduation October 2027</span>
+      </div>
+      <p class="edu-note">
+        Faculty of Mathematics and Computer Science. Probability, statistics and linear
+        algebra are the part of ML I lean on hardest — evaluation design, what a metric
+        is actually measuring, and when a difference between two models is not a
+        difference. The numerical-analysis side comes from three courses whose reports
+        and code are the projects below: numerical analysis for ODEs, for PDEs, and the
+        finite-volume topic course. Graduate of the FlyRank machine learning internship
+        track, of which the ranking capstone was the final deliverable — the credential
+        is verifiable from the badge at the foot of this page.
+      </p>
+    </section>
+
     <!-- ═══ EVIDENCE ═══ -->
     <section id="evidence">
       <h2>Evidence</h2>
       <p class="lede">
         These four come from the ranking system below, whose paper, code and pipeline
         are public: every number is out-of-fold under a client-grouped split and
-        reproducible from a fixed seed. The projects after it carry their own, and the
-        note underneath is how they are kept honest.
+        reproducible from a fixed seed.
       </p>
 
       <div class="ev-grid">
@@ -551,8 +574,8 @@
       <h2>Selected projects</h2>
 
       <p class="lede">
-        Six, all public. One line each below; the detail, the figures and the links
-        follow underneath.
+        Six, all with public code. Three of them run CI that recomputes their published
+        numbers on every push, so a claim that stops being true fails a build.
       </p>
 
       <nav class="overview" aria-label="Project summary">
@@ -586,6 +609,7 @@
       <article id="p-ranking" class="project flagship">
         <div class="p-head">
           <h3>Search-Ranking Refresh Queue</h3>
+          <span class="p-status lead">Flagship</span>
           <span class="p-status live">Paper + code public</span>
         </div>
         <p class="p-problem">
@@ -1034,26 +1058,6 @@
         <div class="skill-items">Git, reproducible pipelines, fixed seeds, REST APIs, LLM integration, end-to-end testing, static deployment</div>
         <div class="skill-proof">→ One script reproduces the whole capstone; CI on two repositories recomputes published results on every push and fails the build on a mismatch; this page's contact form is wired to a live backend and covered by a browser test suite</div>
       </div>
-    </section>
-
-    <!-- ═══ EDUCATION ═══ -->
-    <section id="background">
-      <h2>Background</h2>
-      <div class="edu-role">
-        Mathematics and Computer Science, undergraduate —
-        VNU-HCM University of Science<br>
-        <span class="edu-when">Expected graduation October 2027</span>
-      </div>
-      <p class="edu-note">
-        Faculty of Mathematics and Computer Science. Probability, statistics and linear
-        algebra are the part of ML I lean on hardest — evaluation design, what a metric
-        is actually measuring, and when a difference between two models is not a
-        difference. The numerical-analysis side comes from three courses whose reports
-        and code are the projects above: numerical analysis for ODEs, for PDEs, and the
-        finite-volume topic course. Graduate of the FlyRank machine learning internship
-        track, of which the ranking capstone was the final deliverable — the credential
-        is verifiable from the badge at the foot of this page.
-      </p>
     </section>
 
     <!-- ═══ CONTACT ═══ -->
