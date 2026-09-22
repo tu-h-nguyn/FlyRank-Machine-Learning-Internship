@@ -739,12 +739,14 @@
         </div>
 
         <figure class="p-fig">
-          <img src="figures/fem_stability.svg" width="509" height="242" loading="lazy"
-               alt="Amplitude against the step ratio at N=160. The full-mass curve turns vertical at 0.577, the lumped-mass curve at 1.0 — two walls where the analysis says they should be.">
+          <img src="figures/fem_solution.gif" width="691" height="259" loading="lazy"
+               alt="Animation, two panels of the same solve. Left, the first two periods: the computed solution sits on the exact one. Right, eighteen periods later: both still reach the same peaks but are visibly out of step.">
           <figcaption>
-            The measured thresholds, against the analysis: one wall at 1/√3 for the
-            consistent mass matrix, one at 1 for the lumped one. Regenerated on every
-            push by the repository's CI.
+            The scheme running, the same solve at two epochs. Early the computed curve
+            sits on the exact one; eighteen periods later they are out of step — and the
+            peak is <code>1.000000</code> against <code>0.999869</code> early, so that is
+            dispersion, not decay. Frames are computed states, one every second time
+            step, never interpolated.
           </figcaption>
         </figure>
 
