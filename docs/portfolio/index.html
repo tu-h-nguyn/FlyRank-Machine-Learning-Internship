@@ -574,7 +574,7 @@
       <h2>Selected projects</h2>
 
       <p class="lede">
-        Six, all with public code. Three of them run CI that recomputes their published
+        Six, all with public code. Five of them run CI that recomputes their published
         numbers on every push, so a claim that stops being true fails a build.
       </p>
 
@@ -921,10 +921,12 @@
         <div class="p-row">
           <div class="p-label">Honest scope</div>
           <div class="p-body">
-            Undergraduate thesis, VNU-HCM University of Science. The experiments are
-            reproducible from the repo; unlike the projects above, this one does not
-            carry a test suite or CI, so treat the code as research code rather than a
-            library.
+            Undergraduate thesis, VNU-HCM University of Science. The theory and the
+            proofs are mine; the test suite, the verification script and the CI came
+            later, with AI assistance, and the repository says which commits.
+            <strong>20 tests</strong> check the primitives against closed-form
+            mathematics, and <strong>39 checks</strong> re-derive every published
+            number on each push.
           </div>
         </div>
 
@@ -970,14 +972,19 @@
         <div class="p-row">
           <div class="p-label">My role</div>
           <div class="p-body">
-            <strong>The repository is mine</strong> — the MATLAB experiments and the
-            build that keeps report, slides and presentation script generated from one
-            set of source files rather than three drifting copies. The written work is
-            group coursework (Nhóm 10), optimisation topic.
+            <strong>The repository is mine</strong> — the MATLAB and Python
+            experiments, the build that keeps report, slides and presentation script
+            generated from one set of source files rather than three drifting copies,
+            and the verification that turned the report's convergence bound into
+            something CI checks: <strong>0 violations across 121 outer steps</strong>
+            for all five inner-accuracy schedules, plus the theorem's own hypothesis,
+            which the closed form satisfies exactly. <strong>90 checks</strong> in
+            total, mutation-tested — 10 deliberately planted bugs, all 10 caught. The
+            written work is group coursework (Nhóm 10), optimisation topic.
           </div>
         </div>
 
-        <div class="p-stack">MATLAB · LaTeX</div>
+        <div class="p-stack">MATLAB · Octave · Python · LaTeX</div>
 
         <div class="p-links">
           <a href="https://github.com/tu-h-nguyn/Inexact-and-Accelerated-Proximal-Point-Algorithms" target="_blank" rel="noopener">View code</a>
@@ -1058,7 +1065,7 @@
       <div class="skill-group">
         <div class="skill-name">Engineering</div>
         <div class="skill-items">Git, reproducible pipelines, fixed seeds, REST APIs, LLM integration, end-to-end testing, static deployment</div>
-        <div class="skill-proof">→ One script reproduces the whole capstone; CI on two repositories recomputes published results on every push and fails the build on a mismatch; this page's contact form is wired to a live backend and covered by a browser test suite</div>
+        <div class="skill-proof">→ One script reproduces the whole capstone; CI on five repositories recomputes published results on every push and fails the build on a mismatch; this page's contact form is wired to a live backend and covered by a browser test suite</div>
       </div>
     </section>
 
