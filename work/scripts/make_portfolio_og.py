@@ -35,7 +35,7 @@ CARD = """
 </style>
 <div class="bar"></div>
 <h1>Nguy&#7877;n Ho&agrave;ng T&uacute;</h1>
-<p class="role">Machine Learning Engineer / AI Engineer Intern</p>
+<p class="role">Applied mathematics &middot; Numerical analysis &middot; Machine learning</p>
 <p class="deck">ML systems end to end, and numerical solvers whose error is measured
    against an exact solution. Both come down to one habit: not trusting a number
    until something independent checks it.</p>
