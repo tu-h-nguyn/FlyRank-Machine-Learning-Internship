@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="google-site-verification" content="RoBPPTMe-SpFcYKFTp-OJqG3KOfBKTTpeFSvSFcufJE">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nguyễn Hoàng Tú — Machine Learning / AI Engineer Intern</title>
-  <meta name="description" content="Maths and CS undergraduate targeting ML / AI Engineer internships. Six public repos: a ranking system with a paper, plus numerical-analysis work verified in CI.">
+  <title>Nguyễn Hoàng Tú — Applied Mathematics &amp; Machine Learning</title>
+  <meta name="description" content="Mathematics and Computer Science undergraduate, VNU-HCM. Numerical analysis and machine learning across six public repositories, recomputed in CI.">
   <link rel="canonical" href="https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="author" content="Nguyễn Hoàng Tú">
@@ -14,17 +14,17 @@
   <!-- Social share preview -->
   <meta property="og:type" content="profile">
   <meta property="og:site_name" content="Nguyễn Hoàng Tú">
-  <meta property="og:title" content="Nguyễn Hoàng Tú — Machine Learning / AI Engineer Intern">
-  <meta property="og:description" content="Mathematics and Computer Science undergraduate targeting Machine Learning / AI Engineer internships. Six public repositories: a search-ranking system with a published paper (18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline) alongside finite element, finite volume and linear multistep work whose published numbers are recomputed in CI.">
+  <meta property="og:title" content="Nguyễn Hoàng Tú — Applied Mathematics &amp; Machine Learning">
+  <meta property="og:description" content="Mathematics and Computer Science undergraduate at VNU-HCM University of Science. Numerical analysis and machine learning: a sharp CFL constant derived and verified to four significant figures, a stability bound checked at every training step, and a search-ranking system with a published paper (18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline). Six public repositories, 359 automated tests, results recomputed in CI.">
   <meta property="og:url" content="https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/">
   <meta property="og:image" content="https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Nguyễn Hoàng Tú, Machine Learning / AI Engineer Intern — 18,010 pages ranked, 0.88 precision@50, six public repositories with results verified in CI.">
+  <meta property="og:image:alt" content="Nguyễn Hoàng Tú — applied mathematics and machine learning. 18,010 pages ranked out-of-fold, 0.88 precision@50, six public repositories with results recomputed in CI.">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Nguyễn Hoàng Tú — Machine Learning / AI Engineer Intern">
-  <meta name="twitter:description" content="Mathematics and Computer Science undergraduate targeting Machine Learning / AI Engineer internships. Six public repositories: a search-ranking system with a published paper (18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline) alongside finite element, finite volume and linear multistep work whose published numbers are recomputed in CI.">
+  <meta name="twitter:title" content="Nguyễn Hoàng Tú — Applied Mathematics &amp; Machine Learning">
+  <meta name="twitter:description" content="Mathematics and Computer Science undergraduate at VNU-HCM University of Science. Numerical analysis and machine learning: a sharp CFL constant derived and verified to four significant figures, a stability bound checked at every training step, and a search-ranking system with a published paper (18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline). Six public repositories, 359 automated tests, results recomputed in CI.">
   <meta name="twitter:image" content="https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/og.png">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -46,8 +46,8 @@
     "alternateName": "Tu Nguyen",
     "url": "https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/",
     "image": "https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/og.png",
-    "jobTitle": "Machine Learning Engineer / AI Engineer Intern",
-    "description": "Mathematics and Computer Science undergraduate targeting Machine Learning / AI Engineer internships. Six public repositories: a search-ranking system with a published paper (18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline) alongside finite element, finite volume and linear multistep projects whose published numbers are recomputed in CI.",
+    "jobTitle": "Applied mathematics, numerical analysis and machine learning",
+    "description": "Mathematics and Computer Science undergraduate at VNU-HCM University of Science. Numerical analysis and machine learning: a sharp CFL constant derived and verified to four significant figures, a stability bound checked at every training step, and a search-ranking system with a published paper (18,010 pages ranked out-of-fold, 0.88 precision@50 against a 0.74 rule baseline). Six public repositories, 359 automated tests, results recomputed in CI.",
     "knowsAbout": ["Machine Learning", "Deep Learning", "PyTorch", "Time Series Forecasting",
                    "Ranking Systems", "Data Leakage Auditing", "Python", "scikit-learn",
                    "Numerical Analysis", "Finite Element Method", "Finite Volume Method",
@@ -167,6 +167,87 @@
     .btn-secondary { background: transparent; color: var(--accent); }
     .btn-secondary:hover, .btn-secondary:focus-visible { background: var(--accent); color: #fff; outline: none; }
     .btn:focus-visible { box-shadow: 0 0 0 3px var(--accent-light); }
+
+    /* ── Hero statistics ─────────────────────────────────────────────── */
+    .stat-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; margin: 2rem 0 2.2rem;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .stat { padding: 0.95rem 0.6rem 0.9rem; text-align: left; }
+    .stat + .stat { border-left: 1px solid var(--border); padding-left: 0.95rem; }
+    .stat-num {
+      display: block; font-family: var(--mono); font-weight: 700;
+      font-size: 1.55rem; line-height: 1.1; color: var(--accent);
+      /* Fixed-width digits stop the row jittering while the numbers count up. */
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-lab {
+      display: block; margin-top: 0.3rem; font-size: 0.74rem; line-height: 1.35;
+      color: var(--text-muted); letter-spacing: 0.01em;
+    }
+    @media (max-width: 640px) {
+      .stat-strip { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(3) { border-left: none; padding-left: 0.6rem; }
+      .stat:nth-child(3), .stat:nth-child(4) { border-top: 1px solid var(--border); }
+      .stat-num { font-size: 1.35rem; }
+    }
+
+    /* ── Hero figure ─────────────────────────────────────────────────── */
+    .hero-fig { margin: 0 0 1.6rem; }
+    .hero-fig img {
+      width: 100%; height: auto; display: block;
+      border: 1px solid var(--border); border-radius: 6px; background: var(--surface);
+    }
+    .hero-fig figcaption {
+      margin-top: 0.7rem; font-size: 0.82rem; line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    .hero-fig figcaption a { white-space: nowrap; }
+
+    /* ── Scroll reveal ───────────────────────────────────────────────── */
+    /* Opacity and a small lift only: nothing reflows, so this cannot shift
+       text under a reader's eye mid-sentence. */
+    .reveal { opacity: 0; transform: translateY(14px); }
+    .reveal.shown {
+      opacity: 1; transform: none;
+      transition: opacity .55s ease, transform .55s cubic-bezier(.22,.61,.36,1);
+    }
+    /* Anyone who has asked their system not to animate gets the page static,
+       and — critically — fully visible, never stuck at opacity 0. */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal.shown { opacity: 1; transform: none; transition: none; }
+    }
+    /* Printing must never produce blank pages for sections the reader happened
+       not to have scrolled past. */
+    @media print {
+      .reveal, .reveal.shown { opacity: 1 !important; transform: none !important; }
+    }
+
+    /* ── Mathematics ─────────────────────────────────────────────────── */
+    /* Native MathML, no renderer and no CDN. The page is about numerical
+       analysis, so its formulae should be real mathematics rather than
+       sub/sup approximations -- and they should still be there when a CDN is
+       blocked, which is exactly when a reviewer is most likely to be reading. */
+    math { font-size: 1.06em; font-family: 'Latin Modern Math', 'STIX Two Math', 'Cambria Math', serif; }
+    /* Do NOT set `display: block` here. MathML has its own inner display type;
+       overriding it with the CSS block value makes every token lay out as a
+       separate block box and the formula collapses into a vertical column.
+       The display="block" attribute already centres it -- style only the box. */
+    math[display="block"] {
+      margin: 1.15rem 0;
+      overflow-x: auto; overflow-y: hidden;   /* long formulae scroll on a phone */
+    }
+    .eq {
+      margin: 1.2rem 0; padding: 0.9rem 1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent); border-radius: 4px;
+    }
+    .eq math[display="block"] { margin: 0.2rem 0; }
+    .eq-note {
+      margin: 0.55rem 0 0; font-size: 0.78rem; line-height: 1.55;
+      color: var(--text-muted); text-align: left;
+    }
 
     .hero-links {
       margin-top: 1rem; font-size: 0.82rem;
@@ -469,6 +550,7 @@
     <div class="nav-inner">
       <span class="nav-name">Nguyễn Hoàng Tú</span>
       <div class="nav-links">
+        <a href="#research">Research</a>
         <a href="#projects">Projects</a>
         <a href="#approach">Approach</a>
         <a href="#skills">Skills</a>
@@ -482,16 +564,43 @@
     <!-- ═══ HERO ═══ -->
     <header class="hero">
       <h1>Nguyễn Hoàng Tú</h1>
-      <p class="role">Machine Learning Engineer / AI Engineer Intern</p>
+      <p class="role">Applied mathematics &middot; Numerical analysis &middot; Machine learning</p>
       <p class="value-prop">
-        Mathematics and Computer Science undergraduate. I build machine learning
-        systems end to end — framing the decision the model has to support, auditing
-        the data for leakage, building a baseline before reaching for a model, and
-        reporting what held up out of sample. The other half of my work is numerical
-        analysis: solvers whose error is measured against an exact solution, and
-        published results a script has to be able to regenerate. Both halves come down
-        to one habit — not trusting a number until something independent checks it.
+        Mathematics and Computer Science undergraduate at VNU-HCM University of
+        Science. I work on <strong>numerical methods for differential equations</strong>
+        and <strong>machine learning systems</strong>, and the two halves share one
+        habit: <strong>no number is published until something independent recomputes
+        it.</strong> Every claim below is checked by a script that fails a build when
+        it stops being true.
       </p>
+
+      <div class="stat-strip" id="stat-strip">
+        <div class="stat"><span class="stat-num" data-to="6">0</span>
+          <span class="stat-lab">public repositories</span></div>
+        <div class="stat"><span class="stat-num" data-to="5">0</span>
+          <span class="stat-lab">recompute results in CI</span></div>
+        <div class="stat"><span class="stat-num" data-to="359">0</span>
+          <span class="stat-lab">automated tests</span></div>
+        <div class="stat"><span class="stat-num" data-to="18010">0</span>
+          <span class="stat-lab">pages ranked out-of-fold</span></div>
+      </div>
+
+      <figure class="hero-fig">
+        <img src="figures/fem_threshold.gif" width="680" height="404" loading="eager"
+             decoding="async"
+             alt="Two panels animating side by side. Left, at 0.98 of the threshold time step, a smooth wave keeps its amplitude. Right, at 1.02 of the threshold, the profile collapses into a sawtooth and the amplitude climbs past one million.">
+        <figcaption>
+          <strong>A sharp stability bound, shown from both sides.</strong> P1 finite
+          elements with leapfrog for the wave equation. Same mesh, same data, same
+          solver — only the step differs, by 4%, across the threshold
+          <math><msup><mi>Δ</mi><mo>∗</mo></msup><mi>t</mi><mo>=</mo><mfrac><mn>2</mn><mrow><mi>c</mi><msqrt><mrow><msub><mi>λ</mi><mi>max</mi></msub><mo form="prefix" stretchy="false">(</mo><msup><mi>T</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mi>S</mi><mo form="postfix" stretchy="false">)</mo></mrow></msqrt></mrow></mfrac></math>.
+          Below it the amplitude is conserved; above it the scheme passes
+          <math><msup><mn>10</mn><mn>6</mn></msup></math> before
+          <math><mi>t</mi><mo>=</mo><mn>1.3</mn></math>. Demonstrating one side only
+          cannot distinguish a sharp bound from any tighter one.
+          <a href="https://tu-h-nguyn.github.io/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation/" target="_blank" rel="noopener">Full write-up &rarr;</a>
+        </figcaption>
+      </figure>
       <div class="cta-row">
         <a class="btn btn-primary" href="#projects">View projects</a>
         <a class="btn btn-secondary" href="https://github.com/tu-h-nguyn" target="_blank" rel="noopener">GitHub</a>
@@ -521,6 +630,100 @@
         track, of which the ranking capstone was the final deliverable — the credential
         is verifiable from the badge at the foot of this page.
       </p>
+    </section>
+
+    <!-- ═══ RESEARCH ═══ -->
+    <section id="research">
+      <h2>Research</h2>
+      <p class="lede">
+        Four results I derived, implemented and then made a build depend on. Each one
+        is a statement with a hypothesis, and in each case the code checks the
+        hypothesis as well as the conclusion — a bound is only as good as the
+        assumption it rests on.
+      </p>
+
+      <div class="eq">
+        <math display="block">
+          <mi>Δ</mi><mi>t</mi><mo>&lt;</mo>
+          <mfrac><mn>2</mn><mrow><mi>c</mi><msqrt><mrow><msub><mi>λ</mi><mi>max</mi></msub><mo stretchy="false">(</mo><msup><mi>T</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mi>S</mi><mo stretchy="false">)</mo></mrow></msqrt></mrow></mfrac>
+          <mspace width="1.4em"/><mo>⟹</mo><mspace width="0.7em"/>
+          <mi>Δ</mi><mi>t</mi><mo>&lt;</mo>
+          <mfrac><mi>h</mi><mrow><mi>c</mi><msqrt><mn>3</mn></msqrt></mrow></mfrac>
+          <mspace width="0.9em"/><mtext>(full mass)</mtext><mo>,</mo>
+          <mspace width="0.7em"/>
+          <mi>Δ</mi><mi>t</mi><mo>&lt;</mo><mfrac><mi>h</mi><mi>c</mi></mfrac>
+          <mspace width="0.6em"/><mtext>(lumped)</mtext>
+        </math>
+        <p class="eq-note">
+          <strong>Sharp CFL for P1 elements.</strong> Necessary <em>and</em> sufficient,
+          from the closed-form spectrum of the generalised eigenproblem. The familiar
+          <math><mi>Δ</mi><mi>t</mi><mo>≤</mo><mi>h</mi><mo>/</mo><mi>c</mi></math>
+          is not sufficient with a consistent mass matrix — a factor of
+          <math><msqrt><mn>3</mn></msqrt></math> apart. The measured threshold agrees
+          to four significant figures, and the animation above shows both sides of it.
+        </p>
+      </div>
+
+      <div class="eq">
+        <math display="block">
+          <mo lspace="0" rspace="0" stretchy="false">∥</mo><mi>e</mi><msub><mo lspace="0" rspace="0" stretchy="false">∥</mo><mrow><msup><mi>L</mi><mn>2</mn></msup></mrow></msub>
+          <mo>≤</mo>
+          <msup><mi>π</mi><mrow><mo>−</mo><mn>2</mn></mrow></msup>
+          <mo lspace="0" rspace="0" stretchy="false">∥</mo><mi>r</mi><msub><mo lspace="0" rspace="0" stretchy="false">∥</mo><mrow><msup><mi>L</mi><mn>2</mn></msup></mrow></msub>
+        </math>
+        <p class="eq-note">
+          <strong>Why minimising a residual is worth doing.</strong> A stability bound
+          for the differential problem: a small residual really does mean a small error.
+          With the boundary condition imposed exactly the bound holds at every training
+          milestone (largest observed ratio 0.0261 against 0.1013); weaken that
+          hypothesis and it is exceeded by 96×. The hypothesis is checked, not assumed.
+        </p>
+      </div>
+
+      <div class="eq">
+        <math display="block">
+          <msub><mi>δ</mi><mrow><mi>k</mi><mo lspace="0.05em" rspace="0.05em">+</mo><mn>1</mn></mrow></msub>
+          <mo>=</mo>
+          <mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><msub><mi>α</mi><mi>k</mi></msub><mo stretchy="false">)</mo>
+          <msub><mi>δ</mi><mi>k</mi></msub>
+          <mo>+</mo>
+          <mfrac><msubsup><mi>ε</mi><mi>k</mi><mn>2</mn></msubsup><mrow><mn>2</mn><msub><mi>λ</mi><mi>k</mi></msub></mrow></mfrac>
+          <mspace width="1.6em"/>
+          <msub><mi>δ</mi><mi>k</mi></msub><mo>∼</mo>
+          <msup><mi>k</mi><mrow><mo>−</mo><mn>1.99</mn></mrow></msup>
+        </math>
+        <p class="eq-note">
+          <strong>How inexactly can you solve a proximal subproblem?</strong> Two notions
+          of inexactness give different accumulated error. Under the second, the measured
+          decay is
+          <math><msup><mi>k</mi><mrow><mo>−</mo><mn>1.99</mn></mrow></msup></math>
+          against the predicted
+          <math><msup><mi>k</mi><mrow><mo>−</mo><mn>2</mn></mrow></msup></math> — within
+          0.6% — which is what preserves the accelerated rate; the first gives only
+          <math><msup><mi>k</mi><mrow><mo>−</mo><mn>0.52</mn></mrow></msup></math>.
+          The convergence bound is checked at every outer step: 0 violations in 121.
+        </p>
+      </div>
+
+      <div class="eq">
+        <math display="block">
+          <mi>σ</mi><mo>=</mo><mtext>ReLU</mtext>
+          <mspace width="0.8em"/><mo>⟹</mo><mspace width="0.8em"/>
+          <msup><mi>σ</mi><mo>″</mo></msup><mo>≡</mo><mn>0</mn>
+          <mspace width="0.8em"/><mo>⟹</mo><mspace width="0.8em"/>
+          <mo>∇</mo><msub><mi>J</mi><mi>r</mi></msub><mo>=</mo><mn>0</mn>
+        </math>
+        <p class="eq-note">
+          <strong>A failure mode stated exactly.</strong> For a second-order operator the
+          residual objective of a physics-informed network is <em>locally constant</em>
+          under ReLU, so every gradient-based method is exactly stationary — not slow,
+          stationary. Measured: the loss never moves from
+          <math><mn>776.229</mn></math>, which is the grid mean of
+          <math><msup><mi>f</mi><mn>2</mn></msup></math> to
+          <math><msup><mn>10</mn><mrow><mo>−</mo><mn>12</mn></mrow></msup></math>.
+          tanh reaches <math><mn>6.0</mn><mo>×</mo><msup><mn>10</mn><mrow><mo>−</mo><mn>5</mn></mrow></msup></math>.
+        </p>
+      </div>
     </section>
 
     <!-- ═══ EVIDENCE ═══ -->
@@ -1315,6 +1518,69 @@
       s.setAttribute("data-goatcounter", endpoint);
       document.head.appendChild(s);
     })();
+  </script>
+  <script>
+  /* ── Motion ────────────────────────────────────────────────────────────
+     Two effects, both progressive: if this script never runs, the page is
+     fully readable — nothing here is required to see the content. Sections
+     get .reveal only from JavaScript, so a reader without it never meets an
+     element stuck at opacity 0. */
+  (function () {
+    var reduced = window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || !('IntersectionObserver' in window)) return;
+
+    /* 1. Reveal sections as they arrive. */
+    var targets = document.querySelectorAll('main > section, .hero-fig, .stat-strip');
+    for (var i = 0; i < targets.length; i++) targets[i].classList.add('reveal');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('shown');
+        io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+    for (var j = 0; j < targets.length; j++) io.observe(targets[j]);
+
+    /* Failsafes. A decorative effect must never be able to hide content:
+       - find-in-page and in-page anchors can jump past the observer;
+       - printing takes the whole document at once;
+       - and if anything above misbehaves, everything is shown anyway. */
+    function showAll() {
+      io.disconnect();
+      for (var k = 0; k < targets.length; k++) targets[k].classList.add('shown');
+    }
+    window.addEventListener('beforeprint', showAll);
+    window.addEventListener('hashchange', showAll);
+    setTimeout(showAll, 8000);
+
+    /* 2. Count the hero figures up, once, when the strip first appears. */
+    var strip = document.getElementById('stat-strip');
+    if (!strip) return;
+    var counted = false;
+    var cio = new IntersectionObserver(function (entries) {
+      if (counted || !entries[0].isIntersecting) return;
+      counted = true;
+      cio.disconnect();
+      var nums = strip.querySelectorAll('.stat-num');
+      nums.forEach(function (el) {
+        var to = parseInt(el.getAttribute('data-to'), 10);
+        if (!isFinite(to)) return;
+        var t0 = null, dur = 1100;
+        function step(ts) {
+          if (t0 === null) t0 = ts;
+          var k = Math.min(1, (ts - t0) / dur);
+          /* ease-out: fast first, settles on the value rather than snapping */
+          var v = Math.round(to * (1 - Math.pow(1 - k, 3)));
+          el.textContent = v.toLocaleString('en-US');
+          if (k < 1) requestAnimationFrame(step);
+          else el.textContent = to.toLocaleString('en-US');
+        }
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.4 });
+    cio.observe(strip);
+  })();
   </script>
 </body>
 </html>
