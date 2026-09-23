@@ -1,0 +1,44 @@
+name: portfolio-check
+
+# The portfolio is built from work/portfolio/site/ into docs/portfolio/, and both are
+# committed. This fails a pull request whose built pages are stale against their
+# sources (or whose figures are stale against their data), and runs the static
+# audits on what would be published. Standard library only: nothing to install.
+
+on:
+  pull_request:
+    paths:
+      - "work/portfolio/**"
+      - "docs/portfolio/**"
+      - "work/scripts/build_portfolio.py"
+      - "work/scripts/make_project_figures.py"
+      - "work/scripts/audit_portfolio.py"
+      - "work/scripts/audit_launch.py"
+      - "work/scripts/configure_site.py"
+      - "work/scripts/export_user_site.py"
+      - ".github/workflows/portfolio-check.yml"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Figures are current with their data
+        run: python3 work/scripts/make_project_figures.py --check
+
+      - name: Built pages are current with their sources
+        run: python3 work/scripts/build_portfolio.py --check
+
+      - name: Audit every page
+        run: |
+          python3 work/scripts/audit_portfolio.py
+          python3 work/scripts/audit_launch.py
+
+      - name: The export builds
+        run: python3 work/scripts/export_user_site.py --out build/user-site

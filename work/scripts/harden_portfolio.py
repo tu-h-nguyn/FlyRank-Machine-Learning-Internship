@@ -43,9 +43,19 @@ def fill(page, name, email, msg):
     page.fill("#cf-name", name); page.fill("#cf-email", email); page.fill("#cf-message", msg)
 
 
+SITE = pathlib.Path(__file__).resolve().parents[2] / "docs" / "portfolio"
+PAGES = ["index.html", "projects/", "thesis/", "cv/"]
+
+
 def main():
     tmp = pathlib.Path(tempfile.mkdtemp(prefix="harden-"))
     build_serve_dir(tmp)
+    # The home page comes from build_serve_dir (form pointed at the mock); the other
+    # pages and the files they reference are served exactly as built.
+    for sub in ["projects", "thesis", "cv", "figures"]:
+        shutil.copytree(SITE / sub, tmp / sub)
+    for f in ["favicon.svg", "og.png"]:
+        shutil.copy2(SITE / f, tmp / f)
     srv = ThreadingHTTPServer(("127.0.0.1", PORT), lambda *a, **k: Handler(*a, directory=str(tmp), **k))
     threading.Thread(target=srv.serve_forever, daemon=True).start()
 
@@ -153,7 +163,7 @@ def main():
             print("\n[5] In-page navigation under the sticky bar")
             pg.goto(f"{BASE}/index.html"); pg.wait_for_timeout(400)
             navh = pg.evaluate("() => document.querySelector('.nav').getBoundingClientRect().height")
-            for target in ["#projects", "#approach", "#skills", "#contact"]:
+            for target in ["#projects", "#research", "#writing", "#skills", "#about", "#contact"]:
                 pg.evaluate(f"() => document.querySelector('a[href=\"{target}\"]').click()")
                 # Smooth scrolling across a long page outlasts any fixed wait, and a
                 # reading taken mid-scroll passes vacuously (the heading is still far
@@ -193,35 +203,40 @@ def main():
 
             # ── 7. Narrow + large-text devices ────────────────────────────
             print("\n[7] Narrow viewport and 200% text")
-            for label, w, h in [("320px (iPhone SE gen1)", 320, 568), ("360px (common Android)", 360, 640)]:
-                c3 = new_ctx(b, viewport={"width": w, "height": h}); p3 = c3.new_page()
-                p3.goto(f"{BASE}/index.html"); p3.wait_for_timeout(500)
-                sw = p3.evaluate("() => document.documentElement.scrollWidth")
-                if sw > w:
-                    wide = p3.evaluate("""(vw) => [...document.querySelectorAll('*')]
-                        .filter(e => e.getBoundingClientRect().width > vw + 1)
-                        .map(e => e.tagName + '.' + (e.className||'').toString().slice(0,25)).slice(0,4)""", w)
-                    report("BUG", label, f"horizontal scroll ({sw}px): {wide}")
-                else:
-                    ok(label, "no horizontal scroll")
-                p3.close(); c3.close()
+            for page in PAGES:
+                for label, w, h in [("320px", 320, 568), ("360px", 360, 640)]:
+                    c3 = new_ctx(b, viewport={"width": w, "height": h}); p3 = c3.new_page()
+                    p3.goto(f"{BASE}/{page}"); p3.wait_for_timeout(500)
+                    sw = p3.evaluate("() => document.documentElement.scrollWidth")
+                    if sw > w:
+                        wide = p3.evaluate("""(vw) => [...document.querySelectorAll('*')]
+                            .filter(e => e.getBoundingClientRect().width > vw + 1)
+                            .map(e => e.tagName + '.' + (e.className||'').toString().slice(0,25)).slice(0,4)""", w)
+                        report("BUG", f"{label} {page}", f"horizontal scroll ({sw}px): {wide}")
+                    else:
+                        ok(f"{label} {page}", "no horizontal scroll")
+                    p3.close(); c3.close()
 
-            c4 = new_ctx(b, viewport={"width": 390, "height": 844}); p4 = c4.new_page()
-            p4.goto(f"{BASE}/index.html")
-            p4.evaluate("() => document.documentElement.style.fontSize = '32px'")  # 200%
-            p4.wait_for_timeout(500)
-            sw = p4.evaluate("() => document.documentElement.scrollWidth")
-            if sw > 390:
-                report("BUG", "200% text zoom", f"horizontal scroll at 2x font size ({sw}px)")
-            else:
-                ok("200% text zoom", "reflows without horizontal scroll")
-            p4.close(); c4.close()
+                c4 = new_ctx(b, viewport={"width": 390, "height": 844}); p4 = c4.new_page()
+                p4.goto(f"{BASE}/{page}")
+                p4.evaluate("() => document.documentElement.style.fontSize = '32px'")  # 200%
+                p4.wait_for_timeout(500)
+                sw = p4.evaluate("() => document.documentElement.scrollWidth")
+                if sw > 390:
+                    report("BUG", f"200% text {page}", f"horizontal scroll at 2x font size ({sw}px)")
+                else:
+                    ok(f"200% text {page}", "reflows without horizontal scroll")
+                p4.close(); c4.close()
 
             # ── 8. Keyboard only ──────────────────────────────────────────
             print("\n[8] Keyboard-only reachability")
             pg.goto(f"{BASE}/index.html"); pg.wait_for_timeout(400)
+            # Every link on the page comes before the form, so the budget is generous;
+            # the loop stops as soon as the submit button has been reached.
             seen, hp_reached = [], False
-            for _ in range(40):
+            for _ in range(300):
+                if "cf-submit" in seen:
+                    break
                 pg.keyboard.press("Tab")
                 el = pg.evaluate("""() => { const a = document.activeElement;
                     return { tag: a.tagName, name: a.getAttribute('name'),
@@ -262,10 +277,126 @@ def main():
             c5 = new_ctx(b); p5 = c5.new_page()
             p5.on("request", lambda r: reqs.append(r.url))
             p5.goto(f"{BASE}/index.html"); p5.wait_for_timeout(1200)
-            size = (pathlib.Path("docs/portfolio/index.html").stat().st_size)
-            ok("page weight", f"{size/1024:.1f} KB of HTML, self-contained (no JS/CSS files)")
-            ok("requests", f"{len(reqs)} request(s) from this origin + Google Fonts (blocked here)")
+            for page in PAGES:
+                f = SITE / page / "index.html" if page.endswith("/") else SITE / page
+                size = f.stat().st_size
+                if size > 200 * 1024:
+                    report("BUG", f"page weight {page}", f"{size/1024:.0f} KB of HTML")
+                else:
+                    ok(f"page weight {page}", f"{size/1024:.0f} KB of HTML, CSS and JS inlined")
+            ok("requests", f"{len(reqs)} request(s) from this origin for the home page, + Google Fonts (blocked here)")
             p5.close(); c5.close()
+
+            # ── 11. Project filter ────────────────────────────────────────
+            print("\n[11] Project filter")
+            c6 = new_ctx(b, viewport={"width": 1280, "height": 900}); p6 = c6.new_page()
+            p6.goto(f"{BASE}/projects/"); p6.wait_for_timeout(400)
+            total = p6.locator("article.project").count()
+            p6.click('.filter[data-filter="quant"]'); p6.wait_for_timeout(700)
+            shown = p6.evaluate("() => [...document.querySelectorAll('article.project')].filter(a => !a.hidden).map(a => a.id)")
+            want = p6.evaluate("() => [...document.querySelectorAll('article.project')].filter(a => (' ' + a.dataset.cat + ' ').includes(' quant ')).map(a => a.id)")
+            pressed = p6.get_attribute('.filter[data-filter="quant"]', "aria-pressed")
+            status = p6.text_content("#filter-status")
+            if shown != want or not want:
+                report("BUG", "filter", f"quant shows {shown}, expected {want}")
+            elif pressed != "true" or str(len(want)) not in (status or ""):
+                report("BUG", "filter", f"state not announced (aria-pressed={pressed}, status={status!r})")
+            else:
+                ok("filter", f"Quantitative shows {len(want)} of {total}; pressed state and status announced")
+            p6.click('.filter[data-filter="all"]'); p6.wait_for_timeout(700)
+            back = p6.evaluate("() => [...document.querySelectorAll('article.project')].filter(a => !a.hidden).length")
+            if back != total:
+                report("BUG", "filter", f"All restores {back} of {total}")
+            else:
+                ok("filter", "All restores every project")
+            p6.goto(f"{BASE}/projects/#p-lmm"); p6.wait_for_timeout(900)
+            top = p6.evaluate("() => document.getElementById('p-lmm').getBoundingClientRect().top")
+            if not (0 <= top < 200):
+                report("BUG", "deep link", f"/projects/#p-lmm lands at {top:.0f}px")
+            else:
+                ok("deep link", f"/projects/#p-lmm lands at the entry (top {top:.0f}px)")
+            p6.close(); c6.close()
+
+            # ── 12. Theme ─────────────────────────────────────────────────
+            print("\n[12] Theme toggle")
+            c7 = new_ctx(b, color_scheme="light"); p7 = c7.new_page()
+            p7.goto(f"{BASE}/index.html"); p7.wait_for_timeout(300)
+            bg0 = p7.evaluate("() => getComputedStyle(document.body).backgroundColor")
+            p7.click(".theme-toggle"); p7.wait_for_timeout(200)
+            bg1 = p7.evaluate("() => getComputedStyle(document.body).backgroundColor")
+            p7.goto(f"{BASE}/thesis/"); p7.wait_for_timeout(300)
+            kept = p7.evaluate("() => document.documentElement.getAttribute('data-theme')")
+            label = p7.get_attribute(".theme-toggle", "aria-label")
+            if bg0 == bg1:
+                report("BUG", "theme", "toggle does not change the page")
+            elif kept != "dark":
+                report("BUG", "theme", f"choice not kept across pages (data-theme={kept!r})")
+            elif "light" not in (label or ""):
+                report("BUG", "theme", f"button label does not say what it does next: {label!r}")
+            else:
+                ok("theme", "toggles, persists across pages, labels its next action")
+            p7.close(); c7.close()
+            c7 = new_ctx(b, color_scheme="dark"); p7 = c7.new_page()
+            p7.goto(f"{BASE}/index.html"); p7.wait_for_timeout(300)
+            bg = p7.evaluate("() => getComputedStyle(document.body).backgroundColor")
+            if bg in ("rgb(251, 251, 249)", "rgb(255, 255, 255)"):
+                report("BUG", "theme", "system dark preference ignored")
+            else:
+                ok("theme", f"follows the system dark preference ({bg})")
+            p7.close(); c7.close()
+
+            # ── 13. Menu on a phone ───────────────────────────────────────
+            print("\n[13] Mobile menu")
+            c8 = new_ctx(b, viewport={"width": 390, "height": 844}); p8 = c8.new_page()
+            p8.goto(f"{BASE}/index.html"); p8.wait_for_timeout(300)
+            p8.click(".burger"); p8.wait_for_timeout(400)
+            opened = p8.evaluate("() => document.getElementById('menu').classList.contains('is-open')")
+            expanded = p8.get_attribute(".burger", "aria-expanded")
+            inside = True
+            for _ in range(12):
+                p8.keyboard.press("Tab")
+                inside &= p8.evaluate("() => !!document.activeElement.closest('#menu')")
+            p8.keyboard.press("Escape"); p8.wait_for_timeout(400)
+            closed = not p8.evaluate("() => document.getElementById('menu').classList.contains('is-open')")
+            back = p8.evaluate("() => document.activeElement.classList.contains('burger')")
+            if not (opened and expanded == "true"):
+                report("BUG", "menu", "burger does not open the menu")
+            elif not inside:
+                report("BUG", "menu", "Tab escapes the open menu")
+            elif not (closed and back):
+                report("BUG", "menu", "Escape does not close and return focus")
+            else:
+                ok("menu", "opens, traps focus, Escape closes and returns focus")
+            p8.close(); c8.close()
+
+            # ── 14. Reduced motion, and no JavaScript on the other pages ──
+            print("\n[14] Reduced motion; no-JS sub-pages")
+            c9 = new_ctx(b, reduced_motion="reduce"); p9 = c9.new_page()
+            for page in PAGES:
+                p9.goto(f"{BASE}/{page}"); p9.wait_for_timeout(300)
+                hidden = p9.evaluate("() => [...document.querySelectorAll('.rv')].filter(e => getComputedStyle(e).opacity !== '1').length")
+                if hidden:
+                    report("BUG", f"reduced motion {page}", f"{hidden} block(s) still invisible")
+                else:
+                    ok(f"reduced motion {page}", "everything visible, nothing animates")
+            p9.close(); c9.close()
+            c10 = new_ctx(b, java_script_enabled=False); p10 = c10.new_page()
+            p10.goto(f"{BASE}/projects/"); p10.wait_for_timeout(300)
+            vis = p10.evaluate("() => [...document.querySelectorAll('article.project')].filter(a => a.offsetParent && getComputedStyle(a).opacity === '1').length")
+            filt = p10.evaluate("() => getComputedStyle(document.querySelector('.filters')).display")
+            n = p10.locator("article.project").count()
+            if vis != n:
+                report("BUG", "no-js projects", f"{vis} of {n} projects visible")
+            elif filt != "none":
+                report("BUG", "no-js projects", "filter buttons shown although they cannot work")
+            else:
+                ok("no-js projects", f"all {n} projects visible; dead filter buttons hidden")
+            p10.goto(f"{BASE}/thesis/"); p10.wait_for_timeout(300)
+            if p10.locator("math").count() < 5 or not p10.locator("#experiments table").is_visible():
+                report("BUG", "no-js thesis", "equations or results table missing")
+            else:
+                ok("no-js thesis", f"{p10.locator('math').count()} equations and the results table render")
+            p10.close(); c10.close()
 
             b.close()
     finally:

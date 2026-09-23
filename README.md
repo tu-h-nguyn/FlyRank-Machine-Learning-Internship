@@ -170,7 +170,7 @@ All metrics are **out-of-fold** under `GroupKFold(5)` grouped by `client_id`. Ba
 | `work/figures/` | SVG charts from the capstone pipeline |
 | `work/capstone_report.md` | Full capstone write-up |
 | `docs/index.html` | Deployed research paper |
-| `docs/portfolio/` | Personal portfolio site |
+| `docs/portfolio/` | Personal portfolio site, built from `work/portfolio/site/` by `work/scripts/build_portfolio.py` |
 | `outputs/` | Reference pipeline outputs (model report, sample queue, charts) |
 | `skills/` | AI assistant instruction library |
 
@@ -179,7 +179,7 @@ All metrics are **out-of-fold** under `GroupKFold(5)` grouped by `client_id`. Ba
 ## Deployed outputs
 
 - **Research paper:** [tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship](https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/)
-- **Portfolio site:** [tu-h-nguyn.github.io](https://tu-h-nguyn.github.io/) — source in `docs/portfolio/`, published to its own address by `work/scripts/export_user_site.py`
+- **Portfolio site:** [tu-h-nguyn.github.io](https://tu-h-nguyn.github.io/) — four pages (home, projects, thesis, CV) written in `work/portfolio/site/`, built into `docs/portfolio/` by `work/scripts/build_portfolio.py`, published to its own address by `work/scripts/export_user_site.py`
 - **FEM wave equation write-up** (separate repo): [https://tu-h-nguyn.github.io/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation/](https://tu-h-nguyn.github.io/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation/) — sharp CFL analysis, every table machine-verified ([code](https://github.com/tu-h-nguyn/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation))
 
 ---
