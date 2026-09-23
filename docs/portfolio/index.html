@@ -589,6 +589,8 @@
 
     .p-row { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: .35rem 1.5rem; padding: 1rem 0; border-top: 1px solid var(--rule); }
     .p-label { font-size: .66rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); padding-top: .3rem; }
+    .p-math { display: block; margin-top: .7rem; padding: .7rem .9rem; background: var(--paper-2); border-left: 2px solid var(--navy);
+              font-family: 'STIX Two Math', 'Cambria Math', Georgia, serif; font-size: 1.02rem; color: var(--ink); overflow-x: auto; line-height: 1.7; }
     .p-body { font-size: .92rem; color: var(--ink-2); line-height: 1.72; }
     .p-body strong { color: var(--ink); font-weight: 600; }
     .p-body ul { list-style: none; display: grid; gap: .35rem; }
@@ -961,8 +963,9 @@
         <p class="eyebrow rv"><span class="num">02</span> Work</p>
         <h2 class="display rv">Selected Projects</h2>
         <p class="lede rv">
-          Six, all with public code. Five of them run CI that recomputes their published
-          numbers on every push, so a claim that stops being true fails a build.
+          Eight, all with public code, each told the same way: problem, why it matters,
+          method, the mathematics or architecture, experiment, result, limitation. Five of
+          them run CI that recomputes their published numbers on every push.
         </p>
 
         <!-- Filters only exist with JavaScript; without it every card simply shows. -->
@@ -971,6 +974,7 @@
           <button type="button" class="filter" data-filter="ml" aria-pressed="false">Machine learning</button>
           <button type="button" class="filter" data-filter="numerical" aria-pressed="false">Numerical analysis</button>
           <button type="button" class="filter" data-filter="optimisation" aria-pressed="false">Optimisation</button>
+          <button type="button" class="filter" data-filter="quant" aria-pressed="false">Quantitative</button>
         </div>
         <p class="sr-only" id="filter-status" role="status" aria-live="polite"></p>
 
@@ -1003,7 +1007,17 @@
           <a class="ov-row" href="#p-ppa" data-cat="optimisation">
             <span class="ov-num" aria-hidden="true">06</span><span class="ov-icon" aria-hidden="true"></span>
             <span class="ov-name">Proximal Point Algorithms</span>
-            <span class="ov-metric">LASSO under <b>four</b> inner-accuracy schedules</span>
+            <span class="ov-metric">LASSO under <b>five</b> inner-accuracy schedules · 0 bound violations</span>
+          </a>
+          <a class="ov-row" href="#p-rag" data-cat="ml">
+            <span class="ov-num" aria-hidden="true">07</span><span class="ov-icon" aria-hidden="true"></span>
+            <span class="ov-name">Enterprise Hybrid RAG</span>
+            <span class="ov-metric">Recall@1 <b>0.795</b> vs 0.585 dense-only</span>
+          </a>
+          <a class="ov-row" href="#p-quant" data-cat="ml quant">
+            <span class="ov-num" aria-hidden="true">08</span><span class="ov-icon" aria-hidden="true"></span>
+            <span class="ov-name">AI Quant Trading Research Lab</span>
+            <span class="ov-metric">Walk-forward, costs on turnover · <b>no</b> unbacked returns</span>
           </a>
         </nav>
 
@@ -1017,59 +1031,51 @@
               <span class="p-status live">Paper + code public</span>
             </div>
             <p class="p-problem rv">
-              An editorial team can review about 50 pages a week out of a portfolio of
-              18,000. The useful question is not "which pages are bad" but
-              <em>which pages should be opened first</em> — an ordering problem, not a
-              threshold one.
+              An editorial team can review about 50 pages a week out of 18,000. The useful question is not "which pages are bad" but <em>which pages should be opened first</em> — an ordering problem, not a threshold one.
             </p>
 
             <div class="rv">
               <div class="p-row">
-                <div class="p-label">Starting point</div>
+                <div class="p-label">Why it matters</div>
                 <div class="p-body">
-                  FlyRank's public internship starter repo: an anonymized 30,000-row
-                  dataset, a skeleton pipeline script and empty notebook templates. No
-                  modelling, no framing, no evaluation.
+                  Review time is the constraint. Ordered by the model, roughly <span class="metric">44 of the first 50</span> pages opened are real decliners, against about 31 for an unordered list — the difference is a week of editorial work spent where it is needed.
                 </div>
               </div>
-
               <div class="p-row">
-                <div class="p-label">My contribution</div>
+                <div class="p-label">Method</div>
                 <div class="p-body">
-                  <ul>
-                    <li>Defined the decision, the label and the decision point: split one 90-day snapshot into three exact 30-day windows and predicted a &gt;20% impressions drop in the last one.</li>
-                    <li>Ran the leakage audit that removed every window-spanning column, including one I had been using in an earlier week.</li>
-                    <li>Engineered the 24 decision-time features, built the rule baseline first, then the models.</li>
-                    <li>Designed the client-grouped split, the stability check across five client holdouts, and the monitoring thresholds.</li>
-                    <li>Wrote the 18,010-row action queue with reason codes, suggested action and confidence, plus the paper.</li>
-                  </ul>
+                  Defined the decision, the label and the decision point first · leakage audit that removed every window-spanning column · 24 decision-time features · a transparent rule baseline before any model · logistic regression and random forest · precision@K at the team's real capacity · permutation importance.
                 </div>
               </div>
-
               <div class="p-row">
-                <div class="p-label">Approach</div>
+                <div class="p-label">Formulation</div>
                 <div class="p-body">
-                  Leakage audit · feature engineering · rule baseline before model ·
-                  logistic regression and random forest · GroupKFold(5) by client ·
-                  precision@K at the team's real capacity · permutation importance ·
-                  stability and error analysis
+                  One 90-day snapshot split into three exact 30-day windows. The label is a &gt;20% fall in impressions in the last window; every feature is knowable at the end of the second. Pages are ranked by predicted probability and scored where the team works — the top 50.
+                  <span class="p-math">P(decline | x) = σ(w<sup>⊤</sup>x + b), &nbsp; precision@K = |top-K ∩ decliners| / K, &nbsp; K = 50</span>
                 </div>
               </div>
-
+              <div class="p-row">
+                <div class="p-label">Experiment</div>
+                <div class="p-body">
+                  30,000-row anonymised snapshot → 18,010 pages above a 100-impression floor, 30 clients. Rule, logistic regression and random forest scored out-of-fold under GroupKFold(5) by client, so no client is ever in both train and test; stability checked across five client holdouts; a deliberately leaky model kept as a control.
+                </div>
+              </div>
               <div class="p-row">
                 <div class="p-label">Result</div>
                 <div class="p-body">
-                  Logistic regression on honest features: <span class="metric">PR-AUC 0.718</span>,
-                  <span class="metric">precision@50 0.88</span> — against
-                  <span class="metric">0.668 / 0.74</span> for the rule baseline and
-                  <span class="metric">0.617</span> for random ordering, on a
-                  <span class="metric">0.62</span> base rate. Stable across five client
-                  holdouts (<span class="metric">PR-AUC 0.668 ± 0.026</span>). The
-                  grouped split scored 0.042 lower than a naive random-row split — evidence
-                  that the split design, not the model, was doing the honest work. An
-                  earlier rule of mine scored only 12 of 18,010 pages above zero
-                  (<span class="metric">ROC-AUC 0.500</span>) and is reported as a failure
-                  in the paper.
+                  Logistic regression on honest features: <span class="metric">PR-AUC 0.718</span>, <span class="metric">precision@50 0.88</span> — against <span class="metric">0.668 / 0.74</span> for the rule baseline and <span class="metric">0.617</span> for random ordering, on a <span class="metric">0.62</span> base rate. The grouped split scored 0.042 lower than a naive random-row split — the split design, not the model, was doing the honest work. The leaky model reached a perfect 1.000 and was discarded.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Limitation</div>
+                <div class="p-body">
+                  One snapshot, not a time series: nothing tests whether the ranking holds across months. Thirty clients is a small sample — PR-AUC moves between 0.63 and 0.70 depending on which clients are held out. Search position and content freshness had to be dropped because they span the outcome window. No experiment, no control group: this cannot say that refreshing a page recovers its traffic.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">My role</div>
+                <div class="p-body">
+                  Started from FlyRank's internship starter repository — an anonymised dataset, a skeleton script and empty notebooks. The framing, the audit, the features, the models, the evaluation, the 18,010-row action queue and the paper are mine.
                 </div>
               </div>
             </div>
@@ -1106,47 +1112,51 @@
               <span class="p-status live">Report + code public</span>
             </div>
             <p class="p-problem rv">
-              Every course quotes <span class="metric">Δt ≤ h/c</span> as the stability limit
-              for explicit time-stepping on the wave equation. With a consistent mass matrix
-              that bound is wrong, and a scheme built on it diverges — quietly, because the
-              unstable mode is the one your initial data barely excites.
+              Every course quotes <span class="metric">Δt ≤ h/c</span> as the stability limit for explicit time-stepping on the wave equation. With a consistent mass matrix that bound is wrong, and a scheme built on it diverges — quietly, because the unstable mode is the one your initial data barely excites.
             </p>
 
             <div class="rv">
               <div class="p-row">
-                <div class="p-label">My contribution</div>
+                <div class="p-label">Why it matters</div>
                 <div class="p-body">
-                  <ul>
-                    <li>Two-person coursework report; everything below — the verification, the fix, the pipeline — is mine.</li>
-                    <li>Built the reproduction harness that recomputes all four tables from source and fails on any mismatch against the published PDF. It runs in CI on every push.</li>
-                    <li>Found and fixed a real reproducibility gap: the published <code>growth()</code> listing could not generate the report's own Table 3.</li>
-                    <li>Wrote the figure pipeline that renders the report's figures and the web page's from one set of computed arrays, so the two cannot drift.</li>
-                  </ul>
+                  Explicit schemes are chosen for speed, and their step size is set from exactly this bound. At Δt = 0.9 h/c — inside the textbook limit — the consistent-mass scheme passes <span class="metric">10⁶</span> before t = 0.4, while the lumped one holds its amplitude within 1% to t = 2.
                 </div>
               </div>
-
               <div class="p-row">
-                <div class="p-label">Approach</div>
+                <div class="p-label">Method</div>
                 <div class="p-body">
-                  Closed-form spectrum of the stiffness/mass pair (S, T) · necessary <em>and</em>
-                  sufficient stability condition · Ritz projection for the convergence proof ·
-                  Thomas algorithm, O(N) per step · four numerical experiments · machine-checked
-                  tables
+                  Closed-form spectrum of the stiffness/mass pair · a necessary <em>and</em> sufficient stability condition · Ritz projection for the convergence proof · Thomas algorithm, O(N) per step · a reproduction harness that recomputes every table from source.
                 </div>
               </div>
-
+              <div class="p-row">
+                <div class="p-label">Mathematics</div>
+                <div class="p-body">
+                  P1 elements in space, leapfrog in time. The scheme is stable exactly when c²Δt² times the largest eigenvalue of M<sup>−1</sup>K stays below 4, and that eigenvalue is known in closed form for each mass matrix:
+                  <span class="p-math">M ü + c² K u = 0, &nbsp; stable ⇔ c²Δt² λ<sub>max</sub>(M<sup>−1</sup>K) ≤ 4<br>consistent: λ<sub>max</sub> → 12/h² ⇒ Δt &lt; h/(c√3)<br>lumped: λ<sub>max</sub> → 4/h² ⇒ Δt &lt; h/c</span>
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Experiment</div>
+                <div class="p-body">
+                  The step size at 0.98 and at 1.02 of the analytic threshold on the same mesh and data; consistent against lumped mass at Δt = 0.9 h/c; convergence over six mesh refinements; the solution eighteen periods on.
+                </div>
+              </div>
               <div class="p-row">
                 <div class="p-label">Result</div>
                 <div class="p-body">
-                  Two distinct CFL constants where the literature usually states one:
-                  <span class="metric">Δt &lt; h/(c√3)</span> for the consistent mass matrix and
-                  <span class="metric">Δt &lt; h/c</span> for the lumped one. The measured
-                  threshold matches the analytic <span class="metric">θ* to four significant
-                  figures</span>, and convergence lands on <span class="metric">2.00</span> in
-                  L² and <span class="metric">1.00</span> in H¹ across six refinements. All four
-                  tables reproduce digit-for-digit — after the harness caught that the shipped
-                  code was missing the <span class="metric">1e-8</span> mode seeding the report
-                  describes.
+                  Two distinct CFL constants where the literature usually states one. The measured threshold matches the analytic θ* to <span class="metric">four significant figures</span>; convergence lands on <span class="metric">2.00</span> in L² and <span class="metric">1.00</span> in H¹. All four report tables reproduce digit-for-digit in CI — after the harness caught that the shipped code was missing the <span class="metric">1e-8</span> mode seeding the report describes.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Limitation</div>
+                <div class="p-body">
+                  One space dimension, linear elements, a uniform mesh and homogeneous Dirichlet boundaries — the sharp constants are proved for that setting only. The scheme is stable but dispersive: eighteen periods on, the computed wave is visibly out of phase with the exact one.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">My role</div>
+                <div class="p-body">
+                  Two-person coursework report. The verification, the fix to the published <code>growth()</code> listing, and the figure pipeline that renders the report and the web page from one set of arrays are mine.
                 </div>
               </div>
             </div>
@@ -1184,45 +1194,51 @@
               <span class="p-status live">Package + tests public</span>
             </div>
             <p class="p-problem rv">
-              The Euler equations grow shocks, contacts and rarefaction fans out of smooth
-              initial data. A scheme that looks convincing on a smooth problem can be
-              quietly wrong at a discontinuity — so the question is not whether the plot
-              looks right, but what it is being measured against.
+              The Euler equations grow shocks, contacts and rarefaction fans out of smooth initial data. A scheme that looks convincing on a smooth problem can be quietly wrong at a discontinuity — so the question is not whether the plot looks right, but what it is being measured against.
             </p>
 
             <div class="rv">
               <div class="p-row">
-                <div class="p-label">Approach</div>
+                <div class="p-label">Why it matters</div>
                 <div class="p-body">
-                  An <strong>exact Riemann solver as ground truth</strong>, then everything
-                  measured against it: four numerical fluxes (Lax–Friedrichs, Rusanov, HLL,
-                  HLLC) · MUSCL piecewise-linear reconstruction with four TVD limiters and a
-                  positivity safeguard · three SSP time integrators · a CLI and a library API
+                  Every compressible-flow code rests on how it treats discontinuities. Without an exact reference, a misplaced shock or a smeared contact looks like a plausible curve.
                 </div>
               </div>
-
+              <div class="p-row">
+                <div class="p-label">Method</div>
+                <div class="p-body">
+                  An <strong>exact Riemann solver as ground truth</strong>, and everything measured against it: four numerical fluxes (Lax–Friedrichs, Rusanov, HLL, HLLC) · MUSCL reconstruction with four TVD limiters and a positivity safeguard · three SSP time integrators · a CLI and a library API.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Mathematics</div>
+                <div class="p-body">
+                  A conservation law for density, momentum and energy, closed by the ideal-gas law, advanced in conservative form so that shocks move at the right speed:
+                  <span class="p-math">U<sub>t</sub> + F(U)<sub>x</sub> = 0, &nbsp; U = (ρ, ρu, E), &nbsp; p = (γ−1)(E − ½ρu²)<br>U<sub>i</sub><sup>n+1</sup> = U<sub>i</sub><sup>n</sup> − (Δt/Δx)(F<sub>i+½</sub> − F<sub>i−½</sub>)</span>
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Experiment</div>
+                <div class="p-body">
+                  Sod's shock tube (N = 200, CFL 0.4, t = 0.2) against the exact solution for every flux; grid convergence up to N = 800; Toro's five benchmarks, including the near-vacuum 123 problem and the Woodward–Colella blast with a 10⁵ pressure ratio.
+                </div>
+              </div>
               <div class="p-row">
                 <div class="p-label">Result</div>
                 <div class="p-body">
-                  On Sod's shock tube (N = 200, CFL 0.4, t = 0.2) the L¹ error in density
-                  falls from <span class="metric">3.274e−02</span> for Lax–Friedrichs to
-                  <span class="metric">4.446e−03</span> for MUSCL–minmod —
-                  <span class="metric">7.4× smaller</span> on the same grid. A grid-convergence
-                  study confirms the schemes reach their design order rather than merely
-                  looking smooth. <span class="metric">133 tests</span>,
-                  <span class="metric">98% coverage</span>, mypy clean, CI on every push, MIT.
+                  The L¹ density error falls from <span class="metric">3.274e−02</span> for Lax–Friedrichs to <span class="metric">4.446e−03</span> for MUSCL–minmod — <span class="metric">7.4× smaller</span> on the same grid. Observed orders 0.93–0.98 for the first-order schemes and 1.90–2.00 for the second-order ones. All five Toro problems run without tuning. <span class="metric">133 tests</span>, <span class="metric">98% coverage</span>, mypy clean, CI on every push.
                 </div>
               </div>
-
+              <div class="p-row">
+                <div class="p-label">Limitation</div>
+                <div class="p-body">
+                  One space dimension. Classical Lax–Friedrichs is still climbing towards order 1 on these grids, the minmod limiter clips smooth extrema and saturates near order 1.90, and the positivity safeguard drops locally to first order wherever it acts.
+                </div>
+              </div>
               <div class="p-row">
                 <div class="p-label">My role</div>
                 <div class="p-body">
-                  <strong>The repository is mine</strong> — the package layout, the exact
-                  Riemann solver used as ground truth, the test suite, the CI, and the
-                  one-command path from source to every table and figure it publishes.
-                  The report behind it is four-person coursework (Nông Thanh Toàn,
-                  Nguyễn Hoàng Tú, Lê Minh Tuấn Kiệt, Đặng Kim Bảng) —
-                  <em>Chuyên đề giải tích số</em>, VNU-HCM University of Science, 2025.
+                  <strong>The repository is mine</strong> — the package, the exact solver, the test suite, the CI and the one-command path to every table and figure. The report behind it is four-person coursework (Nông Thanh Toàn, Nguyễn Hoàng Tú, Lê Minh Tuấn Kiệt, Đặng Kim Bảng), <em>Chuyên đề giải tích số</em>, VNU-HCM University of Science, 2025.
                 </div>
               </div>
             </div>
@@ -1257,47 +1273,51 @@
               <span class="p-status live">Library + tests public</span>
             </div>
             <p class="p-problem rv">
-              Courses state the equivalence theorem — a linear multistep method converges
-              if and only if it is consistent and zero-stable — and the BDF barrier at
-              k ≤ 6, as facts to memorise. Both are checkable by machine, and checking them
-              is more instructive than quoting them.
+              Courses state the equivalence theorem — a linear multistep method converges if and only if it is consistent and zero-stable — and the BDF barrier at k ≤ 6, as facts to memorise. Both are checkable by machine, and checking them is more instructive than quoting them.
             </p>
 
             <div class="rv">
               <div class="p-row">
-                <div class="p-label">Approach</div>
+                <div class="p-label">Why it matters</div>
                 <div class="p-body">
-                  A library that <strong>hard-codes no conclusions</strong>. Feed it the
-                  coefficients (α<sub>j</sub>, β<sub>j</sub>) and it derives the order, the
-                  error constant, the roots of the characteristic polynomial, zero-stability
-                  and the absolute-stability region — so the textbook claims become test
-                  assertions rather than prose.
+                  Every multistep ODE solver in use is a bet that this theorem holds for its coefficients. Order alone guarantees nothing: a method can be consistent to order 3 and still diverge.
                 </div>
               </div>
-
+              <div class="p-row">
+                <div class="p-label">Method</div>
+                <div class="p-body">
+                  A library that <strong>hard-codes no conclusions</strong>. Given the coefficients it derives the order, the error constant, the roots of the characteristic polynomial, zero-stability and the absolute-stability region — so the textbook claims become test assertions the build has to satisfy.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Mathematics</div>
+                <div class="p-body">
+                  A method is a pair of polynomials. Consistency and zero-stability are conditions on their roots, and Method A fails the second with a root at −5:
+                  <span class="p-math">Σ<sub>j</sub> α<sub>j</sub> y<sub>n+j</sub> = h Σ<sub>j</sub> β<sub>j</sub> f<sub>n+j</sub><br>ρ(ζ) = Σ α<sub>j</sub>ζ<sup>j</sup>, σ(ζ) = Σ β<sub>j</sub>ζ<sup>j</sup><br>consistent ⇔ ρ(1) = 0, ρ′(1) = σ(1)<br>Method A: ρ(ζ) = (ζ − 1)(ζ + 5)</span>
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Experiment</div>
+                <div class="p-body">
+                  Measured order on eight zero-stable methods; BDF for k = 1 … 7; Method A on y′ = −y with h = 0.1, recomputed from its coefficients for the figure below.
+                </div>
+              </div>
               <div class="p-row">
                 <div class="p-label">Result</div>
                 <div class="p-body">
-                  Measured order agrees with theory to within
-                  <span class="metric">0.12</span> across eight zero-stable methods. BDF loses
-                  zero-stability exactly at <span class="metric">k = 7</span>
-                  (max|z<sub>i</sub>| = 1.0222) — the k ≤ 6 boundary falls out of the polynomial
-                  roots instead of being assumed. And the point of the whole theorem, made
-                  concrete: a consistent <em>order-3</em> method that is not zero-stable
-                  reaches error <span class="metric">10³⁷</span> by t = 6.
-                  <span class="metric">86 tests</span>, CI, MIT.
+                  Measured order agrees with theory to within <span class="metric">0.12</span>. BDF loses zero-stability exactly at <span class="metric">k = 7</span> (max|z<sub>i</sub>| = 1.0222) — the barrier falls out of the polynomial roots instead of being assumed. Method A reaches error <span class="metric">10³⁷</span> by t = 6, multiplied by 5.3 every step. <span class="metric">93 tests</span>, CI across Python 3.10–3.13.
                 </div>
               </div>
-
+              <div class="p-row">
+                <div class="p-label">Limitation</div>
+                <div class="p-body">
+                  It makes known theorems executable; it proves nothing new. The experiments use scalar model problems such as y′ = −y rather than large systems.
+                </div>
+              </div>
               <div class="p-row">
                 <div class="p-label">My role</div>
                 <div class="p-body">
-                  <strong>The library and its test suite are mine</strong> — the design
-                  decision that nothing is hard-coded, so each textbook claim becomes an
-                  assertion the build has to satisfy, is the whole point of the repository
-                  and it is my work. The report is three-person coursework
-                  (L. T. Nhân, D. T. H. Yến, N. H. Tú); its 63 pages and the 50-page slide
-                  deck are in the repo.
+                  <strong>The library and its test suite are mine.</strong> The report is three-person coursework (L. T. Nhân, D. T. H. Yến, N. H. Tú); its 63 pages and the 50-slide deck are in the repository.
                 </div>
               </div>
             </div>
@@ -1416,36 +1436,54 @@
               <span class="p-status live">Thesis + code public</span>
             </div>
             <p class="p-problem rv">
-              Physics-informed neural networks are usually introduced as a recipe. The
-              thesis works the other way round: the approximation theory first, then the
-              experiments that show where the theory bites.
+              Physics-informed neural networks degrade on problems with a small length scale. The thesis asks why, and at which level: approximation, optimisation, or the stability of the differential problem itself.
             </p>
 
             <div class="rv">
               <div class="p-row">
-                <div class="p-label">What is in it</div>
+                <div class="p-label">Why it matters</div>
                 <div class="p-body">
-                  A LaTeX thesis on the theoretical foundations of neural networks and PINNs,
-                  plus a <code>pinns</code> package with six numbered experiments —
-                  ReLU approximation, the λ trade-off, spectral bias, the heat equation,
-                  Burgers' equation, and a stability study — each writing its results to
-                  committed JSON, all reachable from one <code>run_all.py</code>.
+                  PINNs are proposed as general PDE solvers, and their failures are usually reported as anecdotes. Knowing which level fails tells you what to change — the architecture, the optimiser, or the formulation.
                 </div>
               </div>
-
               <div class="p-row">
-                <div class="p-label">Honest scope</div>
+                <div class="p-label">Method</div>
                 <div class="p-body">
-                  Undergraduate thesis, VNU-HCM University of Science. The theory and the
-                  proofs are mine; the test suite, the verification script and the CI came
-                  later, with AI assistance, and the repository says which commits.
-                  <strong>20 tests</strong> check the primitives against closed-form
-                  mathematics, and <strong>39 checks</strong> re-derive every published
-                  number on each push.
+                  Networks studied through derivatives <em>with respect to the input</em>, giving explicit Jacobian and Hessian recurrences; backpropagation and forward/reverse-mode differentiation derived; gradient pathology, spectral bias and a residual-to-error stability bound, each tested by one experiment with a pass/fail criterion written down before it ran.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Mathematics</div>
+                <div class="p-body">
+                  The loss is a weighted sum of mean-square residuals. For −u″ = f on (0, 1) with the boundary condition imposed exactly, the residual bounds the error — which is why minimising it is worth doing at all:
+                  <span class="p-math">J(θ) = λ<sub>r</sub>J<sub>r</sub> + λ<sub>0</sub>J<sub>0</sub> + λ<sub>b</sub>J<sub>b</sub>, &nbsp; J<sub>r</sub> = (1/N) Σ |r<sub>θ</sub>(x<sub>i</sub>)|²<br>‖e<sub>θ</sub>‖<sub>L²</sub> ≤ π<sup>−2</sup> ‖r<sub>θ</sub>‖<sub>L²</sub></span>
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Experiment</div>
+                <div class="p-body">
+                  Six experiments on an 885-line implementation built directly on <code>torch.autograd</code>, no PINN library: ReLU under a second-order operator, the soft boundary constraint, spectral bias, the diffusion equation, Burgers at small viscosity, and the stability bound.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Result</div>
+                <div class="p-body">
+                  Under ReLU the residual gradient is exactly <span class="metric">0.0</span>; tanh reaches a <span class="metric">16,660×</span> lower L² error. The operator <strong>reverses spectral bias</strong> — contradicting the thesis's own chapter 4, which the text then retracts. Diffusion to <span class="metric">1.0×10⁻⁴</span>. The stability bound holds with its hypothesis (max ratio 0.0261 against 0.1013) and is exceeded up to 96× without it. <span class="metric">20 tests</span>, <span class="metric">39 checks</span> re-derived in CI.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Limitation</div>
+                <div class="p-body">
+                  Burgers at small viscosity is a negative result: no configuration beats a relative L² error of 0.082, and adaptive weighting made it worse (0.39 and 0.35). Every problem is in one space dimension. Quantities after 4,000 Adam steps reproduce only to within 3.4% across machines, and the verification says so.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">My role</div>
+                <div class="p-body">
+                  Undergraduate thesis, VNU-HCM University of Science. The theory and the proofs are mine; the test suite, the verification script and the CI came later, with AI assistance, and the repository says which commits.
                 </div>
               </div>
             </div>
-
 
             <figure class="p-fig rv">
               <div class="frame"><div>
@@ -1569,48 +1607,54 @@
               <span class="p-status live">Report + code public</span>
             </div>
             <p class="p-problem rv">
-              The accelerated proximal point method assumes each inner subproblem is solved
-              exactly. In practice it never is — so the question is how much inexactness the
-              O(1/k²) rate survives.
+              The accelerated proximal point method assumes each inner subproblem is solved exactly. In practice it never is — so the question is how much inexactness the O(1/k²) rate survives.
             </p>
 
             <div class="rv">
               <div class="p-row">
-                <div class="p-label">Approach</div>
+                <div class="p-label">Why it matters</div>
                 <div class="p-body">
-                  A synthetic LASSO (n = 80, m = 30, sparsity 8) run through the inexact
-                  accelerated method against a classical proximal-point baseline, under four
-                  inner-loop schedules — constant, log, √k, and exact — each traced against
-                  the O(1/k) and O(1/k²) reference rates, plus a direct numerical check of the
-                  convergence bound proved in the report.
+                  Every proximal step is solved approximately, by another algorithm. Güler's 1992 proof of the accelerated rate has a gap, identified by Salzo and Villa: whether acceleration survives depends on the kind of error certificate the inner solver can provide.
                 </div>
               </div>
-
+              <div class="p-row">
+                <div class="p-label">Method</div>
+                <div class="p-body">
+                  The inexact accelerated method against the classical proximal point method under five inner-accuracy schedules, traced against the O(1/k) and O(1/k²) rates, with the convergence bound proved in the report checked numerically at every outer step.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Mathematics</div>
+                <div class="p-body">
+                  The proximal operator rarely has a closed form. With inner errors shrinking as ε<sub>k</sub> = O(1/k<sup>q</sup>), a type-1 certificate caps the rate at O(1/k); a type-2 certificate keeps O(1/k²) once q &gt; 3/2:
+                  <span class="p-math">prox<sub>λF</sub>(y) = argmin<sub>x</sub> { F(x) + ‖x − y‖² / (2λ) }<br>type 1 ⇒ O(1/k), &nbsp; type 2, q &gt; 3/2 ⇒ O(1/k²)</span>
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Experiment</div>
+                <div class="p-body">
+                  A synthetic LASSO (n = 80, m = 30, sparsity 8); five schedules — fixed budgets of 1 and 4 inner steps, log k, √k, and exact solves — against the classical, unaccelerated method, over 121 outer steps.
+                </div>
+              </div>
               <div class="p-row">
                 <div class="p-label">Result</div>
                 <div class="p-body">
-                  The experiments show which inner-accuracy schedules preserve the accelerated
-                  rate and which decay to the unaccelerated one — the theorem's hypothesis
-                  made visible rather than assumed.
+                  By k = 40 the √k schedule sits <span class="metric">54×</span> below the classical method and exact solves <span class="metric">198×</span>, while fixed budgets stall at 3×10⁻² and 1.4×10⁻⁴. The bound: <span class="metric">0 violations in 121 steps</span> for all five schedules. <span class="metric">90 checks</span>, mutation-tested — 10 planted bugs, all 10 caught.
                 </div>
               </div>
-
+              <div class="p-row">
+                <div class="p-label">Limitation</div>
+                <div class="p-body">
+                  One synthetic instance at small scale: the experiments illustrate the theorem, they do not benchmark solvers.
+                </div>
+              </div>
               <div class="p-row">
                 <div class="p-label">My role</div>
                 <div class="p-body">
-                  <strong>The repository is mine</strong> — the MATLAB and Python
-                  experiments, the build that keeps report, slides and presentation script
-                  generated from one set of source files rather than three drifting copies,
-                  and the verification that turned the report's convergence bound into
-                  something CI checks: <strong>0 violations across 121 outer steps</strong>
-                  for all five inner-accuracy schedules, plus the theorem's own hypothesis,
-                  which the closed form satisfies exactly. <strong>90 checks</strong> in
-                  total, mutation-tested — 10 deliberately planted bugs, all 10 caught. The
-                  written work is group coursework (Nhóm 10), optimisation topic.
+                  <strong>The repository is mine</strong> — the MATLAB and Python experiments, the build that generates the report, slides and presentation script from one set of sources, and the verification that turned the convergence bound into a CI check. The written work is group coursework (Nhóm 10), optimisation topic.
                 </div>
               </div>
             </div>
-
 
             <figure class="p-fig rv">
               <div class="frame"><div>
@@ -1714,27 +1758,122 @@
           </div>
         </article>
 
-        <!-- ── Two more public repositories, a line each rather than a card. ── -->
-        <article id="p-other" class="project" data-cat="ml">
-          <div class="p-num rv from-left" aria-hidden="true">+</div>
+        <!-- ── 07 ── -->
+        <article id="p-rag" class="project" data-cat="ml">
+          <div class="p-num rv from-left" aria-hidden="true">07</div>
           <div>
             <div class="p-head rv">
-              <h3>Other Work on GitHub</h3>
+              <h3>Enterprise Hybrid RAG</h3>
+              <span class="p-status live">Report + code public</span>
+            </div>
+            <p class="p-problem rv">
+              Answer questions from PDF, DOCX and Markdown with citations that resolve to a page — and know which retriever to trust for which kind of question.
+            </p>
+
+            <div class="rv">
+              <div class="p-row">
+                <div class="p-label">Why it matters</div>
+                <div class="p-body">
+                  An answer without a checkable source is not usable inside a company, and a system that never abstains will invent one. Keyword questions (a policy code such as HB-7.2) and paraphrased ones fail in opposite retrievers, so no single retriever is safe.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Method</div>
+                <div class="p-body">
+                  No RAG framework, so every ranking decision is inspectable. BM25 and dense retrieval built from the same chunk list in one pass · reciprocal-rank fusion · cross-encoder reranking · a confidence gate that abstains · citations resolved to the page, invalid ones dropped.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Architecture</div>
+                <div class="p-body">
+                  Loaders keep page and section → a sentence-aligned chunker → BM25 Okapi and Chroma (384-d cosine, <code>all-MiniLM-L6-v2</code>) → fusion → reranking with <code>ms-marco-MiniLM-L-6-v2</code> → confidence gate → context builder → LLM → citation resolution.
+                  <span class="p-math">RRF(d) = Σ<sub>r ∈ retrievers</sub> 1 / (k + rank<sub>r</sub>(d))</span>
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Experiment</div>
+                <div class="p-body">
+                  50 questions over 22 documents (77 chunks), four configurations — dense only, BM25 only, fused, fused + reranker — broken down by question type, and regenerated by CI on every pull request.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Result</div>
+                <div class="p-body">
+                  <span class="metric">Recall@1 0.795</span> for hybrid + reranker against 0.585 dense-only and 0.643 BM25; <span class="metric">MRR 0.909</span>. By type, BM25 scores 1.00 on keyword questions and 0.11 on paraphrase, the dense encoder 0.43 and 0.44 — the reranked hybrid holds both ceilings (1.00 and 0.44) and reaches 1.00 on terminology.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Limitation</div>
+                <div class="p-body">
+                  The corpus is synthetic and small — 22 documents and 43 scored questions — so every comparison is directional. Generation is not measured with a real LLM. The abstention threshold over-refuses 34.9% of answerable questions. Reranking costs about 694 ms per query against 0.75 ms for BM25.
+                </div>
+              </div>
+            </div>
+
+            <div class="p-stack">Python · sentence-transformers · Chroma · BM25 · pytest · mypy · Docker</div>
+
+            <div class="p-links">
+              <a class="btn btn-secondary" href="https://github.com/tu-h-nguyn/Enterprise-Hybrid-RAG/blob/main/docs/report/report.pdf" target="_blank" rel="noopener">Read the report <span class="arr" aria-hidden="true">↗</span></a>
+              <a class="btn btn-secondary" href="https://github.com/tu-h-nguyn/Enterprise-Hybrid-RAG" target="_blank" rel="noopener">View code <span class="arr" aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── 08 ── -->
+        <article id="p-quant" class="project" data-cat="ml quant">
+          <div class="p-num rv from-left" aria-hidden="true">08</div>
+          <div>
+            <div class="p-head rv">
+              <h3>AI Quant Trading Research Lab</h3>
               <span class="p-status live">Code public</span>
             </div>
             <p class="p-problem rv">
-              Two more public repositories: a retrieval system that shows which retriever to
-              trust for which question, and a trading research harness built so that its
-              answer is allowed to be "no".
+              Does a leakage-aware machine-learning signal add value out of sample, after trading costs, relative to simple trading rules?
             </p>
-            <div class="p-row rv">
-              <div class="p-label">Projects</div>
-              <div class="p-body">
-                <ul>
-                  <li><strong><a href="https://github.com/tu-h-nguyn/Enterprise-Hybrid-RAG" target="_blank" rel="noopener">Enterprise Hybrid RAG</a></strong> — question answering over PDF, DOCX and Markdown with page-level citations, built without a RAG framework: BM25 and dense retrieval, reciprocal-rank fusion, cross-encoder reranking and an abstention gate. On 50 questions over 22 documents, hybrid + reranker reaches <span class="metric">Recall@1 0.795</span>, against 0.585 dense-only and 0.643 BM25.</li>
-                  <li><strong><a href="https://github.com/tu-h-nguyn/AI-Quant-Trading-System" target="_blank" rel="noopener">AI Quant Trading Research Lab</a></strong> — does a leakage-aware ML signal beat simple trading rules out of sample, after costs? Walk-forward refits with an embargo, logistic regression and XGBoost against buy-and-hold, momentum and moving-average baselines on SPY, QQQ, IWM, TLT and GLD, costs charged on turnover, moving-block bootstrap. A research harness: no returns are quoted, because none are committed.</li>
-                </ul>
+
+            <div class="rv">
+              <div class="p-row">
+                <div class="p-label">Why it matters</div>
+                <div class="p-body">
+                  Most backtests that look profitable leak — shuffled splits, features that peek at the future, costs left out. A harness built so that its answer is allowed to be "no" is worth more than one that always says yes.
+                </div>
               </div>
+              <div class="p-row">
+                <div class="p-label">Method</div>
+                <div class="p-body">
+                  Chronological walk-forward refits from independent estimator clones, with an embargo for forward-horizon labels · features from current and past data only · buy-and-hold, momentum and moving-average baselines against logistic regression and XGBoost · costs charged on turnover · moving-block bootstrap for dependent daily returns.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Architecture</div>
+                <div class="p-body">
+                  Market data → features → baseline and ML signals → walk-forward out-of-sample → portfolio (long-only minimum-variance and risk-parity weights from trailing observations, lagged before returns apply; volatility targeting; drawdown guardrails) → costs and turnover → metrics → bootstrap → report, with each run's configuration and source commit recorded.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Experiment</div>
+                <div class="p-body">
+                  The flagship study runs the same experiment on SPY, QQQ, IWM, TLT and GLD. AUC is reported as a predictive diagnostic; trading metrics come from a separate cost-aware backtest; the signal threshold is fixed from configuration and never tuned on the out-of-sample period.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Result</div>
+                <div class="p-body">
+                  A research harness, not a strategy. <span class="metric">No returns are quoted here</span>: none are committed to the repository — its research workflow regenerates the report, and an ML signal that loses to a baseline counts as a valid result.
+                </div>
+              </div>
+              <div class="p-row">
+                <div class="p-label">Limitation</div>
+                <div class="p-body">
+                  Historical simulation only: execution slippage, liquidity, borrow costs, corporate actions and regime shifts can change live outcomes. Five ETFs, daily data. Research and educational software, not investment advice.
+                </div>
+              </div>
+            </div>
+
+            <div class="p-stack">Python · pandas · scikit-learn · XGBoost · pytest · ruff · GitHub Actions</div>
+
+            <div class="p-links">
+              <a class="btn btn-secondary" href="https://github.com/tu-h-nguyn/AI-Quant-Trading-System" target="_blank" rel="noopener">View code <span class="arr" aria-hidden="true">↗</span></a>
             </div>
           </div>
         </article>
