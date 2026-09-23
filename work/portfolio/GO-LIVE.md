@@ -11,7 +11,8 @@ Where the values live: **`work/portfolio/site.json`**. Nothing else needs editin
 python3 work/scripts/audit_launch.py     # what is still unset, and why it matters
 ```
 
-Right now that reports exactly two gaps: the analytics code and the badge link.
+Right now it reports no blocking issues: analytics and the badge link are both configured.
+The one thing left is the domain, and that waits on DNS you have to point yourself.
 
 ---
 
@@ -59,37 +60,55 @@ To back out at any point:
 python3 work/scripts/configure_site.py --base https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship
 ```
 
-## 2. Analytics — GoatCounter
+## 2. Analytics — done, on GA4
 
-Free for personal use, about 3 KB, sets no cookies and stores no personal data, so it
-needs no consent banner. While the code is empty the page loads no analytics script at
-all — worth knowing, because it means an unconfigured site is not quietly half-tracking.
+Both pages count visits with **Google Analytics 4, `G-KGRCWRY9BV`**. It is stamped in and
+the audit passes on it; nothing here is blocking. The rest of this section is how to
+change it.
 
-1. Sign up at `goatcounter.com` and pick a code — say `hoangtu`. Your dashboard is then
-   `https://hoangtu.goatcounter.com`.
-2. ```bash
-   python3 work/scripts/configure_site.py --analytics hoangtu
-   ```
-3. Commit, push, wait a minute or two, then open the live site in a private window and
-   reload twice.
-4. Open your dashboard. The visits should be there within about 30 seconds.
-   **Screenshot that dashboard showing non-zero visits** — that is the deliverable, not
-   a screenshot of the script tag.
+One counter, one place: `analytics_provider` and `analytics_id` in `site.json`. The block
+between the `analytics:start` and `analytics:end` comments on each page is *generated* —
+by `configure_site.py` on the portfolio and by `build_paper.py` on the paper — so never
+edit it by hand; the next run overwrites you. That is also why the pages cannot end up
+shipping two counters at once, or a dead snippet that loads nothing: the audit fails on
+both.
 
-If the dashboard stays empty: an ad blocker will block `gc.zgo.at`, so test with one off.
+```bash
+python3 work/scripts/configure_site.py --analytics G-ABC1234567   # a different GA4 property
+python3 work/scripts/configure_site.py --analytics hoangtu        # switch to GoatCounter
+python3 work/scripts/configure_site.py --analytics none           # no counter at all
+python3 work/scripts/build_paper.py                                # carry it into the paper
+```
+
+Then commit, push, wait a minute or two, open the live site in a private window, reload
+twice, and check the dashboard. **Screenshot the dashboard showing non-zero visits** —
+that is the deliverable, not a screenshot of the script tag. GA4's standard reports can
+lag up to a day; look at **Realtime**, which shows the visit within about a minute.
+
+If the dashboard stays empty it is almost always an ad blocker — `googletagmanager.com`
+and `gc.zgo.at` are on every blocklist. Test with one off.
+
+**One thing to know about GA4.** It sets cookies and sends data to Google, so in the EU/UK
+it needs a consent banner to be lawful, and this site ships none. For a portfolio read by
+recruiters that is a judgement you are making, not an oversight — but it is why the
+cookieless alternative is kept one command away. GoatCounter is free for personal use,
+about 3 KB, sets no cookies and stores no personal data, so it needs no banner.
 
 ## 3. The graduate badge
 
 The badge is drawn and installed in the footer of both pages
 (`docs/assets/flyrank-graduate-badge.svg`) — it is served from your own repo, so it cannot
-break when someone else's host goes down. What is missing is where it points.
+break when someone else's host goes down. It links to your FlyRank verification page
+(`internship.flyrank.ai/verify?id=FR-D2-T779H-R890R`), which is set and passing the audit.
 
-I could not open `internship-badge.netlify.app` from the build environment to read your
-verification URL, so the link is a placeholder and both audits fail on it deliberately.
+To point it somewhere else:
 
 ```bash
 python3 work/scripts/configure_site.py --verify https://<your-verification-page>
 ```
+
+The one check that cannot be done from here: open that link on the live site and confirm
+it loads *your* credential page, not a 404 or someone else's.
 
 If FlyRank supplies its own badge image and you would rather use theirs, replace
 `docs/assets/flyrank-graduate-badge.svg` with it — same filename, and nothing else changes.
@@ -119,4 +138,5 @@ python3 work/scripts/audit_portfolio.py   # must print NO ISSUES FOUND
 ```
 
 Then, on the live URL, in a private window: HTTPS padlock, share preview, favicon, badge
-links to your verification page, and a visit showing in the GoatCounter dashboard.
+links to your verification page, and a visit showing in the analytics dashboard
+(GA4 → **Realtime**, unless you switched the counter).
