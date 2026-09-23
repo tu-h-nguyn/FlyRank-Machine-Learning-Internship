@@ -21,8 +21,11 @@ under a client-grouped split, put **88% real decliners in its top 50** against *
 transparent rule baseline and a **61.6%** base rate — while my own Week-4 rule turned out to score
 only 12 of 18,010 pages above zero and therefore rank nothing (ROC-AUC 0.500). Adding the
 window-overlapping columns back lifted precision@200 to 0.995, a beautiful number that is a leakage
-confession rather than a result. The deliverable is an 18,010-row action queue carrying reason
-codes, a suggested action and a confidence label, built to **support the order of human review** —
+confession rather than a result. A whole-pipeline permutation test (p = 0.005) and a
+client-clustered bootstrap indicate the ranking advantage is not chance and holds inside 14 of 18
+clients, while the precision@50 margin on its own sits within noise. The deliverable is an
+18,010-row action queue carrying reason codes, a suggested action and a confidence label, built to
+**support the order of human review** —
 not to promise that refreshing a page recovers its traffic.
 
 ---
@@ -170,6 +173,28 @@ the score was client memorisation**, not transferable skill.
 PR-AUC 0.6678 ± 0.0258 (range 0.630–0.702), precision@50 0.816 ± 0.048. With only 30 clients, the
 range is the result — not the single 0.7183.
 
+**Is the win bigger than the noise? (`work/scripts/evidence_audit.py` → `evidence_audit.json`).**
+A point estimate on 30 clients — one of which holds 31.6% of the pages — is not evidence on its
+own, so the headline was attacked six ways:
+
+| Attack | Result |
+|---|---|
+| Whole-pipeline permutation test (200 retrains on shuffled labels, globally and within each client) | Observed PR-AUC lift 1.167; the null never exceeded 1.026. p = 0.005 under both nulls — the floor for 200 permutations |
+| Client-clustered paired bootstrap, model − rule (1,000 resamples of clients) | ROC-AUC +0.079 [+0.004, +0.118]; PR-AUC +0.051 [-0.004, +0.086] (96.4% of resamples favour the model); precision@50 +0.14 [-0.06, +0.24] |
+| Inside each client (18 clients with ≥50 pages and ≥10 of each class) | Model beats rule on within-client ROC-AUC in 14 of 18 (sign test p = 0.015); median 0.584 vs 0.551 |
+| Largest client removed / alone | PR-AUC 0.740 vs 0.714 without it; 0.635 vs 0.549 inside it |
+| 4 demand floors × 3 decline thresholds | Model beats rule on PR-AUC in 12 of 12; on precision@50 wins 9, ties 2, loses 1 |
+| Gradient-boosting challenger (regularised `HistGradientBoostingClassifier`) | PR-AUC 0.697 vs 0.718, gap +0.021 [-0.008, +0.041] in the logistic regression's favour |
+| Calibration | Brier skill +0.052, ECE 0.028, slope 0.78; top decile predicted 0.84, observed 0.76 |
+
+**What survives:** the model orders pages better than the rule across the whole ranking, inside
+most clients, without the dominant client, and under every definition tried. **What does not:**
+the precision@50 gap on its own — its interval crosses zero, so "44 vs 37 of the top 50" is a
+point estimate, not a guarantee. **What it changed:** the readable model is confirmed on merit
+(boosting and forests land within noise, below it), and the score is presented as a rank with a
+confidence label — at the top it overstates the probability by about eight points. The one-page
+summary is `work/MODEL_CARD.md`.
+
 **Risk deciles (out-of-fold).** Top decile 75.9% declined vs bottom decile 42.7% — a 1.78× spread:
 real signal, no sharp boundary.
 
@@ -180,7 +205,7 @@ real signal, no sharp boundary.
 - The model's own weak spot is the middle of the queue: deciles 5–7 sit at 62–71%, barely above the
   61.6% base rate. Honest reading: the queue is trustworthy at the top and near-uninformative in the
   middle.
-- 14 of the top 200 carry only `model_pattern_only` — the model ranks them high but no human-readable
+- 9 of the top 200 carry only `model_pattern_only` — the model ranks them high but no human-readable
   rule matches. Those are downgraded to `monitor` by design.
 
 **Leakage tests run (all in `w06_validation_audit.ipynb`).**
@@ -307,19 +332,28 @@ git clone https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship
 cd FlyRank-Machine-Learning-Internship
 pip install -r requirements.txt
 python work/scripts/capstone_pipeline.py      # ~25s; writes work/outputs/*.json + work/figures/*.svg
+python work/scripts/evidence_audit.py         # ~2.5 min; bootstrap, permutation test, calibration
+pytest -q tests/                              # feature contract, receipts, claims, public safety
 ```
 
 Then run the notebooks top to bottom (Colab badges in `work/README.md`, or locally with Jupyter):
-`w06_validation_audit.ipynb` → `w07_action_playbook.ipynb` → `capstone.ipynb`.
+`w06_validation_audit.ipynb` → `w07_action_playbook.ipynb` → `w08_evidence_audit.ipynb` → `capstone.ipynb`.
 
 - **Seed:** `RANDOM_SEED = 42` everywhere (splits, models, permutation importance).
 - **CV:** `GroupKFold(5)` by `client_id` — deterministic, no seed dependence.
-- **Environment:** Python 3.11, pandas 2.x, scikit-learn 1.7.x, matplotlib 3.x (`requirements.txt`).
-  Random-forest numbers can move a point or two between scikit-learn versions; the shipped logistic
-  regression is stable.
+- **Environment:** Python 3.11+, pandas 2.x–3.x, scikit-learn 1.7–1.9, matplotlib 3.x
+  (`requirements.txt`). The committed receipts reproduce exactly on both ends of that range.
+- **Checked, not trusted:** `tests/test_capstone.py` re-derives the population, the base rate and the
+  shipped model's out-of-fold metrics from the raw CSV and compares them with the receipts; it also
+  checks that the headline numbers printed in this report, the README, the model card and the
+  deployed paper are the numbers in the receipts. CI (`.github/workflows/capstone-receipts.yml`)
+  re-runs the pipeline on every push and fails if any committed receipt changes.
+- **Byte-identical figures:** SVGs are written without timestamps and with salted element IDs, so a
+  rebuild on unchanged data leaves `git status` clean.
 - **Receipts (committed):** `work/outputs/capstone_metrics.json` (every metric, base rate, split
   design, full exclusion list), `capstone_importance.json`, `capstone_coefficients.json`,
-  `capstone_queue_top20.json`, `capstone_queue_summary.json`, `monitoring_thresholds.json`.
+  `capstone_queue_top20.json`, `capstone_queue_summary.json`, `monitoring_thresholds.json`,
+  `evidence_audit.json` (bootstrap intervals, permutation nulls, calibration, per-client, sensitivity).
 - **Not committed by design:** `work/outputs/refresh_action_queue.csv` (18,010 rows) — repo policy
   blocks dataset CSVs. It is regenerated by the single command above.
 - **No sealed-holdout claim is made.** Every number here is out-of-fold cross-validation on one

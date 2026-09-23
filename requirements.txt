@@ -5,3 +5,4 @@ matplotlib>=3.8
 reportlab>=4.0
 duckdb>=1.0
 huggingface_hub>=0.24
+pytest>=8.0
