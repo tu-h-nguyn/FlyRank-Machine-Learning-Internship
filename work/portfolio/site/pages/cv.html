@@ -1,0 +1,130 @@
+<!--page
+{
+  "path": "cv/",
+  "nav": "cv",
+  "title": "CV — Nguyễn Hoàng Tú",
+  "description": "Résumé of Nguyễn Hoàng Tú: Mathematics & Computer Science, VNU-HCM University of Science. Machine learning, numerical methods, quantitative research.",
+  "og_title": "CV — Nguyễn Hoàng Tú",
+  "og_description": "Mathematics and Computer Science, VNU-HCM University of Science. Machine learning, numerical methods, quantitative research — every line links to public code."
+}
+-->
+    <header class="page-head">
+      <div class="wrap">
+        <p class="label"><a href="{{root}}">Home</a> / CV</p>
+        <h1>Nguyễn Hoàng Tú</h1>
+        <p class="lede">Mathematics &amp; Computer Science, VNU-HCM University of Science. Machine learning, numerical methods and quantitative research — built from the mathematics up, with tests that check the numbers.</p>
+        <p class="cv-contact"><a href="https://github.com/tu-h-nguyn">github.com/tu-h-nguyn</a><span aria-hidden="true">·</span><a href="https://www.linkedin.com/in/tuhcmus/">linkedin.com/in/tuhcmus</a><span aria-hidden="true">·</span><a href="https://tu-h-nguyn.github.io/">tu-h-nguyn.github.io</a></p>
+        <div class="cv-actions">
+          <button class="btn btn-primary" type="button" data-print>Print or save as PDF</button>
+          <a class="btn btn-secondary" href="{{home_sections}}#contact">Contact <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+        <p class="note screen-only">This page is the résumé: it prints to a clean PDF. A separately typeset PDF is not published yet.</p>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="cv">
+        <section aria-labelledby="cv-edu">
+          <h2 id="cv-edu">Education</h2>
+          <div class="cv-row">
+            <p class="label">Until Oct 2027</p>
+            <div>
+              <h3>Mathematics &amp; Computer Science — VNU-HCM University of Science</h3>
+              <ul>
+                <li>Thesis: <em>Theoretical Foundations of Neural Networks and PINNs</em> — why physics-informed networks fail, six experiments with criteria fixed in advance.</li>
+                <li>Coursework with public reports and code: numerical methods for ODEs and PDEs, a finite-volume topic course (2025), optimisation.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="cv-exp">
+          <h2 id="cv-exp">Experience</h2>
+          <div class="cv-row">
+            <p class="label">2026</p>
+            <div>
+              <h3>Machine Learning Internship Track — FlyRank</h3>
+              <ul>
+                <li>Capstone: ranked 18,010 pages by 30-day search-decline risk for an editorial team that reviews about 50 a week.</li>
+                <li>Leakage audit, rule baseline first, client-grouped cross-validation; <b>precision@50 0.88</b> against 0.74 for the baseline.</li>
+                <li>Published a paper and a one-script reproducible pipeline — <a href="https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/">tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship</a></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="cv-proj">
+          <h2 id="cv-proj">Selected Projects</h2>
+          <div class="cv-row">
+            <p class="label">Scientific ML</p>
+            <div>
+              <h3>Neural Networks and PINNs — thesis code</h3>
+              <p>PINN on <code>torch.autograd</code>, no PINN library; ReLU shown exactly stationary under a second-order operator; the operator reverses spectral bias. 20 tests, 39 numbers re-derived in CI.</p>
+              <p class="cv-url"><a href="https://github.com/tu-h-nguyn/Foundations-of-Neural-Networks-and-PINNs-for-Differential-Equations">github.com/tu-h-nguyn/Foundations-of-Neural-Networks-and-PINNs-for-Differential-Equations</a></p>
+            </div>
+          </div>
+          <div class="cv-row">
+            <p class="label">Retrieval</p>
+            <div>
+              <h3>Enterprise Hybrid RAG</h3>
+              <p>BM25 + dense retrieval, reciprocal-rank fusion, cross-encoder reranking, abstention, page-level citations; no framework. Recall@1 <b>0.795</b> against 0.585 dense-only and 0.643 BM25.</p>
+              <p class="cv-url"><a href="https://github.com/tu-h-nguyn/Enterprise-Hybrid-RAG">github.com/tu-h-nguyn/Enterprise-Hybrid-RAG</a></p>
+            </div>
+          </div>
+          <div class="cv-row">
+            <p class="label">Quantitative</p>
+            <div>
+              <h3>AI Quant Trading Research Lab</h3>
+              <p>Walk-forward refits with an embargo, costs on turnover, rule baselines against logistic regression and XGBoost on five ETFs, moving-block bootstrap. A research harness; no performance is claimed.</p>
+              <p class="cv-url"><a href="https://github.com/tu-h-nguyn/AI-Quant-Trading-System">github.com/tu-h-nguyn/AI-Quant-Trading-System</a></p>
+            </div>
+          </div>
+          <div class="cv-row">
+            <p class="label">Numerical analysis</p>
+            <div>
+              <h3>Sharp CFL Analysis — FEM for the Wave Equation</h3>
+              <p>Consistent-mass CFL limit Δt &lt; h/(c√3) derived and matched to four significant figures; all report tables re-derived digit-for-digit in CI.</p>
+              <p class="cv-url"><a href="https://github.com/tu-h-nguyn/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation">github.com/tu-h-nguyn/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation</a></p>
+            </div>
+          </div>
+          <div class="cv-row">
+            <p class="label">Numerical analysis</p>
+            <div>
+              <h3>Finite-Volume Solver for the 1D Euler Equations</h3>
+              <p>Exact Riemann solver as ground truth; four fluxes, TVD limiters, SSP integrators; L¹ error 7.4× smaller on Sod's tube. 133 tests, 98% coverage.</p>
+              <p class="cv-url"><a href="https://github.com/tu-h-nguyn/The-Finite-Volume-Method-for-One-Dimensional-Euler-Equations">github.com/tu-h-nguyn/The-Finite-Volume-Method-for-One-Dimensional-Euler-Equations</a></p>
+            </div>
+          </div>
+          <div class="cv-row">
+            <p class="label">Numerical analysis</p>
+            <div>
+              <h3>Linear Multistep Methods</h3>
+              <p>A library that derives order, error constant and stability from the coefficients; BDF loses zero-stability exactly at k = 7. 93 tests.</p>
+              <p class="cv-url"><a href="https://github.com/tu-h-nguyn/Stability-Consistency-and-Convergence-of-Linear-Multistep-Methods">github.com/tu-h-nguyn/Stability-Consistency-and-Convergence-of-Linear-Multistep-Methods</a></p>
+            </div>
+          </div>
+          <div class="cv-row">
+            <p class="label">Optimisation</p>
+            <div>
+              <h3>Inexact and Accelerated Proximal Point Algorithms</h3>
+              <p>Inner-accuracy schedules on LASSO; the convergence bound checked at each of 121 steps with 0 violations; 90 checks, mutation-tested.</p>
+              <p class="cv-url"><a href="https://github.com/tu-h-nguyn/Inexact-and-Accelerated-Proximal-Point-Algorithms">github.com/tu-h-nguyn/Inexact-and-Accelerated-Proximal-Point-Algorithms</a></p>
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="cv-skills">
+          <h2 id="cv-skills">Skills</h2>
+          <div class="cv-row"><p class="label">Mathematics</p><p>Numerical analysis of ODEs and PDEs (FEM, finite volumes, multistep methods), stability and convergence analysis, convex optimisation, linear algebra, probability and statistics for evaluation</p></div>
+          <div class="cv-row"><p class="label">ML &amp; AI</p><p>Neural-network theory, automatic differentiation, physics-informed networks, supervised learning with leakage audits, information retrieval and reranking</p></div>
+          <div class="cv-row"><p class="label">Quantitative</p><p>Walk-forward validation, backtesting with costs, minimum-variance and risk-parity allocation, block bootstrap</p></div>
+          <div class="cv-row"><p class="label">Engineering</p><p>Python (NumPy, pandas, PyTorch, scikit-learn, XGBoost), pytest, mypy, ruff, GitHub Actions, LaTeX, MATLAB/Octave</p></div>
+        </section>
+
+        <section aria-labelledby="cv-writing">
+          <h2 id="cv-writing">Writing</h2>
+          <div class="cv-row"><p class="label">Paper</p><p>Which page should an editor open first? Ranking 18,010 pages by search-decline risk.</p></div>
+          <div class="cv-row"><p class="label">Reports</p><p>FEM for the wave equation (web write-up and report); linear multistep methods (63 pages); finite volumes for the Euler equations; hybrid RAG design and evaluation. The paper, the RAG report and the FEM web write-up are in English; the other reports are in Vietnamese.</p></div>
+        </section>
+      </div>
+    </div>
