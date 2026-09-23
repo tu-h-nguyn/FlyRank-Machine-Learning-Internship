@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" fill="#0369a1"/>
-  <text x="32" y="45" font-family="Helvetica, Arial, sans-serif" font-size="38"
-        font-weight="700" fill="#ffffff" text-anchor="middle">T</text>
+  <rect width="64" height="64" fill="#1c2d3d"/>
+  <rect x="40" y="40" width="16" height="16" fill="#6d8397"/>
+  <text x="29" y="47" font-family="'Playfair Display', Georgia, 'Times New Roman', serif" font-size="44"
+        font-weight="900" font-style="italic" fill="#ffffff" text-anchor="middle">T</text>
 </svg>

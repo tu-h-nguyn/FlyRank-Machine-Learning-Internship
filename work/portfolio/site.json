@@ -1,9 +1,10 @@
 {
-  "_comment": "Single source of truth for the public site. Change a value here, then run: python3 work/scripts/configure_site.py. external_sites lists other sites this one links to on purpose, so the launch audit does not flag them as stale URLs.",
+  "_comment": "Single source of truth for the public site. Change a value here, then run: python3 work/scripts/configure_site.py. external_sites lists other sites this one links to on purpose, so the launch audit does not flag them as stale URLs. portfolio_url is where the portfolio is canonical; work/scripts/export_user_site.py publishes docs/portfolio/ there.",
   "base_url": "https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship",
   "base_url_target": "https://hoangtu.is-a.dev",
-  "goatcounter_code": "",
-  "ga4_id": "G-KGRCWRY9BV",
+  "portfolio_url": "https://tu-h-nguyn.github.io/",
+  "analytics_provider": "ga4",
+  "analytics_id": "G-KGRCWRY9BV",
   "badge_verify_url": "https://internship.flyrank.ai/verify?id=FR-D2-T779H-R890R&first_name=T%C3%BA",
   "google_site_verification": "RoBPPTMe-SpFcYKFTp-OJqG3KOfBKTTpeFSvSFcufJE",
   "external_sites": [

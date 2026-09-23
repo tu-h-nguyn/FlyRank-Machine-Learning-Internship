@@ -105,6 +105,26 @@ accessibility audit caught it; I had not thought to look.
 audit was the only accessibility failure in the first run, and the only imperfect audit
 left afterwards is the blocked-font console error described under Speed.
 
+### 5–7. The redesign pass — three regressions, each found by measuring
+
+The page was rebuilt in an editorial style with motion (September 2026). Re-running the
+suites against it found three things the new design broke:
+
+- **5. A shrinking nav moved the page after the jump.** The sticky nav tightened from
+  68px to 58px once scrolled. A sticky element still occupies layout, so the whole page
+  shifted up 10px *after* an anchor jump had landed — heading at 62px, under a 69px nav.
+  **Fix:** the nav keeps its height and only gains a border and shadow.
+  **Evidence:** all four anchors land at 72px. The suite's own check had been reading the
+  position 700ms after the click, mid-scroll on the longer page, and so passed
+  vacuously; it now waits for scrolling to stop, and fails with the shrink put back.
+- **6. 200% text overflowed again, from a new place.** One section label ("01 —
+  Background") was a flex row that could not wrap, and it forced a `1fr` grid track wider
+  than a 390px screen (430px of content). **Fix:** single-column tracks are
+  `minmax(0, 1fr)` and the label wraps. **Evidence:** no horizontal scroll at 2×.
+- **7. The submit button read back in capitals.** `innerText` honours
+  `text-transform`, so an uppercased button reported "SEND MESSAGE" and the form test's
+  label check failed. **Fix:** that button is no longer uppercased.
+
 ---
 
 ## Known limitations — not fixed, not hidden
@@ -123,10 +143,12 @@ determined could burn through that, and then the form **silently stops deliverin
 the quota resets — with no alert to me and a green "message sent" shown to the visitor.
 This is the failure I would fix first if the site mattered commercially.
 
-**4. `robots.txt` cannot work here.** Crawlers only read it at the domain root
-(`tu-h-nguyn.github.io/robots.txt`), which I do not control — this is a project page on
-a shared domain. I shipped `sitemap.xml` instead and will submit it manually through
-Search Console. A custom domain would remove this limitation.
+**4. ~~`robots.txt` cannot work here.~~ Fixed by moving.** Crawlers only read it at the
+domain root (`tu-h-nguyn.github.io/robots.txt`), which a project page does not control.
+The portfolio now has that root: it is published to the user site
+`tu-h-nguyn.github.io`, which serves `robots.txt`, `sitemap.xml` and a 404 page
+(`work/scripts/export_user_site.py`). The copy this repo still serves under
+`/portfolio/` points its canonical tag there.
 
 **5. Google Fonts is a third-party render-blocking dependency.** On a slow or restricted
 network the page renders in fallback fonts. Mitigated with `preconnect` and
@@ -139,7 +161,10 @@ what they exclude.
 **7. Tested in Chromium only.** No real iOS Safari, no real Android device. Safari is
 the gap I would most like to close.
 
-**8. No analytics.** I cannot tell whether anyone visits or where they drop off.
+**8. Analytics is a page counter, not a funnel.** GA4 is installed, so visits are visible
+— but nothing on the page is instrumented, so I still cannot tell where a reader drops off
+or which project sent them to GitHub. GA4 also sets cookies and the page ships no consent
+banner; `GO-LIVE.md` explains the trade and keeps a cookieless counter one command away.
 
 **9. Three of five projects have no repository link,** and the Transformer project's
 result has no number attached. On a page that argues from evidence, those are the weak
@@ -160,7 +185,7 @@ items — named here rather than quietly left.
 | Twitter | `summary_large_image` |
 | JSON-LD | `Person` — job title, `knowsAbout`, `sameAs` → GitHub + LinkedIn |
 | Favicon | inline SVG monogram |
-| Sitemap | `docs/sitemap.xml`, both pages |
+| Sitemap | on the portfolio's own site (`tu-h-nguyn.github.io/sitemap.xml`, both pages), next to `robots.txt` |
 
 The share image is generated, not a screenshot: name, target role, one-line value
 proposition, and the three numbers that matter (18,010 · 0.88 · public paper + code).

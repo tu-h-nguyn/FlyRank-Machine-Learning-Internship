@@ -34,3 +34,7 @@ __pycache__/
 .venv/
 venv/
 .env
+
+# --- Built sites ------------------------------------------------------------
+# export_user_site.py output; published to tu-h-nguyn.github.io, never committed here
+build/

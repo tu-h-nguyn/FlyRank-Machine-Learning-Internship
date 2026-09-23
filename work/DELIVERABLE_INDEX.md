@@ -90,7 +90,7 @@ This index links every deliverable produced during the internship, organized by 
 | Retrospective | [`work/RETROSPECTIVE.md`](RETROSPECTIVE.md) |
 | This deliverable index | [`work/DELIVERABLE_INDEX.md`](DELIVERABLE_INDEX.md) |
 | Demo script / narration guide | [`work/DEMO_SCRIPT.md`](DEMO_SCRIPT.md) |
-| Portfolio site | [tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio](https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/) |
+| Portfolio site | [tu-h-nguyn.github.io](https://tu-h-nguyn.github.io/) (source: `docs/portfolio/`) |
 
 ---
 

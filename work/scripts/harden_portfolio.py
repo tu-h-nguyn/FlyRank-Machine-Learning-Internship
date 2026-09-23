@@ -155,9 +155,19 @@ def main():
             navh = pg.evaluate("() => document.querySelector('.nav').getBoundingClientRect().height")
             for target in ["#projects", "#approach", "#skills", "#contact"]:
                 pg.evaluate(f"() => document.querySelector('a[href=\"{target}\"]').click()")
-                pg.wait_for_timeout(700)
-                top = pg.evaluate(f"() => document.querySelector('{target}').getBoundingClientRect().top")
-                if top < navh - 1:
+                # Smooth scrolling across a long page outlasts any fixed wait, and a
+                # reading taken mid-scroll passes vacuously (the heading is still far
+                # below the nav). Measure only once the page has stopped moving.
+                top, last = None, None
+                for _ in range(40):
+                    pg.wait_for_timeout(150)
+                    top = pg.evaluate(f"() => document.querySelector('{target}').getBoundingClientRect().top")
+                    if last is not None and abs(top - last) < 0.5:
+                        break
+                    last = top
+                if top > navh + 120:
+                    report("BUG", f"anchor {target}", f"scroll never reached the section (top {top:.0f})")
+                elif top < navh - 1:
                     report("BUG", f"anchor {target}", f"heading hidden under sticky nav (top {top:.0f} < nav {navh:.0f})")
                 else:
                     ok(f"anchor {target}", f"lands clear of the nav (top {top:.0f})")

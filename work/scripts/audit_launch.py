@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Week 9 launch audit — checks what "live on a real address" actually requires.
 
-Covers both served pages: the paper (docs/index.html) and the portfolio
-(docs/portfolio/index.html). Everything here is checkable offline, from the
-files that GitHub Pages will serve. The three things it CANNOT check from here
+Covers both pages: the paper (docs/index.html, served from this repo) and the
+portfolio (docs/portfolio/index.html, canonical at site.json's portfolio_url and
+published there by export_user_site.py). Everything here is checkable offline,
+from the files that GitHub Pages will serve. The three things it CANNOT check from here
 are called out at the end, because they need the live URL.
 
     python3 work/scripts/audit_launch.py
@@ -13,6 +14,9 @@ import pathlib
 import re
 import struct
 import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from configure_site import analytics_from  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs"
@@ -53,15 +57,33 @@ BASE = cfg["base_url"].rstrip("/")
 # address, say). Without this every intentional outbound link reads as a
 # leftover of the previous address.
 EXTERNAL = tuple(u.rstrip("/") for u in cfg.get("external_sites", []))
-CODE = cfg.get("goatcounter_code", "")
+# The portfolio has its own root address (a user site), so its canonical URL no
+# longer sits under BASE.
+PORTFOLIO = cfg.get("portfolio_url") or f"{BASE}/portfolio/"
 VERIFY = cfg.get("badge_verify_url", "")
 
+# Read the counter the same way configure_site.py does, older keys included. A config
+# that names two counters is a finding here, not a crash.
+try:
+    PROVIDER, ANALYTICS_ID = analytics_from(cfg)
+    CONFIG_ERROR = ""
+except SystemExit as e:
+    PROVIDER, ANALYTICS_ID, CONFIG_ERROR = "", "", str(e).splitlines()[0]
+
+# What a correctly stamped page looks like for each counter, and where its numbers show up.
+ANALYTICS = {
+    "ga4": (re.compile(r'gtag/js\?id=(G-[A-Z0-9]+)'), "Google Analytics"),
+    "goatcounter": (re.compile(r'data-goatcounter="https://([a-z0-9-]+)\.goatcounter\.com/count"'),
+                    "GoatCounter"),
+}
+DASHBOARD = ANALYTICS.get(PROVIDER, (None, "analytics"))[1]
+
 print(f"base URL   {BASE}")
-print(f"analytics  {CODE or '(unset)'}")
+print(f"analytics  {f'{PROVIDER} {ANALYTICS_ID}' if PROVIDER else (CONFIG_ERROR or '(unset)')}")
 print(f"badge link {VERIFY or '(unset)'}")
 
 PAGES = [("paper", DOCS / "index.html", f"{BASE}/"),
-         ("portfolio", DOCS / "portfolio" / "index.html", f"{BASE}/portfolio/")]
+         ("portfolio", DOCS / "portfolio" / "index.html", PORTFOLIO)]
 
 titles = {}
 
@@ -91,10 +113,12 @@ for name, path, url in PAGES:
           meta(html, "property", "og:url") or "missing")
 
     # --- share preview ---
+    # The share image is published next to the page, so it must sit under the
+    # page's own address and exist in the page's own folder.
     ogimg = meta(html, "property", "og:image") or ""
-    check("og:image is absolute", ogimg.startswith(BASE + "/"), ogimg or "missing")
-    if ogimg.startswith(BASE + "/"):
-        f = DOCS / ogimg[len(BASE) + 1:]
+    check("og:image is absolute", ogimg.startswith(url), ogimg or "missing")
+    if ogimg.startswith(url):
+        f = here / ogimg[len(url):]
         if check("og:image file exists", f.exists(), str(f.relative_to(ROOT)) if f.exists() else ogimg):
             w, h = png_size(f)
             check("og:image is 1200x630", (w, h) == (1200, 630), f"{w}x{h}, {f.stat().st_size/1024:.0f} KB")
@@ -117,20 +141,30 @@ for name, path, url in PAGES:
     check("theme-color set", bool(meta(html, "name", "theme-color")))
 
     # --- analytics ---
-    # Two snippets can carry it: GoatCounter (data-goatcounter) and GA4
-    # (gtag config). Either one counted is enough — the site currently runs
-    # GA4 with GoatCounter left unset, and flagging that forever is noise.
-    tag = re.search(r'data-goatcounter="([^"]*)"', html)
-    ga4 = re.search(r"gtag\('config',\s*'(G-[A-Z0-9]+)'\)", html)
-    if check("analytics snippet present", bool(tag) or bool(ga4)):
-        endpoint = tag.group(1) if tag else ""
-        measured = endpoint or (ga4.group(1) if ga4 else "")
-        check("analytics code configured", bool(measured),
-              measured or "empty — nothing will be counted")
-        if endpoint:
-            check("analytics endpoint well formed",
-                  re.fullmatch(r"https://[a-z0-9-]+\.goatcounter\.com/count", endpoint) is not None,
-                  endpoint)
+    # The block is generated (configure_site.py for the portfolio, build_paper.py for
+    # the paper), so the page and site.json cannot drift apart: a page shipping a
+    # counter site.json does not know about, or two counters at once, is a finding.
+    block = re.search(r"<!-- analytics:start.*?<!-- analytics:end -->", html, re.S)
+    if check("analytics block present", bool(block),
+             "" if block else "no analytics:start/end markers — run configure_site.py"):
+        body = block.group(0)
+        check("analytics provider configured", bool(PROVIDER),
+              f"{PROVIDER} {ANALYTICS_ID}" if PROVIDER else (CONFIG_ERROR or "unset — nothing will be counted"))
+        found = [n for n, (pat, _) in ANALYTICS.items() if pat.search(body)]
+        if PROVIDER:
+            m = ANALYTICS[PROVIDER][0].search(body)
+            check(f"{PROVIDER} snippet stamped into the page", bool(m),
+                  m.group(0) if m else f"site.json says {PROVIDER} but the page has no such tag")
+            if m:
+                check("the stamped ID matches site.json", m.group(1) == ANALYTICS_ID,
+                      f"page has {m.group(1)}, site.json has {ANALYTICS_ID}")
+        check("exactly one analytics provider on the page", len(found) <= 1,
+              " + ".join(found) if len(found) > 1 else "")
+        # A counter outside the managed block would survive every regeneration.
+        outside = html.replace(body, "")
+        strays = [n for n, (pat, _) in ANALYTICS.items() if pat.search(outside)]
+        strays += ["dead goatcounter stub"] if 'data-goatcounter=""' in outside else []
+        check("no analytics outside the managed block", not strays, ", ".join(strays))
 
     # --- graduate badge ---
     b = re.search(r'<a class="grad-badge"[^>]*href="([^"]+)"[^>]*>\s*<img src="([^"]+)"[^>]*alt="([^"]*)"',
@@ -153,7 +187,11 @@ stray = set()
 for f in list(DOCS.rglob("*.html")) + list(DOCS.rglob("*.xml")):
     for m in re.finditer(r'https://[a-z0-9.-]*(?:github\.io|is-a\.dev)[^\s"\'<>]*', f.read_text(encoding="utf-8")):
         url = m.group(0)
-        if not url.startswith(BASE) and not url.startswith(EXTERNAL):
+        # A file at the portfolio's root (the page itself, its share image) is
+        # expected; a deeper path under that host is a project site and has to be
+        # listed in external_sites like any other.
+        at_portfolio = url.startswith(PORTFOLIO) and "/" not in url[len(PORTFOLIO):]
+        if not url.startswith(BASE) and not url.startswith(EXTERNAL) and not at_portfolio:
             stray.add(url)
 check("no URLs left pointing at the old address", not stray, "; ".join(sorted(stray)[:3]))
 
@@ -162,7 +200,10 @@ if sitemap.exists():
     locs = re.findall(r"<loc>([^<]+)</loc>", sitemap.read_text(encoding="utf-8"))
     check("sitemap URLs all use the live base", all(l.startswith(BASE) for l in locs),
           f"{len(locs)} URLs")
-    check("sitemap lists both pages", {f"{BASE}/", f"{BASE}/portfolio/"} <= set(locs))
+    check("sitemap lists the paper", f"{BASE}/" in locs)
+    # The portfolio's own site carries its sitemap (export_user_site.py); listing
+    # it here as well would advertise a URL this repo does not canonically serve.
+    check("sitemap leaves the portfolio to its own site", PORTFOLIO not in locs)
 
 cname = DOCS / "CNAME"
 host = BASE.split("://", 1)[1].split("/", 1)[0]
@@ -190,7 +231,7 @@ print("\n" + "=" * 62)
 print("Cannot be checked from here — do these on the live URL:")
 print("  1. Open the address in a private window on desktop, then on your phone.")
 print("  2. Paste the address into a share-preview debugger and confirm the card.")
-print("  3. Reload twice and confirm the hit shows in the GoatCounter dashboard.")
+print(f"  3. Reload twice and confirm the hit shows in the {DASHBOARD} dashboard.")
 print("=" * 62)
 
 if warnings:

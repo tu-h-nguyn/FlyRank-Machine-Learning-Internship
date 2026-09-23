@@ -23,6 +23,9 @@ this branch is merged. Once it is, wait a minute or two and open:
 
 **https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/**
 
+(That is still where this repo serves it. Its canonical home is now
+**https://tu-h-nguyn.github.io/** — see `GO-LIVE.md`, section 0.)
+
 ## 4. The real test — this is the actual deliverable
 
 1. Open that URL **in a private/incognito window**, so you are testing what a stranger
