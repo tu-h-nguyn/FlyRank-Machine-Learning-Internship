@@ -41,19 +41,25 @@ def ratio(a, b):
     hi, lo = max(la, lb), min(la, lb)
     return (hi + 0.05) / (lo + 0.05)
 
+# Every text colour the page sets, on every ground it sits on. The ghost numerals
+# (#cfccc4) and the slate squares are aria-hidden decoration and carry no meaning,
+# so they are deliberately not in this list.
 pairs = [
-    ("body text",        "#18181b", "#fafaf9", 4.5),
-    ("secondary text",   "#52525b", "#fafaf9", 4.5),
-    ("muted text",       "#71717a", "#fafaf9", 4.5),
-    ("muted on white",   "#71717a", "#ffffff", 4.5),
-    ("accent link",      "#0369a1", "#fafaf9", 4.5),
-    ("accent on white",  "#0369a1", "#ffffff", 4.5),
-    ("white on accent",  "#ffffff", "#0369a1", 4.5),
-    ("callout text",     "#0c4a6e", "#e0f2fe", 4.5),
-    ("live badge",       "#15803d", "#f0fdf4", 4.5),
-    ("error text",       "#b91c1c", "#fafaf9", 4.5),
-    ("setup note",       "#92400e", "#fffbeb", 4.5),
-    ("success status",   "#15803d", "#fafaf9", 4.5),
+    ("body text",          "#111111", "#ffffff", 4.5),
+    ("body on paper-2",    "#111111", "#f4f3ef", 4.5),
+    ("secondary text",     "#3d4247", "#ffffff", 4.5),
+    ("secondary on p-2",   "#3d4247", "#f4f3ef", 4.5),
+    ("muted text",         "#5f6469", "#ffffff", 4.5),
+    ("muted on paper-2",   "#5f6469", "#f4f3ef", 4.5),
+    ("navy link",          "#1c2d3d", "#ffffff", 4.5),
+    ("white on navy",      "#ffffff", "#1c2d3d", 4.5),
+    ("soft on navy",       "#c3ccd5", "#1c2d3d", 4.5),
+    ("soft on navy hover", "#c3ccd5", "#243a4e", 4.5),
+    ("white on ink",       "#ffffff", "#111111", 4.5),
+    ("footer text",        "#a3a8ad", "#0e0e0e", 4.5),
+    ("error text",         "#b91c1c", "#ffffff", 4.5),
+    ("setup note",         "#92400e", "#fffbeb", 4.5),
+    ("success status",     "#15803d", "#ffffff", 4.5),
 ]
 print("\ncontrast (WCAG AA needs 4.5:1 for body text):")
 for name, fg, bg, need in pairs:
