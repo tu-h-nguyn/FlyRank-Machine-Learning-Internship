@@ -1714,26 +1714,25 @@
           </div>
         </article>
 
-        <!-- ── Everything whose code is not public yet. Kept short on purpose:
-             a claim with nothing to open is worth a line, not a card. ── -->
+        <!-- ── Two more public repositories, a line each rather than a card. ── -->
         <article id="p-other" class="project" data-cat="ml">
           <div class="p-num rv from-left" aria-hidden="true">+</div>
           <div>
             <div class="p-head rv">
-              <h3>Other Work, Code Not Public</h3>
+              <h3>Other Work on GitHub</h3>
+              <span class="p-status live">Code public</span>
             </div>
             <p class="p-problem rv">
-              Listed for completeness rather than as evidence — there is nothing to open
-              here yet, so take these as background, not as claims you can check.
+              Two more public repositories: a retrieval system that shows which retriever to
+              trust for which question, and a trading research harness built so that its
+              answer is allowed to be "no".
             </p>
             <div class="p-row rv">
               <div class="p-label">Projects</div>
               <div class="p-body">
                 <ul>
-                  <li><strong>Transformer volatility forecasting</strong> — attention encoder on realized volatility, benchmarked walk-forward against GARCH and LSTM.</li>
-                  <li><strong>Quant research scout</strong> — an LLM agent that triages weekly arXiv and GitHub output for relevance.</li>
-                  <li><strong>Neural ODE signal pipeline</strong> — continuous-time model over irregularly sampled series.</li>
-                  <li><strong>Mean-reversion backtest</strong> — options strategy evaluated walk-forward with explicit risk rules.</li>
+                  <li><strong><a href="https://github.com/tu-h-nguyn/Enterprise-Hybrid-RAG" target="_blank" rel="noopener">Enterprise Hybrid RAG</a></strong> — question answering over PDF, DOCX and Markdown with page-level citations, built without a RAG framework: BM25 and dense retrieval, reciprocal-rank fusion, cross-encoder reranking and an abstention gate. On 50 questions over 22 documents, hybrid + reranker reaches <span class="metric">Recall@1 0.795</span>, against 0.585 dense-only and 0.643 BM25.</li>
+                  <li><strong><a href="https://github.com/tu-h-nguyn/AI-Quant-Trading-System" target="_blank" rel="noopener">AI Quant Trading Research Lab</a></strong> — does a leakage-aware ML signal beat simple trading rules out of sample, after costs? Walk-forward refits with an embargo, logistic regression and XGBoost against buy-and-hold, momentum and moving-average baselines on SPY, QQQ, IWM, TLT and GLD, costs charged on turnover, moving-block bootstrap. A research harness: no returns are quoted, because none are committed.</li>
                 </ul>
               </div>
             </div>
@@ -1782,7 +1781,7 @@
           <div class="skill-group">
             <div class="skill-name"><i aria-hidden="true">ii.</i>Deep Learning</div>
             <div class="skill-items">PyTorch, Transformer encoders, LSTMs, attention, training pipelines, neural ODEs and physics-informed losses</div>
-            <div class="skill-proof">→ <a href="#p-pinns">Neural Networks and PINNs for Differential Equations</a> — thesis plus six experiments with committed results. Transformer and neural-ODE work sits under "Other work": code not public, so take it as background.</div>
+            <div class="skill-proof">→ <a href="#p-pinns">Neural Networks and PINNs for Differential Equations</a> — thesis plus six experiments with committed results.</div>
           </div>
 
           <div class="skill-group">
