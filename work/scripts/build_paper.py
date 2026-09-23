@@ -62,14 +62,13 @@ REPO_URL = "https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship"
 # away from REPO_URL when the repo is renamed.
 REPO_DIR = REPO_URL.rsplit("/", 1)[-1]
 
-# The public address, analytics code and badge link live in one place so that
+# The public address and analytics code live in one place so that
 # going live on a new domain is one command; see work/scripts/configure_site.py.
 SITE = json.loads((REPO / "work" / "portfolio" / "site.json").read_text())
 SITE_URL = SITE["base_url"].rstrip("/")
 # Analytics lives in site.json too. It used to be hand-pasted into docs/index.html,
 # which meant every rebuild of this page silently dropped the tag.
 ANALYTICS_PROVIDER, ANALYTICS_ID = analytics_from(SITE)
-BADGE_VERIFY = SITE.get("badge_verify_url", "") or "#badge-not-configured"
 GSV = SITE.get("google_site_verification", "")
 NB = f"{REPO_URL}/blob/main/work/notebooks"
 
@@ -514,11 +513,6 @@ pre{background:var(--surface); border:1px solid var(--rule); border-radius:5px; 
 .link-card span{display:block; font-size:13px; color:var(--muted); margin-top:3px}
 footer{margin-top:72px; padding-top:26px; border-top:1px solid var(--rule); color:var(--muted); font-size:14.5px}
 footer strong{color:var(--ink-2)}
-.grad-badge-wrap{margin-top:22px}
-.grad-badge{display:inline-block; border-bottom:0; line-height:0; border-radius:10px}
-.grad-badge img{width:238px; height:auto; display:block}
-.grad-badge:focus-visible{outline:2px solid var(--signal); outline-offset:3px}
-.grad-badge-note{margin:9px 0 0; font-size:13px; color:var(--muted)}
 @media (max-width:620px){
   body{font-size:16px}
   .wrap{padding:0 18px 72px}
@@ -945,13 +939,6 @@ python work/scripts/build_paper.py         # rebuilds this page</pre>
     <p>Decision-support research on observational data. No causal claim, no algorithmic claim, no
     client-identifying detail.</p>
 
-    <div class="grad-badge-wrap">
-      <a class="grad-badge" href="{BADGE_VERIFY}" target="_blank" rel="noopener">
-        <img src="assets/flyrank-graduate-badge.svg" width="264" height="64"
-             alt="FlyRank AI Fluency Internship — Graduate, 2026. Opens the verification page.">
-      </a>
-      <p class="grad-badge-note">Graduate of the FlyRank AI Fluency Internship — verify this credential.</p>
-    </div>
   </footer>
 </section>
 </div>

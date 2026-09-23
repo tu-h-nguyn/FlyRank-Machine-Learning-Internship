@@ -92,7 +92,7 @@ python3 work/scripts/audit_launch.py               # did it work
 | Custom domain | Wired end to end, still canonical on `github.io` until DNS resolves — see `portfolio/GO-LIVE.md` |
 | Analytics | GA4 `G-KGRCWRY9BV` on both pages, generated from `portfolio/site.json`; swap it for GoatCounter or turn it off with one command |
 | Share preview / favicon / titles | Done on both pages; the paper's card is `docs/og-paper.png` |
-| Graduate badge | Drawn and in both footers, linking to the FlyRank verification page |
+| Graduate badge | Removed from both pages by choice; the FlyRank data credit stays in the paper |
 
 Two things worth knowing about the build:
 
