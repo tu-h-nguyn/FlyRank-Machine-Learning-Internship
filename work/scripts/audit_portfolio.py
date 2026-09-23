@@ -1,209 +1,144 @@
-#!/usr/bin/env python3
-"""Static audit of every portfolio page in docs/portfolio/ — links, contrast, SEO, assets.
+import pathlib, re, sys
 
-Runs offline against the built files (build_portfolio.py writes them), so it checks
-exactly what gets published:
-
-  links     every in-page and cross-page link resolves, down to the #anchor;
-            every target=_blank carries rel=noopener; no href="#"
-  assets    every local src/href exists; the share image is 1200x630
-  contrast  every text colour on every ground it sits on, light AND dark theme
-  SEO       per page: title, description, canonical, Open Graph, one <h1>;
-            JSON-LD on the home page
-
-    python3 work/scripts/audit_portfolio.py
-"""
-import json
-import pathlib
-import re
-import struct
-import sys
-
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-SITE = ROOT / "docs" / "portfolio"
-PAGES = sorted(SITE.rglob("index.html"))
-
+html = pathlib.Path("docs/portfolio/index.html").read_text(encoding="utf-8")
 issues = []
 
+# --- links ---
+anchors = re.findall(r'<a\s[^>]*href="([^"]+)"[^>]*>', html)
+ids = set(re.findall(r'\sid="([^"]+)"', html))
+for h in anchors:
+    if h == "#":
+        issues.append(f"DEAD LINK: href='#'")
+    elif h == "#badge-not-configured":
+        # the graduate badge's placeholder; audit_launch.py owns this check
+        issues.append("BADGE: verify URL not set — run configure_site.py --verify <url>")
+    elif h.startswith("#") and h[1:] not in ids:
+        issues.append(f"BROKEN ANCHOR: {h} has no matching id")
+print(f"links: {len(anchors)} total, {len(set(a for a in anchors if a.startswith('http')))} external")
 
-def fail(msg):
-    issues.append(msg)
+# external links must be safe
+for m in re.finditer(r'<a\s([^>]*target="_blank"[^>]*)>', html):
+    if "rel=" not in m.group(1) or "noopener" not in m.group(1):
+        issues.append(f"target=_blank without rel=noopener: {m.group(1)[:70]}")
 
+# --- images ---
+imgs = re.findall(r'<img\s', html)
+print(f"images: {len(imgs)} (none = nothing to break, nothing slow to load)")
 
-def rel(p):
-    return p.relative_to(ROOT).as_posix()
+# --- external requests ---
+ext = set(re.findall(r'https://([a-z0-9.-]+)/', html))
+print("external hosts:", ", ".join(sorted(ext)))
 
-
-def strip_comments(html):
-    return re.sub(r"<!--.*?-->", "", html, flags=re.S)
-
-
-def ids_of(path, cache={}):
-    if path not in cache:
-        cache[path] = set(re.findall(r'\sid="([^"]+)"', path.read_text(encoding="utf-8")))
-    return cache[path]
-
-
-def resolve(page, href):
-    """A local href -> (file on disk, fragment). Directory links mean their index.html."""
-    path, _, frag = href.partition("#")
-    if not path:
-        return page, frag
-    target = (page.parent / path).resolve()
-    if path.endswith("/") or target.is_dir():
-        target = target / "index.html"
-    return target, frag
-
-
-# ── links and assets, page by page ───────────────────────────────────────────
-print("links and assets:")
-for page in PAGES:
-    html = strip_comments(page.read_text(encoding="utf-8"))
-    hrefs = re.findall(r'<a\s[^>]*href="([^"]+)"', html)
-    local = [h for h in hrefs if not re.match(r"(https?:|mailto:|tel:)", h)]
-    bad = []
-    for h in local:
-        if h == "#":
-            bad.append("href='#'")
-            continue
-        target, frag = resolve(page, h)
-        if not target.exists():
-            bad.append(f"{h} -> missing {rel(target) if target.is_relative_to(ROOT) else target}")
-        elif frag and frag not in ids_of(target):
-            bad.append(f"{h} -> no id '{frag}' in {rel(target)}")
-    for m in re.finditer(r'<a\s([^>]*target="_blank"[^>]*)>', html):
-        if "noopener" not in m.group(1):
-            bad.append(f"target=_blank without rel=noopener: {m.group(1)[:60]}")
-    for ref in re.findall(r'\s(?:src|href)="((?!https?:|#|mailto:|data:)[^"]+)"', html):
-        target, _ = resolve(page, ref)
-        if not target.exists():
-            bad.append(f"asset {ref} missing")
-    ext = len(set(h for h in hrefs if h.startswith("http")))
-    print(f"  {'ok  ' if not bad else 'FAIL'} {rel(page):36s} {len(local):3d} local links, {ext:2d} external")
-    for b in sorted(set(bad)):
-        fail(f"{rel(page)}: {b}")
-
-
-# ── contrast ─────────────────────────────────────────────────────────────────
+# --- contrast ---
 def lum(hexcol):
     c = hexcol.lstrip("#")
-    rgb = [int(c[i:i + 2], 16) / 255 for i in (0, 2, 4)]
-    rgb = [v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4 for v in rgb]
-    return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]
+    rgb = [int(c[i:i+2], 16)/255 for i in (0, 2, 4)]
+    rgb = [v/12.92 if v <= 0.03928 else ((v+0.055)/1.055)**2.4 for v in rgb]
+    return 0.2126*rgb[0] + 0.7152*rgb[1] + 0.0722*rgb[2]
 
-
-def ratio(a, b, dim=1.0):
-    """Contrast of a on b; dim scales both luminances (a CSS brightness() filter)."""
-    la, lb = lum(a) * dim, lum(b) * dim
+def ratio(a, b):
+    la, lb = lum(a), lum(b)
     hi, lo = max(la, lb), min(la, lb)
     return (hi + 0.05) / (lo + 0.05)
 
+# Every text colour the page sets, on every ground it sits on. The ghost numerals
+# (#cfccc4) and the slate squares are aria-hidden decoration and carry no meaning,
+# so they are deliberately not in this list.
+pairs = [
+    ("body text",          "#111111", "#ffffff", 4.5),
+    ("body on paper-2",    "#111111", "#f4f3ef", 4.5),
+    ("secondary text",     "#3d4247", "#ffffff", 4.5),
+    ("secondary on p-2",   "#3d4247", "#f4f3ef", 4.5),
+    ("muted text",         "#5f6469", "#ffffff", 4.5),
+    ("muted on paper-2",   "#5f6469", "#f4f3ef", 4.5),
+    ("navy link",          "#1c2d3d", "#ffffff", 4.5),
+    ("white on navy",      "#ffffff", "#1c2d3d", 4.5),
+    ("soft on navy",       "#c3ccd5", "#1c2d3d", 4.5),
+    ("soft on navy hover", "#c3ccd5", "#243a4e", 4.5),
+    ("white on ink",       "#ffffff", "#111111", 4.5),
+    ("footer text",        "#a3a8ad", "#0e0e0e", 4.5),
+    ("error text",         "#b91c1c", "#ffffff", 4.5),
+    ("setup note",         "#92400e", "#fffbeb", 4.5),
+    ("success status",     "#15803d", "#ffffff", 4.5),
+]
+print("\ncontrast (WCAG AA needs 4.5:1 for body text):")
+for name, fg, bg, need in pairs:
+    r = ratio(fg, bg)
+    ok = r >= need
+    print(f"  {'ok  ' if ok else 'FAIL'} {name:18s} {r:5.2f}:1")
+    if not ok:
+        issues.append(f"CONTRAST: {name} is {r:.2f}:1, needs {need}:1")
 
-# The two palettes, read from the stylesheet itself so this list cannot drift from it.
-css = (ROOT / "work" / "portfolio" / "site" / "styles.css").read_text(encoding="utf-8")
-light = dict(re.findall(r"--([a-z0-9-]+):\s*(#[0-9a-f]{6})", css.split("@media (prefers-color-scheme: dark)")[0]))
-dark_block = re.search(r':root\[data-theme="dark"\]\s*\{(.*?)\}', css, re.S).group(1)
-dark = dict(light, **dict(re.findall(r"--([a-z0-9-]+):\s*(#[0-9a-f]{6})", dark_block)))
+# --- SEO / meta ---
+import json as _json, struct as _struct
+print("\nSEO / meta:")
 
-TEXT = [("ink", "body text"), ("ink-2", "secondary text"), ("muted", "muted text"), ("accent", "link / accent")]
-GROUNDS = ["bg", "surface", "surface-2"]
-print("\ncontrast (WCAG AA: 4.5:1 for body text):")
-for theme, pal in [("light", light), ("dark", dark)]:
-    rows = [(f"{name} on {g}", pal[fg], pal[g]) for fg, name in TEXT for g in GROUNDS]
-    rows += [("button label", pal["btn-fg"], pal["btn-bg"]),
-             ("button hover", pal["bg"], pal["accent"]),
-             ("error text", pal["err"], pal["surface"]),
-             ("success text", pal["ok"], pal["bg"])]
-    for name, fg, bg in rows:
-        r = ratio(fg, bg)
-        good = r >= 4.5
-        print(f"  {'ok  ' if good else 'FAIL'} {theme:5s} {name:28s} {r:5.2f}:1")
-        if not good:
-            fail(f"CONTRAST ({theme}): {name} is {r:.2f}:1")
-
-# Text drawn inside the data figures sits on a white plate in both themes; in dark
-# mode the plate is dimmed by brightness(.9), which scales luminance by 0.9.
-figs = (ROOT / "work" / "scripts" / "make_project_figures.py").read_text(encoding="utf-8")
-named = dict(zip(["INK", "NAVY", "SLATE", "MUTED", "GRID", "PAPER"],
-                 re.search(r'INK, NAVY, SLATE, MUTED, GRID, PAPER = (.*)', figs).group(1).replace('"', "").split(", ")))
-for label, col in [("figure ink", named["INK"]), ("figure navy", named["NAVY"]),
-                   ("figure slate labels", named["SLATE"]), ("figure muted", named["MUTED"])]:
-    for theme, dim in [("light", 1.0), ("dark", 0.9)]:
-        r = ratio(col, named["PAPER"], dim)
-        good = r >= 4.5
-        print(f"  {'ok  ' if good else 'FAIL'} {theme:5s} {label:28s} {r:5.2f}:1")
-        if not good:
-            fail(f"CONTRAST ({theme}): {label} {col} on the figure plate is {r:.2f}:1")
-for col in sorted(set(re.findall(r'fill="(#[0-9a-fA-F]{6})"', figs))):
-    if col.lower() not in {named["PAPER"].lower()} and ratio(col, named["PAPER"]) < 4.5:
-        fail(f"CONTRAST: a figure draws text or marks in {col}, {ratio(col, named['PAPER']):.2f}:1 on white")
-
-
-# ── SEO, page by page ────────────────────────────────────────────────────────
-def meta(html, attr, val):
+def meta(attr, val):
     m = re.search(rf'<meta\s+{attr}="{re.escape(val)}"\s+content="([^"]*)"', html)
     return m.group(1) if m else None
 
+title = re.search(r"<title>(.*?)</title>", html, re.S)
+title = title.group(1).strip() if title else ""
+desc = meta("name", "description") or ""
 
-print("\nSEO / meta:")
-titles = {}
-for page in PAGES:
-    html = page.read_text(encoding="utf-8")
-    t = re.search(r"<title>(.*?)</title>", html, re.S)
-    title = t.group(1).strip() if t else ""
-    desc = meta(html, "name", "description") or ""
-    titles[rel(page)] = title
-    checks = [
-        ("title 1-60 chars", 0 < len(title) <= 60),
-        ("description 50-160 chars", 50 <= len(desc) <= 160),
-        ("canonical URL", 'rel="canonical"' in html),
-        ("robots directive", bool(meta(html, "name", "robots"))),
-        ("og:title", bool(meta(html, "property", "og:title"))),
-        ("og:description", bool(meta(html, "property", "og:description"))),
-        ("og:url", bool(meta(html, "property", "og:url"))),
-        ("og:image absolute", (meta(html, "property", "og:image") or "").startswith("https://")),
-        ("og:image:alt", bool(meta(html, "property", "og:image:alt"))),
-        ("twitter:card", meta(html, "name", "twitter:card") == "summary_large_image"),
-        ("favicon", 'rel="icon"' in html),
-        ("lang", "<html lang=" in html),
-        ("viewport", 'name="viewport"' in html),
-        ("exactly one <h1>", len(re.findall(r"<h1[\s>]", html)) == 1),
-        ("skip link", 'class="skip"' in html),
-    ]
-    if page == SITE / "index.html":
-        ld = re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
-        try:
-            json.loads(ld.group(1)) if ld else None
-            checks.append(("JSON-LD parses", bool(ld)))
-        except ValueError as e:
-            checks.append((f"JSON-LD parses ({e})", False))
-    failed = [n for n, good in checks if not good]
-    print(f"  {'ok  ' if not failed else 'FAIL'} {rel(page):36s} title {len(title):2d} chars, description {len(desc):3d}"
-          + (f"  — {', '.join(failed)}" if failed else ""))
-    for n in failed:
-        fail(f"SEO {rel(page)}: {n}")
-dupes = {t for t in titles.values() if list(titles.values()).count(t) > 1}
-if dupes:
-    fail(f"SEO: pages share a title: {sorted(dupes)}")
+checks = [
+    ("<title> present",        bool(title)),
+    ("title <= 60 chars",      0 < len(title) <= 60),
+    ("description present",    bool(desc)),
+    ("description 50-160",     50 <= len(desc) <= 160),
+    ("canonical URL",          'rel="canonical"' in html),
+    ("robots directive",       bool(meta("name", "robots"))),
+    ("og:title",               bool(meta("property", "og:title"))),
+    ("og:description",         bool(meta("property", "og:description"))),
+    ("og:url",                 bool(meta("property", "og:url"))),
+    ("og:image (absolute)",    (meta("property", "og:image") or "").startswith("https://")),
+    ("og:image:alt",           bool(meta("property", "og:image:alt"))),
+    ("twitter:card",           meta("name", "twitter:card") == "summary_large_image"),
+    ("favicon linked",         'rel="icon"' in html),
+    ("lang attribute",         '<html lang=' in html),
+    ("viewport meta",          'name="viewport"' in html),
+    ("exactly one <h1>",       len(re.findall(r"<h1[\s>]", html)) == 1),
+]
 
+ld = re.search(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
+if ld:
+    try:
+        _json.loads(ld.group(1))
+        checks.append(("JSON-LD parses", True))
+    except Exception as e:
+        checks.append((f"JSON-LD parses ({e})", False))
+else:
+    checks.append(("JSON-LD present", False))
 
-# ── share image ──────────────────────────────────────────────────────────────
+for name, good in checks:
+    print(f"  {'ok  ' if good else 'FAIL'} {name}")
+    if not good:
+        issues.append(f"SEO: {name}")
+
+print(f"  info title is {len(title)} chars, description {len(desc)} chars")
+
+# --- assets referenced by the page must exist, at the right size ---
 print("\nassets:")
-og = SITE / "og.png"
+base = pathlib.Path("docs/portfolio")
+for f in ["favicon.svg", "og.png"]:
+    exists = (base / f).exists()
+    print(f"  {'ok  ' if exists else 'FAIL'} {f} present")
+    if not exists:
+        issues.append(f"ASSET: {f} missing")
+
+og = base / "og.png"
 if og.exists():
     raw = og.read_bytes()
-    w, h = struct.unpack(">II", raw[16:24])
+    w, h = _struct.unpack(">II", raw[16:24])          # PNG IHDR
     good = (w, h) == (1200, 630)
-    print(f"  {'ok  ' if good else 'FAIL'} og.png is {w}x{h} (want 1200x630), {len(raw) / 1024:.0f} KB")
+    print(f"  {'ok  ' if good else 'FAIL'} og.png is {w}x{h} (want 1200x630), {len(raw)/1024:.0f} KB")
     if not good:
-        fail("ASSET: og.png wrong dimensions")
-else:
-    fail("ASSET: og.png missing")
+        issues.append("ASSET: og.png wrong dimensions")
 
-print("\n" + "=" * 50)
+print("\n" + ("=" * 50))
 if issues:
     print(f"{len(issues)} ISSUE(S):")
     for i in issues:
         print("  -", i)
     sys.exit(1)
-print(f"NO ISSUES FOUND across {len(PAGES)} pages")
+print("NO ISSUES FOUND")

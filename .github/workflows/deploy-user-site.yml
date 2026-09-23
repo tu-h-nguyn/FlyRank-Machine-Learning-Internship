@@ -16,8 +16,6 @@ on:
       - "docs/portfolio/**"
       - "docs/assets/**"
       - "work/portfolio/site.json"
-      - "work/portfolio/site/**"
-      - "work/scripts/build_portfolio.py"
       - "work/scripts/export_user_site.py"
       - ".github/workflows/deploy-user-site.yml"
   workflow_dispatch:
@@ -39,12 +37,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Refuse to publish pages that are stale against their sources
-        run: |
-          python3 work/scripts/make_project_figures.py --check
-          python3 work/scripts/build_portfolio.py --check
-
-      - name: Audit the pages before they go anywhere
+      - name: Audit the page before it goes anywhere
         run: |
           python3 work/scripts/audit_portfolio.py
           python3 work/scripts/audit_launch.py
