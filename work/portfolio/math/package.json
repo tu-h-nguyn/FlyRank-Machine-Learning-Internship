@@ -1,0 +1,6 @@
+{
+  "name": "portfolio-math",
+  "private": true,
+  "description": "KaTeX, used at build time by work/scripts/render_math.py to typeset the portfolio's formulas. Nothing here ships to the browser except the stylesheet, loaded from the CDN at the same version.",
+  "dependencies": { "katex": "0.18.7" }
+}

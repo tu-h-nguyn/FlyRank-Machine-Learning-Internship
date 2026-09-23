@@ -38,3 +38,7 @@ venv/
 # --- Built sites ------------------------------------------------------------
 # export_user_site.py output; published to tu-h-nguyn.github.io, never committed here
 build/
+
+# build-time KaTeX (npm install in work/portfolio/math)
+work/portfolio/math/node_modules/
+work/portfolio/math/package-lock.json
