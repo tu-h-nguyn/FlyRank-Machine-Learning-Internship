@@ -299,7 +299,44 @@ def ppa():
     return wrap("ppa", ["\n".join(pa), "\n".join(pb)], 2)
 
 
-FIGURES = {"lmm": lmm, "pinns": pinns, "ppa": ppa}
+# ── vietnam: the country in the hero panel, archipelagos included ───────────
+
+# Principal features of the two archipelagos, (lon, lat).
+HOANG_SA = [(112.33, 16.83), (111.60, 16.53), (111.20, 15.78), (112.73, 16.67), (111.71, 16.45),
+            (111.75, 16.30), (112.54, 16.97), (112.21, 16.94), (111.92, 16.07), (112.26, 16.58)]
+TRUONG_SA = [(111.92, 8.64), (114.33, 11.43), (114.36, 10.18), (114.33, 9.88), (114.48, 10.38),
+             (112.92, 7.87), (113.30, 8.10), (113.70, 8.97), (114.62, 8.85), (111.67, 8.67),
+             (115.03, 10.75), (114.08, 11.05), (115.55, 9.72), (116.15, 10.19), (113.85, 10.95),
+             (112.25, 7.55), (115.85, 7.90), (114.85, 9.35)]
+
+
+def vietnam():
+    data = json.loads((ROOT / "work" / "portfolio" / "og-map" / "countries.json").read_text(encoding="utf-8"))
+    rings = next(r for name, r in data["region"] if name == "Vietnam")
+    lon0, lon1, lat0, lat1 = 102.0, 117.0, 7.2, 23.6
+    k = math.cos(math.radians(15.5))
+    s = 17.0                                          # px per degree of latitude
+    W, H = round((lon1 - lon0) * k * s) + 8, round((lat1 - lat0) * s) + 8
+
+    def xy(lon, lat):
+        return 4 + (lon - lon0) * k * s, 4 + (lat1 - lat) * s
+
+    d = "".join("M" + "L".join(f"{xy(x, y)[0]:.1f},{xy(x, y)[1]:.1f}" for x, y in r) + "Z" for r in rings)
+    out = [f'<svg class="vn-map" viewBox="0 0 {W} {H}" role="img" aria-labelledby="vn-t" xmlns="http://www.w3.org/2000/svg">',
+           '<title id="vn-t">Map of Việt Nam, including the Hoàng Sa (Paracel) and Trường Sa (Spratly) archipelagos</title>',
+           f'<path class="vn-land" d="{d}"/>']
+    for pts, cls in [(HOANG_SA, "vn-hs"), (TRUONG_SA, "vn-ts")]:
+        out.append(f'<g class="vn-isl {cls}">' + "".join(
+            f'<circle cx="{xy(x, y)[0]:.1f}" cy="{xy(x, y)[1]:.1f}" r="1.9"/>' for x, y in pts) + "</g>")
+    hx, hy = xy(112.0, 17.25)
+    tx, ty = xy(114.0, 12.0)
+    out += [f'<text class="vn-lab" x="{hx:.1f}" y="{hy:.1f}" text-anchor="middle">Hoàng Sa</text>',
+            f'<text class="vn-lab" x="{tx:.1f}" y="{ty:.1f}" text-anchor="middle">Trường Sa</text>',
+            "</svg>"]
+    return "\n".join(out)
+
+
+FIGURES = {"lmm": lmm, "pinns": pinns, "ppa": ppa, "vietnam": vietnam}
 
 
 def block(name, indent):
