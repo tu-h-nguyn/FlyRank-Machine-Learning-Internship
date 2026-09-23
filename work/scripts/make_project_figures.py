@@ -313,7 +313,7 @@ TRUONG_SA = [(111.92, 8.64), (114.33, 11.43), (114.36, 10.18), (114.33, 9.88), (
 def vietnam():
     data = json.loads((ROOT / "work" / "portfolio" / "og-map" / "countries.json").read_text(encoding="utf-8"))
     rings = next(r for name, r in data["region"] if name == "Vietnam")
-    lon0, lon1, lat0, lat1 = 102.0, 117.0, 7.2, 23.6
+    lon0, lon1, lat0, lat1 = 97.6, 117.0, 7.2, 23.6        # room on the west for the avatar
     k = math.cos(math.radians(15.5))
     s = 17.0                                          # px per degree of latitude
     W, H = round((lon1 - lon0) * k * s) + 8, round((lat1 - lat0) * s) + 8
@@ -323,7 +323,8 @@ def vietnam():
 
     d = "".join("M" + "L".join(f"{xy(x, y)[0]:.1f},{xy(x, y)[1]:.1f}" for x, y in r) + "Z" for r in rings)
     out = [f'<svg class="vn-map" viewBox="0 0 {W} {H}" role="img" aria-labelledby="vn-t" xmlns="http://www.w3.org/2000/svg">',
-           '<title id="vn-t">Map of Việt Nam, including the Hoàng Sa (Paracel) and Trường Sa (Spratly) archipelagos</title>',
+           '<title id="vn-t">Map of Việt Nam, including the Hoàng Sa (Paracel) and Trường Sa (Spratly) archipelagos, '
+           'with an arrow from my avatar to Hồ Chí Minh City</title>',
            f'<path class="vn-land" d="{d}"/>']
     for pts, cls in [(HOANG_SA, "vn-hs"), (TRUONG_SA, "vn-ts")]:
         out.append(f'<g class="vn-isl {cls}">' + "".join(
@@ -331,7 +332,21 @@ def vietnam():
     hx, hy = xy(112.0, 17.25)
     tx, ty = xy(114.0, 12.0)
     out += [f'<text class="vn-lab" x="{hx:.1f}" y="{hy:.1f}" text-anchor="middle">Hoàng Sa</text>',
-            f'<text class="vn-lab" x="{tx:.1f}" y="{ty:.1f}" text-anchor="middle">Trường Sa</text>',
+            f'<text class="vn-lab" x="{tx:.1f}" y="{ty:.1f}" text-anchor="middle">Trường Sa</text>']
+
+    # Hồ Chí Minh City, and the avatar pointing at it
+    cx, cy = xy(106.66, 10.76)
+    ax, ay, ar = 46.0, 146.0, 42.0                   # avatar circle over the empty land to the west
+    out += ['<defs><clipPath id="vn-av"><circle cx="{:.1f}" cy="{:.1f}" r="{:.1f}"/></clipPath>'.format(ax, ay, ar - 2),
+            '<marker id="vn-ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
+            '<path class="vn-arrow-head" d="M0,0 L10,5 L0,10 z"/></marker></defs>',
+            f'<circle class="vn-av-ring" cx="{ax:.1f}" cy="{ay:.1f}" r="{ar:.1f}"/>',
+            f'<image href="figures/avatar.png" x="{ax - ar + 5:.1f}" y="{ay - ar + 4:.1f}" width="{2 * ar - 10:.1f}" '
+            f'height="{2 * ar - 4:.1f}" preserveAspectRatio="xMidYMid meet" clip-path="url(#vn-av)"/>',
+            f'<path class="vn-arrow" d="M{ax + ar * 0.94 + 3:.1f},{ay + ar * 0.34:.1f} Q{cx - 34:.1f},{ay + 18:.1f} {cx - 6:.1f},{cy - 5:.1f}" marker-end="url(#vn-ah)"/>',
+            f'<circle class="vn-hcm-pulse" cx="{cx:.1f}" cy="{cy:.1f}" r="4"/>',
+            f'<circle class="vn-hcm" cx="{cx:.1f}" cy="{cy:.1f}" r="3.4"/>',
+            f'<text class="vn-lab vn-hcm-lab" x="{ax:.1f}" y="{ay + ar + 16:.1f}" text-anchor="middle">TP. Hồ Chí Minh</text>',
             "</svg>"]
     return "\n".join(out)
 
