@@ -179,7 +179,7 @@ All metrics are **out-of-fold** under `GroupKFold(5)` grouped by `client_id`. Ba
 ## Deployed outputs
 
 - **Research paper:** [tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship](https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/)
-- **Portfolio site:** [tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio](https://tu-h-nguyn.github.io/FlyRank-Machine-Learning-Internship/portfolio/)
+- **Portfolio site:** [tu-h-nguyn.github.io](https://tu-h-nguyn.github.io/) — source in `docs/portfolio/`, published to its own address by `work/scripts/export_user_site.py`
 - **FEM wave equation write-up** (separate repo): [https://tu-h-nguyn.github.io/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation/](https://tu-h-nguyn.github.io/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation/) — sharp CFL analysis, every table machine-verified ([code](https://github.com/tu-h-nguyn/The-Finite-Element-Method-for-the-One-Dimensional-Wave-Equation))
 
 ---

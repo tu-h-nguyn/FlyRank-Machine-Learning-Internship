@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Week 9 launch audit — checks what "live on a real address" actually requires.
 
-Covers both served pages: the paper (docs/index.html) and the portfolio
-(docs/portfolio/index.html). Everything here is checkable offline, from the
-files that GitHub Pages will serve. The three things it CANNOT check from here
+Covers both pages: the paper (docs/index.html, served from this repo) and the
+portfolio (docs/portfolio/index.html, canonical at site.json's portfolio_url and
+published there by export_user_site.py). Everything here is checkable offline,
+from the files that GitHub Pages will serve. The three things it CANNOT check from here
 are called out at the end, because they need the live URL.
 
     python3 work/scripts/audit_launch.py
@@ -56,6 +57,9 @@ BASE = cfg["base_url"].rstrip("/")
 # address, say). Without this every intentional outbound link reads as a
 # leftover of the previous address.
 EXTERNAL = tuple(u.rstrip("/") for u in cfg.get("external_sites", []))
+# The portfolio has its own root address (a user site), so its canonical URL no
+# longer sits under BASE.
+PORTFOLIO = cfg.get("portfolio_url") or f"{BASE}/portfolio/"
 VERIFY = cfg.get("badge_verify_url", "")
 
 # Read the counter the same way configure_site.py does, older keys included. A config
@@ -79,7 +83,7 @@ print(f"analytics  {f'{PROVIDER} {ANALYTICS_ID}' if PROVIDER else (CONFIG_ERROR 
 print(f"badge link {VERIFY or '(unset)'}")
 
 PAGES = [("paper", DOCS / "index.html", f"{BASE}/"),
-         ("portfolio", DOCS / "portfolio" / "index.html", f"{BASE}/portfolio/")]
+         ("portfolio", DOCS / "portfolio" / "index.html", PORTFOLIO)]
 
 titles = {}
 
@@ -109,10 +113,12 @@ for name, path, url in PAGES:
           meta(html, "property", "og:url") or "missing")
 
     # --- share preview ---
+    # The share image is published next to the page, so it must sit under the
+    # page's own address and exist in the page's own folder.
     ogimg = meta(html, "property", "og:image") or ""
-    check("og:image is absolute", ogimg.startswith(BASE + "/"), ogimg or "missing")
-    if ogimg.startswith(BASE + "/"):
-        f = DOCS / ogimg[len(BASE) + 1:]
+    check("og:image is absolute", ogimg.startswith(url), ogimg or "missing")
+    if ogimg.startswith(url):
+        f = here / ogimg[len(url):]
         if check("og:image file exists", f.exists(), str(f.relative_to(ROOT)) if f.exists() else ogimg):
             w, h = png_size(f)
             check("og:image is 1200x630", (w, h) == (1200, 630), f"{w}x{h}, {f.stat().st_size/1024:.0f} KB")
@@ -181,7 +187,11 @@ stray = set()
 for f in list(DOCS.rglob("*.html")) + list(DOCS.rglob("*.xml")):
     for m in re.finditer(r'https://[a-z0-9.-]*(?:github\.io|is-a\.dev)[^\s"\'<>]*', f.read_text(encoding="utf-8")):
         url = m.group(0)
-        if not url.startswith(BASE) and not url.startswith(EXTERNAL):
+        # A file at the portfolio's root (the page itself, its share image) is
+        # expected; a deeper path under that host is a project site and has to be
+        # listed in external_sites like any other.
+        at_portfolio = url.startswith(PORTFOLIO) and "/" not in url[len(PORTFOLIO):]
+        if not url.startswith(BASE) and not url.startswith(EXTERNAL) and not at_portfolio:
             stray.add(url)
 check("no URLs left pointing at the old address", not stray, "; ".join(sorted(stray)[:3]))
 
@@ -190,7 +200,10 @@ if sitemap.exists():
     locs = re.findall(r"<loc>([^<]+)</loc>", sitemap.read_text(encoding="utf-8"))
     check("sitemap URLs all use the live base", all(l.startswith(BASE) for l in locs),
           f"{len(locs)} URLs")
-    check("sitemap lists both pages", {f"{BASE}/", f"{BASE}/portfolio/"} <= set(locs))
+    check("sitemap lists the paper", f"{BASE}/" in locs)
+    # The portfolio's own site carries its sitemap (export_user_site.py); listing
+    # it here as well would advertise a URL this repo does not canonically serve.
+    check("sitemap leaves the portfolio to its own site", PORTFOLIO not in locs)
 
 cname = DOCS / "CNAME"
 host = BASE.split("://", 1)[1].split("/", 1)[0]

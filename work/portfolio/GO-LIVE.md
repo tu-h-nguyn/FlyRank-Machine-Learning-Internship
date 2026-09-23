@@ -16,6 +16,46 @@ The one thing left is the domain, and that waits on DNS you have to point yourse
 
 ---
 
+## 0. The portfolio's own address — `tu-h-nguyn.github.io`
+
+The portfolio is canonical at **https://tu-h-nguyn.github.io/** (`portfolio_url` in
+`site.json`), not under this repo's `/FlyRank-Machine-Learning-Internship/portfolio/`.
+GitHub serves that bare address from one specially named repository,
+**`tu-h-nguyn/tu-h-nguyn.github.io`**, and nothing is ever edited there: it holds only
+what `work/scripts/export_user_site.py` builds from `docs/portfolio/`. The page is still
+written and tested here.
+
+The old `/portfolio/` URL keeps working — this repo still serves the same page, with its
+canonical tag pointing at the new address so search engines count one page, not two.
+The paper's address does not change, so `submission/paper_url.txt` stays valid.
+
+One-time setup, about five minutes:
+
+1. **Create the repository** at <https://github.com/new>: owner `tu-h-nguyn`, name
+   exactly **`tu-h-nguyn.github.io`**, **Public**, no README, no licence. The name is
+   what makes GitHub serve it at the root address.
+2. **Make a token** at <https://github.com/settings/personal-access-tokens/new>:
+   *Fine-grained*, repository access *Only select repositories* →
+   `tu-h-nguyn.github.io`, permission **Contents: Read and write**. Nothing else.
+3. **Store it here** as a repository secret named **`USER_SITE_TOKEN`**
+   (this repo → Settings → Secrets and variables → Actions → New repository secret).
+4. **Publish**: Actions → *deploy-user-site* → *Run workflow*. From then on it runs by
+   itself on every push to `main` that touches the portfolio.
+5. In the new repository, **Settings → Pages** should show *Deploy from a branch*,
+   `main`, `/ (root)`. Set it if it does not, then open https://tu-h-nguyn.github.io/
+   in a private window.
+
+Build and inspect the site locally at any time — it never pushes:
+
+```bash
+python3 work/scripts/export_user_site.py     # -> build/user-site/ (gitignored)
+```
+
+Two things that do not carry over by themselves: **Search Console** verifies per
+address, so add `https://tu-h-nguyn.github.io/` as a new property there (the
+verification tag is already in the page). **GA4** needs nothing — the same measurement
+ID counts on any address.
+
 ## 1. The domain — `hoangtu.is-a.dev`
 
 `is-a.dev` gives developers a free subdomain. It is a real domain on the public suffix
