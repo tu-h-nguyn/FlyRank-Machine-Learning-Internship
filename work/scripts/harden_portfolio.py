@@ -220,8 +220,12 @@ def main():
             # ── 8. Keyboard only ──────────────────────────────────────────
             print("\n[8] Keyboard-only reachability")
             pg.goto(f"{BASE}/index.html"); pg.wait_for_timeout(400)
+            # Every link on the page comes before the form, so the budget is generous;
+            # the loop stops as soon as the submit button has been reached.
             seen, hp_reached = [], False
-            for _ in range(40):
+            for _ in range(300):
+                if "cf-submit" in seen:
+                    break
                 pg.keyboard.press("Tab")
                 el = pg.evaluate("""() => { const a = document.activeElement;
                     return { tag: a.tagName, name: a.getAttribute('name'),
