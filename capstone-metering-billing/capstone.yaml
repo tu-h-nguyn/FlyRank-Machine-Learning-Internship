@@ -1,0 +1,13 @@
+run: docker compose up --build
+seed: docker compose exec api python scripts/seed.py
+test: docker compose run --rm api pytest -q
+base_url: http://localhost:8000
+endpoints:
+  - GET /health
+  - POST /generate
+  - GET /usage?tenant_key=demo-free
+  - POST /billing/checkout?tenant_key=demo-free
+  - POST /webhooks/stripe
+notes:
+  stripe_mode: test
+  public_url_required: false
