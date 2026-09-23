@@ -5,14 +5,13 @@ and a real message in the inbox.
 
 ## ~~1. Get a free access key~~ — done
 
-Key `88690ebb-…` is set on the `access_key` input in `work/portfolio/site/pages/index.html`
-(built into `docs/portfolio/index.html` by `work/scripts/build_portfolio.py`).
+Key `88690ebb-…` is set on the `access_key` input in `docs/portfolio/index.html`.
 It is public by design: it names a mailbox, it is not a credential. Free tier is 250
 submissions a month.
 
-If it ever needs replacing, change **only** the `value="…"` on that input, then rebuild. The
-string `PASTE_YOUR_WEB3FORMS_ACCESS_KEY_HERE` appears once more as a constant in the form's
-JavaScript (`work/portfolio/site/form.js`) and must stay exactly as it is — it is how the page notices an unset key and
+If it ever needs replacing, change **only** the `value="…"` on that input. The string
+`PASTE_YOUR_WEB3FORMS_ACCESS_KEY_HERE` appears once more as a constant in the page's
+JavaScript and must stay exactly as it is — it is how the page notices an unset key and
 shows the yellow "not connected yet" warning.
 
 ## ~~2. Paste the key into the page~~ — done

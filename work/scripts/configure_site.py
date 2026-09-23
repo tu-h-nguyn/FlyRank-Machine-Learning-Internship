@@ -36,12 +36,8 @@ CONFIG = ROOT / "work" / "portfolio" / "site.json"
 DOCS = ROOT / "docs"
 CNAME = DOCS / "CNAME"
 
-# Every served file of the paper that may carry an absolute site URL. The portfolio
-# is not edited here: its pages are built from work/portfolio/site/ by
-# build_portfolio.py, which stamps the analytics block from site.json itself, so this
-# script rewrites URLs in those sources and then rebuilds.
-TARGETS = ["index.html", "sitemap.xml"]
-PORTFOLIO_SOURCES = ROOT / "work" / "portfolio" / "site"
+# Every file that may carry an absolute site URL.
+TARGETS = ["index.html", "portfolio/index.html", "sitemap.xml"]
 
 # A GA4 measurement ID; anything else is read as a GoatCounter site code.
 GA4_ID = re.compile(r"G-[A-Z0-9]{6,12}")
@@ -208,17 +204,6 @@ def main():
         else:
             print(f"  {rel}: already current")
 
-    # The portfolio's sources: only absolute URLs to the paper's base move here.
-    for path in sorted(PORTFOLIO_SOURCES.rglob("*.html")):
-        text = path.read_text(encoding="utf-8")
-        n = text.count(old_base) if old_base != new_base else 0
-        rel = path.relative_to(ROOT).as_posix()
-        if n:
-            dirty = True
-            print(f"  {rel}: {n} absolute URL(s) -> {new_base}")
-            if not args.check:
-                path.write_text(text.replace(old_base, new_base), encoding="utf-8")
-
     # The paper's URL is a required deliverable: exactly one line, and it has to
     # follow the site to its new address.
     paper_url = ROOT / "submission" / "paper_url.txt"
@@ -262,17 +247,6 @@ def main():
         cfg["analytics_id"] = ident
         cfg["badge_verify_url"] = verify
         save(cfg)
-
-    # Rebuild the portfolio from the (now saved) config, or report what would change.
-    from build_portfolio import build
-    print()
-    pending = dict(cfg, base_url=new_base, analytics_provider=provider, analytics_id=ident)
-    stale = build(check=args.check, quiet=True, cfg=pending)
-    if stale:
-        dirty = True
-        print(("  would rebuild " if args.check else "  rebuilt ") + ", ".join(stale))
-    else:
-        print("  docs/portfolio: already current")
 
     print()
     if args.check:

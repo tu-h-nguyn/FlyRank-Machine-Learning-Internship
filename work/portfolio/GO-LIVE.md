@@ -22,9 +22,8 @@ The portfolio is canonical at **https://tu-h-nguyn.github.io/** (`portfolio_url`
 `site.json`), not under this repo's `/FlyRank-Machine-Learning-Internship/portfolio/`.
 GitHub serves that bare address from one specially named repository,
 **`tu-h-nguyn/tu-h-nguyn.github.io`**, and nothing is ever edited there: it holds only
-what `work/scripts/export_user_site.py` builds from `docs/portfolio/`. The pages are still
-written and tested here: sources in `work/portfolio/site/`, built into `docs/portfolio/` by
-`work/scripts/build_portfolio.py` (see `REDESIGN.md`, section 8).
+what `work/scripts/export_user_site.py` builds from `docs/portfolio/`. The page is still
+written and tested here.
 
 The old `/portfolio/` URL keeps working — this repo still serves the same page, with its
 canonical tag pointing at the new address so search engines count one page, not two.
