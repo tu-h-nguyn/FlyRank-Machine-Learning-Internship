@@ -20,6 +20,8 @@ Second, I learned to write claims that match the evidence. Early in the project 
 
 Third, I learned that negative results are results. My Week-4 rule failing was not a setback — it was the clearest finding of the whole project. Word count not surviving as a predictive feature (permutation importance ≈ 0.0009) was not a contradiction of the FlyRank research paper — it was a distinction between an observed state and a predictive signal. Reporting those honestly earned more credibility than any headline number.
 
+Fourth, I learned that a point estimate is a claim, not evidence. After the capstone shipped I went back and attacked my own headline with a client-clustered bootstrap and a permutation test that retrains the whole pipeline on shuffled labels. Part of it held up better than I expected: chance never came close (p = 0.005), and the model beat the rule inside 14 of 18 clients. Part of it did not: the precision@50 gap over the rule, the number I had led with, has a 95% interval of −0.06 to +0.24. It crosses zero. With thirty clients, "44 versus 37 of the top 50" is what happened on this snapshot, not a promise for the next one. The audit also found two numbers in my own write-ups that had drifted from their receipts, which is why every headline number is now checked by a test.
+
 **The three most transferable things I learned:**
 
 1. **Leakage is a design problem, not a debugging problem.** You do not find leakage by looking at residuals. You find it by asking "when in time was this number computed?" for every column, before the model sees any data. The window decomposition diagram I drew in Week 3 has been more valuable than any model architecture I have read about.

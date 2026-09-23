@@ -472,10 +472,13 @@ def _style(ax, title: str, xlabel: str, ylabel: str) -> None:
 
 
 def save(fig, name: str) -> None:
-    FIG.mkdir(parents=True, exist_ok=True)
-    fig.savefig(FIG / name, format="svg", bbox_inches="tight", transparent=False,
-                facecolor="white")
+    """Write a byte-reproducible SVG: no timestamp, no library version, element IDs salted
+    by the file name. A rebuild on unchanged data leaves `git status` clean."""
     import matplotlib.pyplot as plt
+    FIG.mkdir(parents=True, exist_ok=True)
+    with plt.rc_context({"svg.hashsalt": name}):
+        fig.savefig(FIG / name, format="svg", bbox_inches="tight", transparent=False,
+                    facecolor="white", metadata={"Date": None, "Creator": None})
     plt.close(fig)
 
 

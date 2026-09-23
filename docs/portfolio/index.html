@@ -1058,7 +1058,7 @@
               <div class="p-row">
                 <div class="p-label">Method</div>
                 <div class="p-body">
-                  Defined the decision, the label and the decision point first · leakage audit that removed every window-spanning column · 24 decision-time features · a transparent rule baseline before any model · logistic regression and random forest · precision@K at the team's real capacity · permutation importance.
+                  Defined the decision, the label and the decision point first · leakage audit that removed every window-spanning column · 24 decision-time features · a transparent rule baseline before any model · logistic regression and random forest · precision@K at the team's real capacity · client-clustered bootstrap, permutation test and calibration check · permutation importance.
                 </div>
               </div>
               <div class="p-row">
@@ -1077,7 +1077,7 @@
               <div class="p-row">
                 <div class="p-label">Result</div>
                 <div class="p-body">
-                  Logistic regression on honest features: <span class="metric">PR-AUC 0.718</span>, <span class="metric">precision@50 0.88</span> — against <span class="metric">0.668 / 0.74</span> for the rule baseline and <span class="metric">0.617</span> for random ordering, on a <span class="metric">0.62</span> base rate. The grouped split scored 0.042 lower than a naive random-row split — the split design, not the model, was doing the honest work. The leaky model reached a perfect 1.000 and was discarded.
+                  Logistic regression on honest features: <span class="metric">PR-AUC 0.718</span>, <span class="metric">precision@50 0.88</span> — against <span class="metric">0.668 / 0.74</span> for the rule baseline and <span class="metric">0.617</span> for random ordering, on a <span class="metric">0.62</span> base rate. The grouped split scored 0.042 lower than a naive random-row split — the split design, not the model, was doing the honest work. The leaky model reached a perfect 1.000 and was discarded. Then the result was attacked: a whole-pipeline permutation test puts chance at <span class="metric">p = 0.005</span>, and the model beats the rule inside <span class="metric">14 of 18</span> clients — while a client-clustered bootstrap shows the top-50 margin alone sits within noise, so it is reported as a point estimate, not a guarantee.
                 </div>
               </div>
               <div class="p-row">

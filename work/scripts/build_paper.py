@@ -35,6 +35,7 @@ COEF = json.loads((OUT / "capstone_coefficients.json").read_text())
 TOP20 = json.loads((OUT / "capstone_queue_top20.json").read_text())
 QSUM = json.loads((OUT / "capstone_queue_summary.json").read_text())
 STATES = json.loads((OUT / "capstone_states.json").read_text())
+EVID = json.loads((OUT / "evidence_audit.json").read_text())   # from evidence_audit.py
 
 R = M["reports"]
 BASE = M["base_rate"]
@@ -47,6 +48,14 @@ LEAK = R["Model (random forest, window-overlapping features)"]
 RULE = R["Rule baseline (decision-time columns)"]
 W4 = R["Week-4 rule (window-contaminated)"]
 RAND = R["Random ordering"]
+BOOT = EVID["bootstrap"]
+VS_RULE = BOOT["paired_gaps"]["logreg_minus_rule"]
+VS_HGB = BOOT["paired_gaps"]["logreg_minus_hgb"]
+PERM = EVID["permutation_test"]
+CAL = EVID["calibration"]
+PCL = EVID["per_client"]
+SENS = EVID["sensitivity"]
+BIG = EVID["largest_client"]
 
 REPO_URL = "https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship"
 # The directory `git clone` creates, so the repro block below cannot drift
@@ -115,14 +124,15 @@ TIMELINE_SVG = '''
 </svg>'''
 
 
-def table(headers, rows, highlight_row=None, note=None) -> str:
+def table(headers, rows, highlight_row=None, note=None, prose=False) -> str:
     head = "".join(f"<th>{h}</th>" for h in headers)
     body = ""
     for i, r in enumerate(rows):
         cls = ' class="row-key"' if highlight_row is not None and i == highlight_row else ""
         body += "<tr" + cls + ">" + "".join(f"<td>{c}</td>" for c in r) + "</tr>"
     n = f'<p class="table-note">{note}</p>' if note else ""
-    return f'<div class="scroll"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>{n}'
+    wrap = "scroll prose-table" if prose else "scroll"   # prose: sentences in cells, so let them wrap
+    return f'<div class="{wrap}"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>{n}'
 
 
 results_table = table(
@@ -158,6 +168,54 @@ results_table = table(
          f"Base rate {BASE:.4f} — {M['positives']:,} of "
          f"{POP['rows_modelled']:,} pages declined. The leaky row is shown to be disowned, not claimed.",
 )
+
+
+def _ci(g: dict, digits: int = 3) -> str:
+    return f"{g['point']:+.{digits}f} <span class='ci'>[{g['lo']:+.{digits}f}, {g['hi']:+.{digits}f}]</span>"
+
+
+_w, _t, _l = SENS["precision_at_50_model_wins_ties_losses"]
+evidence_table = table(
+    ["Attack on the result", "What came back", "Verdict"],
+    [
+        ["Whole-pipeline permutation test — retrained "
+         f"{PERM['n_permutations']}× on shuffled labels, globally and within each client",
+         f"Real PR-AUC lift {PERM['observed_lift']:.3f}; the null never passed "
+         f"{max(PERM['global_shuffle']['null_max'], PERM['within_client_shuffle']['null_max']):.3f}. "
+         f"p = {PERM['within_client_shuffle']['p_value']:.3f} under both nulls, the floor for "
+         f"{PERM['n_permutations']} permutations",
+         "<span class='tag tag-ship'>signal is real</span>"],
+        ["Client-clustered paired bootstrap, model − rule, whole ranking",
+         f"ROC-AUC {_ci(VS_RULE['roc_auc'])}<br>PR-AUC {_ci(VS_RULE['pr_auc'])}",
+         "<span class='tag tag-ship'>holds</span>"],
+        ["Same bootstrap, precision@50 alone",
+         f"{_ci(VS_RULE['p@50'], 2)}",
+         "<span class='tag tag-flag'>not secure alone</span>"],
+        [f"Inside each client ({PCL['clients_eligible']} with ≥50 pages)",
+         f"Model beats the rule in {PCL['roc_auc_model_wins']} of {PCL['clients_eligible']} "
+         f"(sign test p = {PCL['roc_auc_sign_test_p']:.3f})",
+         "<span class='tag tag-ship'>not a pooling artefact</span>"],
+        [f"Largest client ({BIG['largest_client_share_of_pages'] * 100:.1f}% of pages) removed / alone",
+         f"PR-AUC {BIG['without_largest_client']['logreg']['pr_auc']:.3f} vs "
+         f"{BIG['without_largest_client']['rule']['pr_auc']:.3f} without it; "
+         f"{BIG['largest_client_only']['logreg']['pr_auc']:.3f} vs "
+         f"{BIG['largest_client_only']['rule']['pr_auc']:.3f} inside it",
+         "<span class='tag tag-ship'>holds</span>"],
+        ["4 demand floors × 3 decline thresholds",
+         f"PR-AUC: model ahead in {SENS['model_beats_rule_on_pr_auc_in']}. "
+         f"Precision@50: {_w} wins, {_t} ties, {_l} loss",
+         "<span class='tag tag-ship'>holds</span>"],
+        ["Gradient-boosting challenger",
+         f"PR-AUC {EVID['complexity_check']['gradient_boosting']['pr_auc']:.3f} vs "
+         f"{LR['pr_auc']:.3f}; gap {_ci(VS_HGB['pr_auc'])}",
+         "<span class='tag'>complexity not earned</span>"],
+    ],
+    prose=True,
+    note=f"{BOOT['method'].capitalize()}. Every row is a receipt in "
+         "<code>work/outputs/evidence_audit.json</code>, written by "
+         "<code>work/scripts/evidence_audit.py</code>.",
+)
+
 
 decile_rows = [[str(dd["decile"]), f"{dd['observed_decline_rate'] * 100:.1f}%",
                 f"{dd['lift']:.2f}×", f"{dd['n']:,}"] for dd in M["risk_deciles"]]
@@ -241,7 +299,8 @@ recs = [
      "The thresholds behind the reason codes move — they are policy choices, not constants."),
     ("Keep a human gate in front of every action, and automate nothing.",
      "The model never reads page content, cannot see a sibling page absorbing demand, and cannot "
-     "separate seasonality from decline. 14 of the top 200 carry only <code>model_pattern_only</code> "
+     f"separate seasonality from decline. {QSUM['top200_reason_code_mix'].get('model_pattern_only', 0)} "
+     "of the top 200 carry only <code>model_pattern_only</code> "
      "and are downgraded to monitor by design.",
      "Nothing — this is a design boundary, not a tunable parameter."),
 ]
@@ -265,7 +324,9 @@ limits = [
      "For those, this system is silent — not reassuring."),
     ("Thirty clients is a small sample",
      f"PR-AUC moves between {STAB['pr_auc_min']} and {STAB['pr_auc_max']} depending on which clients are "
-     f"held out. That range is the result, not the single {LR['pr_auc']:.4f}."),
+     f"held out. That range is the result, not the single {LR['pr_auc']:.4f}. The client-bootstrap "
+     f"interval on the precision@50 gap over the rule, {VS_RULE['p@50']['lo']:+.2f} to "
+     f"{VS_RULE['p@50']['hi']:+.2f}, crosses zero."),
     ("Search position could not be used at all",
      "The only position column is a 90-day mean that spans the outcome window. A central SEO signal had "
      "to be dropped; the warehouse's daily table would restore it."),
@@ -438,6 +499,10 @@ ol.limits li{counter-increment:lim; border-left:2px solid var(--rule); padding:2
 .lim-body{margin:0 !important; font-size:14.8px; color:var(--ink-2)}
 ul.plain{padding-left:20px; margin:14px 0}
 ul.plain li{margin-bottom:8px; color:var(--ink-2); max-width:66ch}
+.ci{color:var(--muted); font-size:.9em; white-space:nowrap}
+.prose-table td:nth-child(2){font-family:inherit; white-space:normal; min-width:260px}
+.prose-table td:first-child{min-width:180px}
+.plate-narrow{max-width:520px; margin-left:auto; margin-right:auto}
 
 /* repro + footer ---------------------------------------------------------- */
 pre{background:var(--surface); border:1px solid var(--rule); border-radius:5px; padding:16px 18px;
@@ -498,7 +563,10 @@ BODY = f'''
   while the rule I had built in Week 4 turned out to score just 12 of 18,010 pages above zero and
   therefore rank nothing at all (ROC-AUC {W4['roc_auc']:.3f}). Adding the window-overlapping columns back
   lifted precision@200 to {LEAK['precision_at_k']['200']:.3f}, a beautiful number that is a leakage
-  confession rather than a result. The deliverable is an 18,010-row action queue with reason codes,
+  confession rather than a result. A whole-pipeline permutation test (p = {PERM['within_client_shuffle']['p_value']:.3f})
+  and a client-clustered bootstrap indicate the ranking advantage is not chance and holds inside
+  {PCL['roc_auc_model_wins']} of {PCL['clients_eligible']} clients — while the precision@50 margin on its own sits within noise.
+  The deliverable is an 18,010-row action queue with reason codes,
   a suggested action and a confidence label, built to support the order of human review — not to
   promise that refreshing a page recovers its traffic.</p>
 </div>
@@ -651,6 +719,65 @@ BODY = f'''
   is the honest result — not the single {LR['pr_auc']:.4f}. Simplicity also won on merit: the logistic
   regression edged the random forest ({LR['pr_auc']:.4f} vs {RF['pr_auc']:.4f}), so the readable model
   is the one that ships.</p>
+
+
+  <h3>Is the win bigger than the noise?</h3>
+  <p>Thirty clients, one of which holds {BIG['largest_client_share_of_pages'] * 100:.1f}% of the pages,
+  is a small sample, and a point estimate on a small sample is a claim, not evidence. So the
+  headline was attacked six ways, and each answer was committed as a receipt before this paragraph
+  was written.</p>
+
+  {evidence_table}
+
+  <figure>
+    <div class="plate">{fig("evidence_permutation.svg")}</div>
+    <figcaption><b>Chance does not get close.</b> The whole pipeline — features, grouped folds, model —
+    retrained on shuffled labels {PERM['n_permutations']} times per null. Shuffling <em>within</em>
+    each client keeps every client's own decline rate, so a model that had only learned “which client
+    declines more” would pass it. It does not.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="plate">{fig("evidence_bootstrap.svg")}</div>
+    <figcaption><b>The honest shape of the win.</b> Against the rule, the whole-ranking metrics sit
+    clear of zero or nearly so; precision@20 and precision@50 do not. “{round(LR['precision_at_k']['50'] * 50)}
+    of the top 50” against {round(RULE['precision_at_k']['50'] * 50)} is what happened on this snapshot,
+    not a guarantee for the next one. Against gradient boosting every interval straddles zero — extra
+    complexity bought nothing, so the readable model ships.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="plate">{fig("evidence_capacity.svg")}</div>
+    <figcaption><b>Precision at every review capacity, with client-bootstrap bands.</b> The model's
+    line sits above the rule's from K = 30 onward; the bands overlap, which is what thirty clients
+    buys.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="plate">{fig("evidence_per_client.svg")}</div>
+    <figcaption><b>Inside each client, not just in the pool.</b> A pooled ranking can win by sorting
+    clients rather than pages. Within-client ROC-AUC rules that out: the model is ahead in
+    {PCL['roc_auc_model_wins']} of {PCL['clients_eligible']} clients, including all four of the
+    largest. Clients are shown by size rank, never by ID.</figcaption>
+  </figure>
+
+  <h3>Can the score be read as a probability?</h3>
+  <p>Mostly, and not at the top. The Brier score beats always predicting the base rate
+  (skill {CAL['brier_skill_score']:+.3f}), the expected calibration error is
+  {CAL['expected_calibration_error']:.3f}, and the middle deciles sit on the diagonal. But the
+  calibration slope is {CAL['calibration_slope']:.2f}: the riskiest tenth averages a predicted
+  {CAL['reliability'][-1]['mean_predicted']:.2f} while {CAL['reliability'][-1]['observed_rate']:.2f}
+  actually declined. The queue therefore prints a confidence label rather than a percentage, and the
+  labels behave as ordered — <strong>high</strong>
+  {CAL['confidence_labels']['high']['observed_decline_rate'] * 100:.1f}% declined,
+  <strong>medium</strong> {CAL['confidence_labels']['medium']['observed_decline_rate'] * 100:.1f}%,
+  <strong>low</strong> {CAL['confidence_labels']['low']['observed_decline_rate'] * 100:.1f}%.</p>
+
+  <figure>
+    <div class="plate plate-narrow">{fig("evidence_calibration.svg")}</div>
+    <figcaption><b>Well calibrated in the middle, overconfident at the top.</b> Read the score as a
+    rank.</figcaption>
+  </figure>
 
   {deciles_table}
 

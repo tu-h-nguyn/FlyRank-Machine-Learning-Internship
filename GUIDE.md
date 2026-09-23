@@ -26,6 +26,8 @@ what you may edit, how the pieces connect, and where your own work goes.
 | `docs/intern-free-tooling-guide.md` | The zero-budget tool stack | Reference |
 | `.github/workflows/smoke-test.yml` | CI: re-runs the whole pipeline and fails if any dataset CSV is committed | Keep it green |
 | `.github/workflows/personalize.yml` | Runs once right after you create your copy: points every Colab badge at YOUR repo | Automatic — nothing to do |
+| `tests/` | Capstone guards: feature contract, leakage harness, receipts reproduce, claims match receipts, public safety | `pytest -q tests/` before every commit that touches `work/` |
+| `.github/workflows/capstone-receipts.yml` | CI: re-runs the capstone and fails if a committed receipt drifts | Keep it green |
 | `requirements.txt` | pandas, numpy, scikit-learn, matplotlib, reportlab, duckdb, huggingface_hub | `pip install -r requirements.txt` |
 
 ## 2. How the pipeline fits together

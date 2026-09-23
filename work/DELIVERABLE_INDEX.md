@@ -51,6 +51,17 @@ This index links every deliverable produced during the internship, organized by 
 | Feature importance | [`work/outputs/capstone_importance.json`](outputs/capstone_importance.json) |
 | Model coefficients | [`work/outputs/capstone_coefficients.json`](outputs/capstone_coefficients.json) |
 
+## Evidence audit — is the win bigger than the noise? (ML-09, extended)
+
+| Deliverable | Location |
+|---|---|
+| Evidence audit notebook | [`work/notebooks/w08_evidence_audit.ipynb`](notebooks/w08_evidence_audit.ipynb) |
+| Evidence audit script | [`work/scripts/evidence_audit.py`](scripts/evidence_audit.py) |
+| Receipt: bootstrap intervals, permutation nulls, calibration, per-client, sensitivity | [`work/outputs/evidence_audit.json`](outputs/evidence_audit.json) |
+| Model card | [`work/MODEL_CARD.md`](MODEL_CARD.md) |
+| Claim and receipt tests | [`tests/test_capstone.py`](../tests/test_capstone.py) |
+| CI: receipts reproduce on every push | [`.github/workflows/capstone-receipts.yml`](../.github/workflows/capstone-receipts.yml) |
+
 ## Week 7 — Action Playbook (ML-10)
 
 | Deliverable | Location |
@@ -81,6 +92,11 @@ This index links every deliverable produced during the internship, organized by 
 | Risk deciles | [`work/figures/risk_deciles.svg`](figures/risk_deciles.svg) |
 | Queue reason mix | [`work/figures/queue_reason_mix.svg`](figures/queue_reason_mix.svg) |
 | Queue state mix | [`work/figures/queue_state_mix.svg`](figures/queue_state_mix.svg) |
+| Permutation test | [`work/figures/evidence_permutation.svg`](figures/evidence_permutation.svg) |
+| Paired bootstrap gaps | [`work/figures/evidence_bootstrap.svg`](figures/evidence_bootstrap.svg) |
+| Precision at every capacity, with bands | [`work/figures/evidence_capacity.svg`](figures/evidence_capacity.svg) |
+| Per-client comparison | [`work/figures/evidence_per_client.svg`](figures/evidence_per_client.svg) |
+| Calibration | [`work/figures/evidence_calibration.svg`](figures/evidence_calibration.svg) |
 
 ## Final Package (FL-09, FL-10)
 
@@ -101,7 +117,9 @@ git clone https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship.git
 cd FlyRank-Machine-Learning-Internship
 pip install -r requirements.txt
 python work/scripts/capstone_pipeline.py   # regenerates work/outputs/*.json + work/figures/*.svg
+python work/scripts/evidence_audit.py      # regenerates work/outputs/evidence_audit.json + evidence_*.svg
 python work/scripts/build_paper.py         # rebuilds docs/index.html
+pytest -q tests/                           # checks every headline claim against its receipt
 ```
 
 Every number in the capstone report and the deployed paper traces back to the JSON files in `work/outputs/`, which are regenerated deterministically (seed 42) by the command above.

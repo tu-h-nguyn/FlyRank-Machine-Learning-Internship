@@ -1,0 +1,57 @@
+name: capstone-receipts
+
+# The capstone's numbers are only as good as their reproducibility. On every push this
+# workflow (1) checks every headline claim against its committed receipt, (2) re-runs the
+# capstone pipeline from the raw CSV and fails if any committed receipt changes, and
+# (3) re-runs the evidence audit and reports drift.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  receipts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Claims, feature contract, public safety (against the committed receipts)
+        run: pytest -q tests/
+
+      - name: Re-run the capstone pipeline from the raw CSV
+        run: python work/scripts/capstone_pipeline.py > /dev/null
+
+      - name: Committed receipts must reproduce exactly
+        run: |
+          if ! git diff --exit-code -- work/outputs/; then
+            echo "::error::A committed receipt in work/outputs/ no longer matches a fresh run. Re-run the pipeline, update the prose, and commit both."
+            exit 1
+          fi
+          echo "Every capstone receipt reproduced byte for byte."
+
+      - name: Re-run the evidence audit (bootstrap, permutation test, calibration)
+        run: python work/scripts/evidence_audit.py > /dev/null
+
+      - name: Report evidence drift
+        run: |
+          # Gradient boosting and random forests can move in the fourth decimal between
+          # scikit-learn releases, so drift here is reported, not fatal. The shipped model's
+          # numbers are pinned by the tests above.
+          if ! git diff --quiet -- work/outputs/evidence_audit.json; then
+            echo "::warning::evidence_audit.json drifted on this runner:"
+            git diff --stat -- work/outputs/evidence_audit.json
+          else
+            echo "Evidence audit reproduced byte for byte."
+          fi
+          pytest -q tests/

@@ -49,6 +49,12 @@ python scripts/run_all.py
 
 # Run the capstone pipeline (~25s, writes metrics + figures)
 python work/scripts/capstone_pipeline.py
+
+# Attack the result: bootstrap, permutation test, calibration, per-client (~2.5 min)
+python work/scripts/evidence_audit.py
+
+# Check every claim against its receipt (feature contract, reproducibility, public safety)
+pytest -q tests/
 ```
 
 **Requirements:** Python 3.11+, and the packages in `requirements.txt`:
@@ -61,6 +67,7 @@ matplotlib>=3.8
 reportlab>=4.0
 duckdb>=1.0
 huggingface_hub>=0.24
+pytest>=8.0
 ```
 
 ### Option C: Full warehouse (79M rows, optional)
@@ -121,11 +128,28 @@ All metrics are **out-of-fold** under `GroupKFold(5)` grouped by `client_id`. Ba
 | Random forest | 0.750 | 0.800 | 0.790 | 0.711 | 0.637 |
 | *[leaky] RF + overlapping columns* | *1.000* | *1.000* | *0.995* | *0.775* | *0.687* |
 
-**What this means:** At the team's capacity of ~50 pages/week, roughly **44 of the first 50** are real decliners (vs 31 for the hand-written rule and 29 by chance).
+**What this means:** At the team's capacity of ~50 pages/week, roughly **44 of the first 50** are real decliners (vs 37 for the hand-written rule and 29 by chance) — a point estimate; see the evidence audit below for how much it can move.
 
 **Stability:** Across 5 different client holdouts (seeds 42, 7, 2024, 101, 777): PR-AUC 0.668 ± 0.026, precision@50 0.816 ± 0.048.
 
 **Split-design gap:** Random row split PR-AUC = 0.760 vs grouped = 0.718. The +0.042 difference was client memorisation, not transferable skill.
+
+### Is the win bigger than the noise? — the evidence audit
+
+Thirty clients, one of them holding 31.6% of the pages, is a small sample. `work/scripts/evidence_audit.py` attacks the headline six ways and commits every answer to `work/outputs/evidence_audit.json`:
+
+| Attack | Result | Verdict |
+|---|---|---|
+| **Whole-pipeline permutation test** — retrain 200× on shuffled labels (globally, and within each client) | Real lift 1.167 vs a null maximum of 1.026; p = 0.005 under both nulls (the floor for 200 permutations) | Signal is real |
+| **Client-clustered bootstrap** (1,000 resamples of clients, paired) — model minus rule | ROC-AUC +0.079 [+0.004, +0.118]; PR-AUC +0.051 [-0.004, +0.086], 96% of resamples favour the model | Real across the ranking |
+| Same bootstrap, **precision@50** | +0.14, 95% interval [-0.06, +0.24] | **Not secure on its own** — quote "44 of 50" as a point estimate |
+| **Inside each client** (18 clients with ≥50 pages) | Model beats the rule on within-client ROC-AUC in 14 of 18 clients (sign test p = 0.015) | Not a pooling artefact |
+| **Largest client removed / alone** | PR-AUC 0.740 vs 0.714 without it; 0.635 vs 0.549 inside it | Not one client's artefact |
+| **Other definitions** — 4 demand floors × 3 decline thresholds | Model beats rule on PR-AUC in 12 of 12; on P@50 wins 9, ties 2, loses 1 | Robust |
+| **Gradient boosting challenger** | PR-AUC 0.697 vs 0.718 (gap within noise) | Complexity did not earn its keep — the readable model ships |
+| **Calibration** | Brier skill +0.052, ECE 0.028, slope 0.78; top decile predicted 0.84, observed 0.76 | Read the score as a rank, not a probability |
+
+The full write-up is in [`work/MODEL_CARD.md`](work/MODEL_CARD.md) and [`work/notebooks/w08_evidence_audit.ipynb`](work/notebooks/w08_evidence_audit.ipynb).
 
 ---
 
@@ -133,7 +157,7 @@ All metrics are **out-of-fold** under `GroupKFold(5)` grouped by `client_id`. Ba
 
 1. **One snapshot, no causal claims.** This is cross-sectional data from one time period. The model ranks pages by *associated* risk — it cannot say refreshing a page will recover its traffic. The honest framing is decision-support, not prediction.
 
-2. **Small client pool (30 clients).** With only 30 clients in the grouped split, the PR-AUC range across holdouts (0.630–0.702) is wide. The range is the result, not the single 0.718.
+2. **Small client pool (30 clients).** With only 30 clients in the grouped split, the PR-AUC range across holdouts (0.630–0.702) is wide. The range is the result, not the single 0.718. The client-bootstrap interval on the precision@50 gap over the rule crosses zero; the whole-ranking gap (ROC-AUC) does not.
 
 3. **The middle of the queue is uninformative.** Risk deciles 5–7 sit at 62–71% decline rate, barely above the 61.6% base rate. The queue is trustworthy at the top and near-random in the middle.
 
@@ -169,6 +193,8 @@ All metrics are **out-of-fold** under `GroupKFold(5)` grouped by `client_id`. Ba
 | `work/outputs/` | Metrics JSONs (committed receipts) |
 | `work/figures/` | SVG charts from the capstone pipeline |
 | `work/capstone_report.md` | Full capstone write-up |
+| `work/MODEL_CARD.md` | One-page model card: intended use, intervals, calibration, failure modes |
+| `tests/` | Guards: feature contract, leakage harness, receipts reproduce, claims match receipts, public safety |
 | `docs/index.html` | Deployed research paper |
 | `docs/portfolio/` | Personal portfolio site |
 | `outputs/` | Reference pipeline outputs (model report, sample queue, charts) |
@@ -202,11 +228,15 @@ git clone https://github.com/tu-h-nguyn/FlyRank-Machine-Learning-Internship.git
 cd FlyRank-Machine-Learning-Internship
 pip install -r requirements.txt
 python work/scripts/capstone_pipeline.py   # ~25s; writes work/outputs/*.json + work/figures/*.svg
+python work/scripts/evidence_audit.py      # ~2.5 min; writes work/outputs/evidence_audit.json
+pytest -q tests/                           # every headline number checked against its receipt
 ```
+
+- **Byte-identical rebuilds:** figures are written without timestamps and with salted element IDs, so re-running on unchanged data leaves `git status` clean. CI (`capstone-receipts.yml`) re-runs the pipeline on every push and fails if a committed receipt drifts.
 
 - **Seed:** `RANDOM_SEED = 42` everywhere.
 - **CV:** `GroupKFold(5)` by `client_id` — deterministic, no seed dependence.
-- **Environment:** Python 3.11, pandas 2.x, scikit-learn 1.7.x, matplotlib 3.x.
+- **Environment:** Python 3.11+, pandas 2.x–3.x, scikit-learn 1.7–1.9, matplotlib 3.x — the receipts reproduce exactly across these versions.
 
 ---
 

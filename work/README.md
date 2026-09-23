@@ -52,6 +52,7 @@ in Colab, straight from your repo):
 | `notebooks/w05_model.ipynb` | ML-08 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-Machine-Learning-Internship/blob/main/work/notebooks/w05_model.ipynb?flush_cache=true) | ✅ |
 | `notebooks/w06_validation_audit.ipynb` | ML-09 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-Machine-Learning-Internship/blob/main/work/notebooks/w06_validation_audit.ipynb?flush_cache=true) | ✅ |
 | `notebooks/w07_action_playbook.ipynb` | ML-10 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-Machine-Learning-Internship/blob/main/work/notebooks/w07_action_playbook.ipynb?flush_cache=true) | ✅ |
+| `notebooks/w08_evidence_audit.ipynb` | ML-09, extended — client bootstrap, permutation test, calibration, per-client | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-Machine-Learning-Internship/blob/main/work/notebooks/w08_evidence_audit.ipynb?flush_cache=true) | ✅ |
 | `notebooks/capstone.ipynb` | ML-11 (the paper mirrors it) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tu-h-nguyn/FlyRank-Machine-Learning-Internship/blob/main/work/notebooks/capstone.ipynb?flush_cache=true) | ✅ |
 | closing section of `notebooks/capstone.ipynb` | ML-12 — 5-min demo outline + social-post cut + employer-facing summary | (same notebook, last markdown cells) | ✅ |
 
@@ -63,8 +64,12 @@ The long-form write-up is `capstone_report.md`; every number in both traces back
 
 ```bash
 python work/scripts/capstone_pipeline.py   # metrics + figures (seed 42)
+python work/scripts/evidence_audit.py      # bootstrap, permutation test, calibration (~2.5 min)
 python work/scripts/build_paper.py         # rebuilds docs/index.html
+pytest -q tests/                           # every headline claim checked against its receipt
 ```
+
+The one-page model card is `MODEL_CARD.md`.
 ML-12 lives in your capstone notebook's closing markdown cells — it's the smallest card and
 the easiest to forget, which is exactly why it has a row here.
 
