@@ -136,9 +136,10 @@ about 3 KB, sets no cookies and stores no personal data, so it needs no banner.
 
 ## 3. The graduate badge
 
-The badge is drawn and installed in the footer of both pages
-(`docs/assets/flyrank-graduate-badge.svg`) — it is served from your own repo, so it cannot
-break when someone else's host goes down. It links to your FlyRank verification page
+**Removed from both pages by choice.** The drawing is kept at
+`docs/assets/flyrank-graduate-badge.svg` in case it comes back; the paper keeps its required
+FlyRank data credit either way. When it was on the page it was served from your own repo, so it
+could not break when someone else's host went down. It links to your FlyRank verification page
 (`internship.flyrank.ai/verify?id=FR-D2-T779H-R890R`), which is set and passing the audit.
 
 To point it somewhere else:

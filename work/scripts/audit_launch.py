@@ -169,9 +169,9 @@ for name, path, url in PAGES:
     # --- graduate badge ---
     b = re.search(r'<a class="grad-badge"[^>]*href="([^"]+)"[^>]*>\s*<img src="([^"]+)"[^>]*alt="([^"]*)"',
                   html, re.S)
-    # The paper carries the graduate badge; the portfolio dropped it by choice, so
-    # it is only checked there if one comes back.
-    if name == "portfolio" and not b:
+    # Neither page carries the graduate badge any more (removed by choice); it is only
+    # checked if one comes back.
+    if not b:
         print("  --   graduate badge  not on this page (by choice)")
     elif check("graduate badge in footer", bool(b)):
         href, src, alt = b.group(1), b.group(2), b.group(3)
