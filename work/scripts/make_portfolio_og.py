@@ -67,7 +67,7 @@ CARD = """
   <p class="url">tu-h-nguyn.github.io</p>
 </div>
 <div class="main">
-  <p class="eyebrow">Portfolio · 2026</p>
+  <p class="eyebrow">Portfolio</p>
   <h1>Nguy&#7877;n<br>Ho&agrave;ng T&uacute;</h1>
   <p class="role">Machine Learning / AI Engineer Intern</p>
   <div class="stats">
