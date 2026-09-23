@@ -968,9 +968,9 @@
         <p class="eyebrow rv"><span class="num">02</span> Work</p>
         <h2 class="display rv">Selected Projects</h2>
         <p class="lede rv">
-          Eight, all with public code, each told the same way: problem, why it matters,
-          method, the mathematics or architecture, experiment, result, limitation. Five of
-          them run CI that recomputes their published numbers on every push.
+          Six in full, each told the same way: problem, why it matters, method, the
+          mathematics, experiment, result, limitation — and two more below. All eight have
+          public code; five run CI that recomputes their published numbers on every push.
         </p>
 
         <!-- Filters only exist with JavaScript; without it every card simply shows. -->
@@ -979,7 +979,6 @@
           <button type="button" class="filter" data-filter="ml" aria-pressed="false">Machine learning</button>
           <button type="button" class="filter" data-filter="numerical" aria-pressed="false">Numerical analysis</button>
           <button type="button" class="filter" data-filter="optimisation" aria-pressed="false">Optimisation</button>
-          <button type="button" class="filter" data-filter="quant" aria-pressed="false">Quantitative</button>
         </div>
         <p class="sr-only" id="filter-status" role="status" aria-live="polite"></p>
 
@@ -1013,16 +1012,6 @@
             <span class="ov-num" aria-hidden="true">06</span><span class="ov-icon" aria-hidden="true"></span>
             <span class="ov-name">Proximal Point Algorithms</span>
             <span class="ov-metric">LASSO under <b>five</b> inner-accuracy schedules · 0 bound violations</span>
-          </a>
-          <a class="ov-row" href="#p-rag" data-cat="ml">
-            <span class="ov-num" aria-hidden="true">07</span><span class="ov-icon" aria-hidden="true"></span>
-            <span class="ov-name">Enterprise Hybrid RAG</span>
-            <span class="ov-metric">Recall@1 <b>0.795</b> vs 0.585 dense-only</span>
-          </a>
-          <a class="ov-row" href="#p-quant" data-cat="ml quant">
-            <span class="ov-num" aria-hidden="true">08</span><span class="ov-icon" aria-hidden="true"></span>
-            <span class="ov-name">AI Quant Trading Research Lab</span>
-            <span class="ov-metric">Walk-forward, costs on turnover · <b>no</b> unbacked returns</span>
           </a>
         </nav>
 
@@ -1778,122 +1767,27 @@ c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v0 v585 h43z"/></svg></span></span></
           </div>
         </article>
 
-        <!-- ── 07 ── -->
-        <article id="p-rag" class="project" data-cat="ml">
-          <div class="p-num rv from-left" aria-hidden="true">07</div>
+        <!-- ── Two more public repositories, a line each rather than a card. ── -->
+        <article id="p-other" class="project" data-cat="ml">
+          <div class="p-num rv from-left" aria-hidden="true">+</div>
           <div>
             <div class="p-head rv">
-              <h3>Enterprise Hybrid RAG</h3>
-              <span class="p-status live">Report + code public</span>
-            </div>
-            <p class="p-problem rv">
-              Answer questions from PDF, DOCX and Markdown with citations that resolve to a page — and know which retriever to trust for which kind of question.
-            </p>
-
-            <div class="rv">
-              <div class="p-row">
-                <div class="p-label">Why it matters</div>
-                <div class="p-body">
-                  An answer without a checkable source is not usable inside a company, and a system that never abstains will invent one. Keyword questions (a policy code such as HB-7.2) and paraphrased ones fail in opposite retrievers, so no single retriever is safe.
-                </div>
-              </div>
-              <div class="p-row">
-                <div class="p-label">Method</div>
-                <div class="p-body">
-                  No RAG framework, so every ranking decision is inspectable. BM25 and dense retrieval built from the same chunk list in one pass · reciprocal-rank fusion · cross-encoder reranking · a confidence gate that abstains · citations resolved to the page, invalid ones dropped.
-                </div>
-              </div>
-              <div class="p-row">
-                <div class="p-label">Architecture</div>
-                <div class="p-body">
-                  Loaders keep page and section → a sentence-aligned chunker → BM25 Okapi and Chroma (384-d cosine, <code>all-MiniLM-L6-v2</code>) → fusion → reranking with <code>ms-marco-MiniLM-L-6-v2</code> → confidence gate → context builder → LLM → citation resolution.
-                  <span class="p-math" data-tex="\operatorname{RRF}(d)=\sum_{r\in\mathcal{R}}\frac{1}{k+\operatorname{rank}_r(d)}"><!--tex--><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">RRF</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>d</mi><mo stretchy="false">)</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>r</mi><mo>∈</mo><mi mathvariant="script">R</mi></mrow></munder><mfrac><mn>1</mn><mrow><mi>k</mi><mo>+</mo><msub><mrow><mi mathvariant="normal">rank</mi><mo>⁡</mo></mrow><mi>r</mi></msub><mo stretchy="false">(</mo><mi>d</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">\operatorname{RRF}(d)=\sum_{r\in\mathcal{R}}\frac{1}{k+\operatorname{rank}_r(d)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">RRF</span></span><span class="mopen">(</span><span class="mord mathnormal">d</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.6431em;vertical-align:-1.3217em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8557em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span><span class="mrel mtight">∈</span><span class="mord mathcal mtight">R</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3217em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop"><span class="mop"><span class="mord mathrm">rank</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">d</span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><!--/tex--></span>
-                </div>
-              </div>
-              <div class="p-row">
-                <div class="p-label">Experiment</div>
-                <div class="p-body">
-                  50 questions over 22 documents (77 chunks), four configurations — dense only, BM25 only, fused, fused + reranker — broken down by question type, and regenerated by CI on every pull request.
-                </div>
-              </div>
-              <div class="p-row">
-                <div class="p-label">Result</div>
-                <div class="p-body">
-                  <span class="metric">Recall@1 0.795</span> for hybrid + reranker against 0.585 dense-only and 0.643 BM25; <span class="metric">MRR 0.909</span>. By type, BM25 scores 1.00 on keyword questions and 0.11 on paraphrase, the dense encoder 0.43 and 0.44 — the reranked hybrid holds both ceilings (1.00 and 0.44) and reaches 1.00 on terminology.
-                </div>
-              </div>
-              <div class="p-row">
-                <div class="p-label">Limitation</div>
-                <div class="p-body">
-                  The corpus is synthetic and small — 22 documents and 43 scored questions — so every comparison is directional. Generation is not measured with a real LLM. The abstention threshold over-refuses 34.9% of answerable questions. Reranking costs about 694 ms per query against 0.75 ms for BM25.
-                </div>
-              </div>
-            </div>
-
-            <div class="p-stack">Python · sentence-transformers · Chroma · BM25 · pytest · mypy · Docker</div>
-
-            <div class="p-links">
-              <a class="btn btn-secondary" href="https://github.com/tu-h-nguyn/Enterprise-Hybrid-RAG/blob/main/docs/report/report.pdf" target="_blank" rel="noopener">Read the report <span class="arr" aria-hidden="true">↗</span></a>
-              <a class="btn btn-secondary" href="https://github.com/tu-h-nguyn/Enterprise-Hybrid-RAG" target="_blank" rel="noopener">View code <span class="arr" aria-hidden="true">↗</span></a>
-            </div>
-          </div>
-        </article>
-
-        <!-- ── 08 ── -->
-        <article id="p-quant" class="project" data-cat="ml quant">
-          <div class="p-num rv from-left" aria-hidden="true">08</div>
-          <div>
-            <div class="p-head rv">
-              <h3>AI Quant Trading Research Lab</h3>
+              <h3>Other Work on GitHub</h3>
               <span class="p-status live">Code public</span>
             </div>
             <p class="p-problem rv">
-              Does a leakage-aware machine-learning signal add value out of sample, after trading costs, relative to simple trading rules?
+              Two more public repositories: a retrieval system that shows which retriever to
+              trust for which question, and a trading research harness built so that its
+              answer is allowed to be "no".
             </p>
-
-            <div class="rv">
-              <div class="p-row">
-                <div class="p-label">Why it matters</div>
-                <div class="p-body">
-                  Most backtests that look profitable leak — shuffled splits, features that peek at the future, costs left out. A harness built so that its answer is allowed to be "no" is worth more than one that always says yes.
-                </div>
+            <div class="p-row rv">
+              <div class="p-label">Projects</div>
+              <div class="p-body">
+                <ul>
+                  <li><strong><a href="https://github.com/tu-h-nguyn/Enterprise-Hybrid-RAG" target="_blank" rel="noopener">Enterprise Hybrid RAG</a></strong> — question answering over PDF, DOCX and Markdown with page-level citations, built without a RAG framework: BM25 and dense retrieval, reciprocal-rank fusion, cross-encoder reranking and an abstention gate. On 50 questions over 22 documents, hybrid + reranker reaches <span class="metric">Recall@1 0.795</span>, against 0.585 dense-only and 0.643 BM25.</li>
+                  <li><strong><a href="https://github.com/tu-h-nguyn/AI-Quant-Trading-System" target="_blank" rel="noopener">AI Quant Trading Research Lab</a></strong> — does a leakage-aware ML signal beat simple trading rules out of sample, after costs? Walk-forward refits with an embargo, logistic regression and XGBoost against buy-and-hold, momentum and moving-average baselines on SPY, QQQ, IWM, TLT and GLD, costs charged on turnover, moving-block bootstrap. A research harness: no returns are quoted, because none are committed.</li>
+                </ul>
               </div>
-              <div class="p-row">
-                <div class="p-label">Method</div>
-                <div class="p-body">
-                  Chronological walk-forward refits from independent estimator clones, with an embargo for forward-horizon labels · features from current and past data only · buy-and-hold, momentum and moving-average baselines against logistic regression and XGBoost · costs charged on turnover · moving-block bootstrap for dependent daily returns.
-                </div>
-              </div>
-              <div class="p-row">
-                <div class="p-label">Architecture</div>
-                <div class="p-body">
-                  Market data → features → baseline and ML signals → walk-forward out-of-sample → portfolio (long-only minimum-variance and risk-parity weights from trailing observations, lagged before returns apply; volatility targeting; drawdown guardrails) → costs and turnover → metrics → bootstrap → report, with each run's configuration and source commit recorded.
-                </div>
-              </div>
-              <div class="p-row">
-                <div class="p-label">Experiment</div>
-                <div class="p-body">
-                  The flagship study runs the same experiment on SPY, QQQ, IWM, TLT and GLD. AUC is reported as a predictive diagnostic; trading metrics come from a separate cost-aware backtest; the signal threshold is fixed from configuration and never tuned on the out-of-sample period.
-                </div>
-              </div>
-              <div class="p-row">
-                <div class="p-label">Result</div>
-                <div class="p-body">
-                  A research harness, not a strategy. <span class="metric">No returns are quoted here</span>: none are committed to the repository — its research workflow regenerates the report, and an ML signal that loses to a baseline counts as a valid result.
-                </div>
-              </div>
-              <div class="p-row">
-                <div class="p-label">Limitation</div>
-                <div class="p-body">
-                  Historical simulation only: execution slippage, liquidity, borrow costs, corporate actions and regime shifts can change live outcomes. Five ETFs, daily data. Research and educational software, not investment advice.
-                </div>
-              </div>
-            </div>
-
-            <div class="p-stack">Python · pandas · scikit-learn · XGBoost · pytest · ruff · GitHub Actions</div>
-
-            <div class="p-links">
-              <a class="btn btn-secondary" href="https://github.com/tu-h-nguyn/AI-Quant-Trading-System" target="_blank" rel="noopener">View code <span class="arr" aria-hidden="true">↗</span></a>
             </div>
           </div>
         </article>
