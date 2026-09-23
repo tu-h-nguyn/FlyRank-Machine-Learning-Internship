@@ -46,7 +46,7 @@ CARD = """
   .main{{padding:60px 64px 54px 60px; display:flex; flex-direction:column}}
   .eyebrow{{display:flex; align-items:center; gap:16px; font-size:15px;
            letter-spacing:.24em; text-transform:uppercase; color:#5f6469}}
-  .eyebrow::before{{content:""; width:44px; height:1px; background:currentColor}}
+  .eyebrow::before, .eyebrow::after{{content:""; width:44px; height:1px; background:currentColor}}
   h1{{font-family:'Playfair Display', serif; font-weight:900; font-size:98px;
      line-height:.98; letter-spacing:-.015em; margin-top:24px}}
   .role{{align-self:flex-start; margin-top:30px; padding-bottom:12px;

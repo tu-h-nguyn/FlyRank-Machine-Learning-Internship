@@ -155,6 +155,10 @@
       content: ""; flex: 0 1 2.6rem; min-width: .8rem; height: 1px; background: currentColor;
       transform-origin: left;
     }
+    /* The hero's label is ruled on both sides: — PORTFOLIO — */
+    .eyebrow.both::after {
+      content: ""; flex: 0 1 2.6rem; min-width: .8rem; height: 1px; background: currentColor;
+    }
     .eyebrow .num { font-family: var(--display); font-style: italic; font-size: 1rem; letter-spacing: 0; }
 
     .lede { font-size: 1rem; color: var(--ink-2); max-width: 38rem; margin-top: 1.4rem; }
@@ -837,7 +841,7 @@
       </div>
 
       <div class="hero-main">
-        <p class="eyebrow">Portfolio</p>
+        <p class="eyebrow both">Portfolio</p>
         <h1 class="hero-name"><span class="line"><span>Nguyễn</span></span> <span class="line"><span>Hoàng Tú</span></span></h1>
         <p class="role"><span>Machine Learning Engineer / AI Engineer Intern</span></p>
         <p class="value-prop">
