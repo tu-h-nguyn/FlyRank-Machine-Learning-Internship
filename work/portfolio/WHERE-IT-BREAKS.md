@@ -125,6 +125,29 @@ suites against it found three things the new design broke:
   `text-transform`, so an uppercased button reported "SEND MESSAGE" and the form test's
   label check failed. **Fix:** that button is no longer uppercased.
 
+### 8–11. The multi-page rebuild — four more, each found by a check written for it
+
+The portfolio became four pages built from shared sources (September 2026). The audits
+were extended to every page first, and then run against it:
+
+- **8. 200% text overflowed on all four pages, from four new places.** Tags and focus
+  items that refused to wrap; list grids that sized themselves to their longest
+  unbreakable word (`code/results/*.json`); long URLs on the CV. **Fix:** tags and focus
+  items wrap, list grids are one `minmax(0, 1fr)` column, code and CV links may break
+  anywhere. **Evidence:** no horizontal scroll at 2× on any page, nor at 320px.
+- **9. Text inside the data figures failed contrast.** The slate curve labels were 3.9:1
+  on white and the reference-rate labels 3.3:1; the old audit never looked inside the
+  figures. **Fix:** slate darkened along its own hue to `#627689` (4.7:1, and 4.6:1 on the
+  plate dark mode dims to 90%), reference labels drawn in the muted text colour.
+  **Evidence:** `audit_portfolio.py` now reads the figure palette from the generator and
+  checks it in both themes.
+- **10. Sub-page metadata too long.** Three descriptions ran 169–188 characters and one
+  title 70, past what search results show. **Fix:** rewritten to ≤ 160 and ≤ 60; the
+  audit checks every page and that no two share a title.
+- **11. A prime that shrank to a dot.** `σ′` written as a superscripted prime rendered
+  as a speck without a math font. **Fix:** the prime is a normal-size `<mo>` after the
+  base, which every font draws correctly.
+
 ---
 
 ## Known limitations — not fixed, not hidden
@@ -236,18 +259,21 @@ blocks the main thread, and nothing jumps around while it loads.
   self-hosting the fonts or dropping them. Already mitigated with `preconnect` and
   `display=swap`, so text paints immediately in a fallback face.
 - **"Minify CSS, est. savings 3 KiB."** The CSS is inlined and hand-maintained. Three
-  kilobytes is not worth making the only stylesheet unreadable on a page I edit by hand.
+  kilobytes is not worth making the only stylesheet unreadable when it is edited by hand.
 
-### Raw payload, over localhost
+### Raw payload, over localhost (four pages, September 2026)
 
-| Metric | Value |
-|---|---|
-| Visitor payload | **41 KB** total (HTML + favicon) |
-| DOM nodes | 234 |
-| Requests | 3 — document, favicon, Google Fonts |
+| Page | HTML | gzipped | DOM nodes | First-view requests |
+|---|---|---|---|---|
+| Home | 89 KB | 22 KB | 723 | 9 — document, analytics, fonts CSS + 5 font files, favicon |
+| Projects | 123 KB | 31 KB | 671 | 10 |
+| Thesis | 91 KB | 23 KB | 921 | 8 |
+| CV | 57 KB | 14 KB | 207 | 9 |
 
-No images on the page, no frameworks, no CSS or JS files: everything is inlined in one
-document. The 62 KB `og.png` is fetched only by social crawlers, never by a visitor.
+No frameworks and no CSS or JS files: the one stylesheet and the one script are inlined
+into each page at build time, and the data figures are inline SVG. The three image
+figures on the projects page (1 MB, mostly two GIFs) load lazily, only when scrolled to.
+`og.png` is fetched only by social crawlers, never by a visitor.
 
 ---
 

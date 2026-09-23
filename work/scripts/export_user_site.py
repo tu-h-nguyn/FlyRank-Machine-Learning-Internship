@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Build the portfolio's own site — https://tu-h-nguyn.github.io/ — from docs/portfolio/.
 
-The portfolio is written and tested here, in docs/portfolio/, where the browser
-suites and audits already point. What GitHub serves at the bare user address is
+The portfolio is written in work/portfolio/site/, built into docs/portfolio/ by
+build_portfolio.py (home, projects/, thesis/, cv/), and tested there, where the
+browser suites and audits point. What GitHub serves at the bare user address is
 a separate repository, `tu-h-nguyn/tu-h-nguyn.github.io`, and this script is the
 only thing that writes into it: that repository is build output, so it can never
 drift from the page the tests ran against.
@@ -85,29 +86,34 @@ def main():
     if not re.fullmatch(r"https://[a-z0-9-]+\.github\.io/", portfolio):
         sys.exit(f"portfolio_url must be a bare user site like https://name.github.io/ — got {portfolio!r}")
 
-    html = (SRC / "index.html").read_text(encoding="utf-8")
-
-    # The page must already say it lives at the new address; this script moves
-    # files, it does not decide where the canonical copy is.
-    canon = re.search(r'<link rel="canonical" href="([^"]+)"', html)
-    if not canon or canon.group(1) != portfolio:
-        sys.exit(f"docs/portfolio/index.html canonical is {canon and canon.group(1)!r}, "
-                 f"expected {portfolio!r} (site.json portfolio_url)")
-
-    # Shared assets live one level up in this repo; at the user site they sit at the root.
-    uses_badge = 'src="../assets/' in html
-    html = html.replace('src="../assets/', 'src="assets/')
+    pages = sorted(SRC.rglob("index.html"), key=lambda f: (len(f.parts), f))   # home first
+    urls = {}
+    for page in pages:
+        sub = page.parent.relative_to(SRC).as_posix()
+        urls[page] = portfolio + ("" if sub == "." else sub + "/")
+        html = page.read_text(encoding="utf-8")
+        # Each page must already say it lives at the new address; this script moves
+        # files, it does not decide where the canonical copy is.
+        canon = re.search(r'<link rel="canonical" href="([^"]+)"', html)
+        if not canon or canon.group(1) != urls[page]:
+            sys.exit(f"{page.relative_to(ROOT)} canonical is {canon and canon.group(1)!r}, "
+                     f"expected {urls[page]!r} (site.json portfolio_url)")
 
     if out.exists():
         shutil.rmtree(out)
-    out.mkdir(parents=True)
+    shutil.copytree(SRC, out)
 
-    (out / "index.html").write_text(html, encoding="utf-8")
-    for name in ["favicon.svg", "og.png"]:
-        shutil.copy2(SRC / name, out / name)
-    shutil.copytree(SRC / "figures", out / "figures")
+    # Shared assets live one level up in this repo; at the user site they sit at the root.
+    uses_badge = False
+    for page in out.rglob("index.html"):
+        html = page.read_text(encoding="utf-8")
+        depth = len(page.parent.relative_to(out).parts)
+        up = "../" * (depth + 1)
+        if f'src="{up}assets/' in html:
+            uses_badge = True
+            page.write_text(html.replace(f'src="{up}assets/', f'src="{"../" * depth}assets/'), encoding="utf-8")
     if uses_badge:
-        (out / "assets").mkdir()
+        (out / "assets").mkdir(exist_ok=True)
         shutil.copy2(BADGE, out / "assets" / BADGE.name)
 
     today = datetime.date.today().isoformat()
@@ -115,20 +121,13 @@ def main():
         # This file governs every project site under the same host too, so it
         # allows everything and only points crawlers at the sitemap.
         f"User-agent: *\nAllow: /\n\nSitemap: {portfolio}sitemap.xml\n", encoding="utf-8")
-    (out / "sitemap.xml").write_text(f"""<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>{portfolio}</loc>
-    <lastmod>{today}</lastmod>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>{paper}</loc>
-    <lastmod>{today}</lastmod>
-    <priority>0.8</priority>
-  </url>
-</urlset>
-""", encoding="utf-8")
+    entries = [(urls[p], "1.0" if urls[p] == portfolio else "0.8") for p in pages] + [(paper, "0.8")]
+    (out / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "".join(f"  <url>\n    <loc>{loc}</loc>\n    <lastmod>{today}</lastmod>\n"
+                  f"    <priority>{prio}</priority>\n  </url>\n" for loc, prio in entries)
+        + "</urlset>\n", encoding="utf-8")
     (out / "404.html").write_text(page_404(portfolio, paper), encoding="utf-8")
     (out / ".nojekyll").write_text("", encoding="utf-8")
     (out / "README.md").write_text(f"""# {portfolio.split('//')[1].rstrip('/')}
@@ -136,19 +135,24 @@ def main():
 Portfolio of Nguyễn Hoàng Tú — live at **{portfolio}**
 
 **Do not edit this repository by hand.** Every file here is generated from
+[`work/portfolio/site/`]({UPSTREAM}/tree/main/work/portfolio/site), built into
 [`docs/portfolio/`]({UPSTREAM}/tree/main/docs/portfolio) in
 [{UPSTREAM.split('github.com/')[1]}]({UPSTREAM}) by
 `work/scripts/export_user_site.py`, and replaced wholesale on each publish. Edit the
 page there, where the browser tests and audits run, and push to `main`.
 """, encoding="utf-8")
 
-    # Every local file the page points at has to have made it across. Comments are
-    # skipped: the portrait instructions name a portrait.jpg that does not exist yet.
-    live = re.sub(r"<!--.*?-->", "", html, flags=re.S)
-    missing = [ref for ref in re.findall(r'(?:src|href)="((?!https?:|#|mailto:)[^"]+)"', live)
-               if not (out / ref).exists()]
+    # Every local file each page points at has to have made it across, resolved from
+    # that page's own folder. Comments are skipped: they may name files on purpose.
+    missing = []
+    for page in out.rglob("index.html"):
+        live = re.sub(r"<!--.*?-->", "", page.read_text(encoding="utf-8"), flags=re.S)
+        for ref in re.findall(r'(?:src|href)="((?!https?:|#|mailto:|data:)[^"]+)"', live):
+            target = (page.parent / ref.split("#")[0]).resolve()
+            if not target.exists() or not target.is_relative_to(out.resolve()):
+                missing.append(f"{page.relative_to(out).as_posix()}: {ref}")
     if missing:
-        sys.exit(f"exported page references missing files: {missing}")
+        sys.exit(f"exported pages reference missing files: {missing}")
 
     files = sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file())
     size = sum((out / f).stat().st_size for f in files)

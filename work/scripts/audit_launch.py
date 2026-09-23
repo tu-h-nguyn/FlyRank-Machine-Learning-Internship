@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Week 9 launch audit — checks what "live on a real address" actually requires.
 
-Covers both pages: the paper (docs/index.html, served from this repo) and the
-portfolio (docs/portfolio/index.html, canonical at site.json's portfolio_url and
-published there by export_user_site.py). Everything here is checkable offline,
-from the files that GitHub Pages will serve. The three things it CANNOT check from here
-are called out at the end, because they need the live URL.
+Covers the paper (docs/index.html, served from this repo) and every page of the
+portfolio (docs/portfolio/**/index.html, built by build_portfolio.py, canonical under
+site.json's portfolio_url and published there by export_user_site.py). Everything
+here is checkable offline, from the files that GitHub Pages will serve. The three
+things it CANNOT check from here are called out at the end, because they need the
+live URL.
 
     python3 work/scripts/audit_launch.py
 """
@@ -82,12 +83,16 @@ print(f"base URL   {BASE}")
 print(f"analytics  {f'{PROVIDER} {ANALYTICS_ID}' if PROVIDER else (CONFIG_ERROR or '(unset)')}")
 print(f"badge link {VERIFY or '(unset)'}")
 
-PAGES = [("paper", DOCS / "index.html", f"{BASE}/"),
-         ("portfolio", DOCS / "portfolio" / "index.html", PORTFOLIO)]
+# (name, file, its canonical URL, the URL of its site's root, that root on disk)
+PAGES = [("paper", DOCS / "index.html", f"{BASE}/", f"{BASE}/", DOCS)]
+for f in sorted((DOCS / "portfolio").rglob("index.html")):
+    sub = f.parent.relative_to(DOCS / "portfolio").as_posix()
+    sub = "" if sub == "." else sub + "/"
+    PAGES.append((f"portfolio/{sub}" if sub else "portfolio", f, PORTFOLIO + sub, PORTFOLIO, DOCS / "portfolio"))
 
 titles = {}
 
-for name, path, url in PAGES:
+for name, path, url, root_url, root_dir in PAGES:
     print(f"\n=== {name}  ({path.relative_to(ROOT)}) ===")
     html = path.read_text(encoding="utf-8")
     here = path.parent
@@ -113,12 +118,12 @@ for name, path, url in PAGES:
           meta(html, "property", "og:url") or "missing")
 
     # --- share preview ---
-    # The share image is published next to the page, so it must sit under the
-    # page's own address and exist in the page's own folder.
+    # The share image is published at the root of the page's own site, so it must
+    # sit under that site's address and exist in that site's folder.
     ogimg = meta(html, "property", "og:image") or ""
-    check("og:image is absolute", ogimg.startswith(url), ogimg or "missing")
-    if ogimg.startswith(url):
-        f = here / ogimg[len(url):]
+    check("og:image is absolute, on this site", ogimg.startswith(root_url), ogimg or "missing")
+    if ogimg.startswith(root_url):
+        f = root_dir / ogimg[len(root_url):]
         if check("og:image file exists", f.exists(), str(f.relative_to(ROOT)) if f.exists() else ogimg):
             w, h = png_size(f)
             check("og:image is 1200x630", (w, h) == (1200, 630), f"{w}x{h}, {f.stat().st_size/1024:.0f} KB")
@@ -171,7 +176,7 @@ for name, path, url in PAGES:
                   html, re.S)
     # The paper carries the graduate badge; the portfolio dropped it by choice, so
     # it is only checked there if one comes back.
-    if name == "portfolio" and not b:
+    if name.startswith("portfolio") and not b:
         print("  --   graduate badge  not on this page (by choice)")
     elif check("graduate badge in footer", bool(b)):
         href, src, alt = b.group(1), b.group(2), b.group(3)
@@ -185,16 +190,17 @@ for name, path, url in PAGES:
 
 # --- site-wide ---
 print("\n=== site ===")
-check("the two pages have different titles", titles.get("paper") != titles.get("portfolio"))
+check("every page has its own title", len(set(titles.values())) == len(titles),
+      f"{len(titles)} pages")
 
 stray = set()
 for f in list(DOCS.rglob("*.html")) + list(DOCS.rglob("*.xml")):
     for m in re.finditer(r'https://[a-z0-9.-]*(?:github\.io|is-a\.dev)[^\s"\'<>]*', f.read_text(encoding="utf-8")):
         url = m.group(0)
-        # A file at the portfolio's root (the page itself, its share image) is
-        # expected; a deeper path under that host is a project site and has to be
-        # listed in external_sites like any other.
-        at_portfolio = url.startswith(PORTFOLIO) and "/" not in url[len(PORTFOLIO):]
+        # A page or file the portfolio itself publishes is expected; any other path
+        # under that host is a project site and has to be listed in external_sites.
+        rest = url[len(PORTFOLIO):].split("#")[0] if url.startswith(PORTFOLIO) else None
+        at_portfolio = rest is not None and (DOCS / "portfolio" / rest).exists()
         if not url.startswith(BASE) and not url.startswith(EXTERNAL) and not at_portfolio:
             stray.add(url)
 check("no URLs left pointing at the old address", not stray, "; ".join(sorted(stray)[:3]))
