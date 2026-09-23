@@ -8,7 +8,7 @@ only thing that writes into it: that repository is build output, so it can never
 drift from the page the tests ran against.
 
 What changes on the way out:
-  * the badge moves from ../assets/ to assets/, since the site is now its own root
+  * any ../assets/ reference moves to assets/, since the site is now its own root
   * robots.txt, sitemap.xml, a 404 page and .nojekyll are added — all of which
     only work at a domain root, which is exactly what a project page could not have
 
@@ -94,9 +94,8 @@ def main():
         sys.exit(f"docs/portfolio/index.html canonical is {canon and canon.group(1)!r}, "
                  f"expected {portfolio!r} (site.json portfolio_url)")
 
-    n = html.count('src="../assets/')
-    if n != 1:
-        sys.exit(f"expected the badge to be the one ../assets/ reference, found {n}")
+    # Shared assets live one level up in this repo; at the user site they sit at the root.
+    uses_badge = 'src="../assets/' in html
     html = html.replace('src="../assets/', 'src="assets/')
 
     if out.exists():
@@ -107,8 +106,9 @@ def main():
     for name in ["favicon.svg", "og.png"]:
         shutil.copy2(SRC / name, out / name)
     shutil.copytree(SRC / "figures", out / "figures")
-    (out / "assets").mkdir()
-    shutil.copy2(BADGE, out / "assets" / BADGE.name)
+    if uses_badge:
+        (out / "assets").mkdir()
+        shutil.copy2(BADGE, out / "assets" / BADGE.name)
 
     today = datetime.date.today().isoformat()
     (out / "robots.txt").write_text(

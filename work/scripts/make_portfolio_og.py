@@ -69,7 +69,7 @@ CARD = """
 <div class="main">
   <p class="eyebrow">Portfolio</p>
   <h1>Nguy&#7877;n<br>Ho&agrave;ng T&uacute;</h1>
-  <p class="role">Machine Learning / AI Engineer Intern</p>
+  <p class="role">Machine Learning / AI Engineer</p>
   <div class="stats">
     <div class="stat"><div class="n">18,010</div><div class="l">pages ranked<br>out-of-fold</div></div>
     <div class="stat"><div class="n">0.88</div><div class="l">precision@50 vs a 0.74 baseline</div></div>
@@ -119,7 +119,7 @@ def main():
         # exact glyphs that matter — the Vietnamese marks in the name included.
         missing = page.evaluate("""() => [
             ["900 98px 'Playfair Display'", "Nguyễn Hoàng Tú 18,010 0.88"],
-            ["400 19px 'Playfair Display'", "MACHINE LEARNING / AI ENGINEER INTERN"],
+            ["400 19px 'Playfair Display'", "MACHINE LEARNING / AI ENGINEER"],
             ["400 15px 'Be Vietnam Pro'", "pages ranked out-of-fold tu-h-nguyn.github.io"],
             ["600 30px 'Be Vietnam Pro'", "WHO I AM"],
         ].filter(([font, text]) => !document.fonts.check(font, text)).map(([f]) => f)""")
